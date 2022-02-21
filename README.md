@@ -7,3 +7,6 @@
 (Cameron Watts)[www.github.com/Zalymo]
 (Avery Pound)[www.github.com/DJ-IRL]
 (Connor Ganaway)[www.github.com/ConnorGanaway]
+
+## Project description
+This project is to develop an open source home security solution that puts user data rights and privacy at the core of the development processes.
