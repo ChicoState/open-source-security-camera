@@ -1,4 +1,4 @@
-name: C++ CI
+name: python motion detection CI
 
 on:
   push:
@@ -12,4 +12,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
-        run: g++ main.cpp -std=c++17 -o run
+        run: python motiondetect.py
