@@ -35,6 +35,7 @@ def imgProcess(frame, avg):
         cnts = cnts[1]
     else:
         print("something went wrong, exiting program :(")
+        exit()
     return avg, cnts
 #get background subtraction with k nearest neighbor
 backSubknn = cv.createBackgroundSubtractorKNN()
