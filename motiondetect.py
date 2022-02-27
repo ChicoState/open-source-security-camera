@@ -1,8 +1,5 @@
-from itertools import count
-from sqlite3 import Timestamp
 import cv2 as cv
 from cv2 import imshow
-import datetime
 
 #works for images, recordings, live video 
 def rescaleFrame(frame, scale):
@@ -48,7 +45,6 @@ avg = None
 #infinate loop and capture video until 'd' is pressed
 while True:
     text = "searching..."
-    timestamp = datetime.datetime.now()
     #read video, gets a bool and frame
     isTrue, frame = capture.read()
     #resize frame
@@ -56,7 +52,7 @@ while True:
     #convert to grayscale image
     avg, cnts = imgProcess(frame_resized, avg)
     for c in cnts:
-        #if contours are less than desired area cont:
+        #if contours are less than desired area cont
         if cv.contourArea(c) < 7000:
             continue
         #set boundaries for motion box from contours
@@ -72,7 +68,7 @@ while True:
     #check for interupt
     if cv.waitKey(28) & 0xFF==ord('d'):
         break
-#if escaped, releas vido and destroy windows.
+#if escaped, releas video and destroy windows.
 capture.release()
 cv.destroyAllWindows()
 cv.waitKey(0)
