@@ -1,3 +1,5 @@
+[![C++ CI](https://github.com/ChicoState/open-source-security-camera/actions/workflows/actions.yaml/badge.svg)](https://github.com/ChicoState/open-source-security-camera/actions/workflows/actions.yaml)
+
 # open-source-security-camera
 
 ## Team Members
