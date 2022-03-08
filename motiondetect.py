@@ -1,5 +1,18 @@
 import cv2 as cv
 from cv2 import imshow
+from cv2 import VideoWriter
+from datetime import datetime
+import time
+
+#recoding setup
+def setRecording(vidnum):
+    #setup for recording:
+    codec = cv.VideoWriter_fourcc(*'XVID')
+    filePath = "imageStore/video{}.avi".format(vidnum)
+    fps = 30
+    isTrue, frame = capture.read()
+    width, height, channels = frame.shape
+    return cv.VideoWriter(filePath, codec, fps, (height, width))
 
 #works for images, recordings, live video 
 def rescaleFrame(frame, scale):
@@ -24,11 +37,13 @@ def imgProcess(frame, avg):
     cv.accumulateWeighted(gray, avg, 0.5)
     #compute difference between first frame and cur frame
     frameDelta = cv.absdiff(gray, cv.convertScaleAbs(avg))
+    cv.imshow('frame delta', frameDelta)
     thresh = cv.threshold(frameDelta, 5, 255, cv.THRESH_BINARY)[1]
     #dilate the threshold image to fill in holes
     thresh = cv.dilate(thresh, None, iterations=2)
     #get contours
     cnts = cv.findContours(thresh.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    cv.imshow('countours', thresh)
     if len(cnts) == 2:
         cnts = cnts[0]
     elif len(cnts) == 3:
@@ -37,35 +52,69 @@ def imgProcess(frame, avg):
         print("something went wrong, exiting program :(")
         exit()
     return avg, cnts
+
 #get background subtraction with k nearest neighbor
 backSubknn = cv.createBackgroundSubtractorKNN()
 #innitial video capture: source ov vid or file path/name
 capture = cv.VideoCapture(0)
 #initially the average frame is 0, set in loop from grayscale image
 avg = None
+
+#setup for recording:
+# codec = cv.VideoWriter_fourcc(*'XVID')
+# filePath = "imageStore/video{}.avi".format(1)
+# fps = 30
+# isTrue, frame = capture.read()
+# width, height, channels = frame.shape
+vidnum=0
+out = setRecording(vidnum)
+numframes = 0
 #infinate loop and capture video until 'd' is pressed
 while True:
     text = "searching..."
     #read video, gets a bool and frame
     isTrue, frame = capture.read()
     #resize frame
-    frame_resized =rescaleFrame(frame, 1)
+    #frame_resized =rescaleFrame(frame, 1)
     #convert to grayscale image
-    avg, cnts = imgProcess(frame_resized, avg)
+    #avg, cnts = imgProcess(frame_resized, avg)
+    avg, cnts = imgProcess(frame, avg)
     for c in cnts:
         #if contours are less than desired area cont
-        if cv.contourArea(c) < 7000:
+        if cv.contourArea(c) < 5000:
             continue
         #set boundaries for motion box from contours
         (x,y,w,h) = cv.boundingRect(c)
+        #set color to draw box:
+        color = (0,0,255)
+        thickness = 2
         #set motion box on frame
-        cv.rectangle(frame_resized, (x,y), (x+w, y+h), (0, 0, 255), 2)
+        #cv.rectangle(frame_resized, (x,y), (x+w, y+h), color, thickness)
+        cv.rectangle(frame, (x,y), (x+w, y+h), color, thickness)
+        
         #change notification text
         text = "Motion!"
     #add text to frame
-    cv.putText(frame_resized, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, (0,0,255), 1)
+    if text == "Motion!":
+        status_color = (0,0,255)
+    else:
+        status_color=(0,255,0)
+    cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
     #display the image
-    cv.imshow('Video', frame_resized)
+    cv.imshow('Video', frame)
+    #if motion detected record:
+    if text == "Motion!":
+        numframes+=1
+        out.write(frame)
+        cv.imshow('this should be recording?', frame)
+    if numframes > 100:
+        numframes = 0
+        out.release()
+        vidnum+=1
+        if vidnum > 2:
+            break
+        out= setRecording(vidnum)
+
     #check for interupt
     if cv.waitKey(28) & 0xFF==ord('d'):
         break
