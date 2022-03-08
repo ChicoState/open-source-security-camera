@@ -124,9 +124,6 @@ while True:
         out.release()
         date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
         out= setRecording(date_time, frame)
-    if numfiles > 10:
-        out.release()
-        break
     #check for interupt
     if cv.waitKey(28) & 0xFF==ord('d'):
         out.release()
