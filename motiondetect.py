@@ -5,11 +5,13 @@ from datetime import datetime
 import time
 
 #recoding setup
-def setRecording(vidnum, frame):
+def setRecording(fileName, frame):
     #type of codec (os dependent, currently working for ubunto 20.4)
     codec = cv.VideoWriter_fourcc(*'XVID')
+    #use date/time file naming
+
     #where to save files
-    filePath = "imageStore/video{}.avi".format(vidnum)
+    filePath = "imageStore/{}.avi".format(fileName)
     #set frame rate for recording
     fps = 20
     #read from frame
@@ -65,11 +67,13 @@ capture = cv.VideoCapture(0)
 
 avg = None
 #number of videos to record before shutting down
-vidnum=0
+#label videos based on date/time
+date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
 #get first frame
 isTrue, frame = capture.read()
-out = setRecording(vidnum, frame)
+out = setRecording(date_time, frame)
 numframes = 0
+numfiles = 0
 #infinate loop and capture video until 'd' is pressed
 while True:
     text = "searching..."
@@ -101,21 +105,28 @@ while True:
     else:
         status_color=(0,255,0)
     cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
+    
+    #current date/time
+    date_time = datetime.now() 
+    cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
+    
     #display the image
     cv.imshow('Video', frame)
     #if motion detected record:
     if text == "Motion!":
         numframes+=1
         out.write(frame)
-        cv.imshow('this should be recording?', frame)
-    if numframes > 1000:
+        cv.imshow('recording', frame)
+    #if number of frames in recording is greater than 500 save recording and start new recording file
+    if numframes > 500:
+        numfiles+=1
         numframes = 0
         out.release()
-        vidnum+=1
-        if vidnum > 2:
-            break
-        out= setRecording(vidnum, frame)
-
+        date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
+        out= setRecording(date_time, frame)
+    if numfiles > 10:
+        out.release()
+        break
     #check for interupt
     if cv.waitKey(28) & 0xFF==ord('d'):
         out.release()
