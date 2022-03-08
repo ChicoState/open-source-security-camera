@@ -5,13 +5,17 @@ from datetime import datetime
 import time
 
 #recoding setup
-def setRecording(vidnum):
-    #setup for recording:
+def setRecording(vidnum, frame):
+    #type of codec (os dependent, currently working for ubunto 20.4)
     codec = cv.VideoWriter_fourcc(*'XVID')
+    #where to save files
     filePath = "imageStore/video{}.avi".format(vidnum)
-    fps = 30
+    #set frame rate for recording
+    fps = 20
+    #read from frame
     isTrue, frame = capture.read()
     width, height, channels = frame.shape
+    #return output object
     return cv.VideoWriter(filePath, codec, fps, (height, width))
 
 #works for images, recordings, live video 
@@ -55,19 +59,16 @@ def imgProcess(frame, avg):
 
 #get background subtraction with k nearest neighbor
 backSubknn = cv.createBackgroundSubtractorKNN()
-#innitial video capture: source ov vid or file path/name
+#innitial video capture: source ov vid or file path/name for usb cam
 capture = cv.VideoCapture(0)
-#initially the average frame is 0, set in loop from grayscale image
-avg = None
+#initialize video capture: source PiCam:
 
-#setup for recording:
-# codec = cv.VideoWriter_fourcc(*'XVID')
-# filePath = "imageStore/video{}.avi".format(1)
-# fps = 30
-# isTrue, frame = capture.read()
-# width, height, channels = frame.shape
+avg = None
+#number of videos to record before shutting down
 vidnum=0
-out = setRecording(vidnum)
+#get first frame
+isTrue, frame = capture.read()
+out = setRecording(vidnum, frame)
 numframes = 0
 #infinate loop and capture video until 'd' is pressed
 while True:
@@ -107,16 +108,17 @@ while True:
         numframes+=1
         out.write(frame)
         cv.imshow('this should be recording?', frame)
-    if numframes > 100:
+    if numframes > 1000:
         numframes = 0
         out.release()
         vidnum+=1
         if vidnum > 2:
             break
-        out= setRecording(vidnum)
+        out= setRecording(vidnum, frame)
 
     #check for interupt
     if cv.waitKey(28) & 0xFF==ord('d'):
+        out.release()
         break
 #if escaped, releas video and destroy windows.
 capture.release()
