@@ -3,17 +3,14 @@ from cv2 import imshow
 from cv2 import VideoWriter
 from datetime import datetime
 import time
-
 #recoding setup
 def setRecording(fileName, frame):
     #type of codec (os dependent, currently working for ubunto 20.4)
     codec = cv.VideoWriter_fourcc(*'XVID')
-    #use date/time file naming
-
     #where to save files
-    filePath = "imageStore/{}.avi".format(fileName)
+    filePath = "videos/{}.avi".format(fileName)
     #set frame rate for recording
-    fps = 20
+    fps = 15
     #read from frame
     isTrue, frame = capture.read()
     width, height, channels = frame.shape
@@ -35,7 +32,7 @@ def imgProcess(frame, avg):
     #convert to grayscale image
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     #blur image to reduce noise (filter size 21X21)
-    gray = cv.GaussianBlur(gray, (11,11),0)
+    gray = cv.GaussianBlur(gray, (7,7),0)
     #if first loop, need to set avg
     if avg is None:
         avg = gray.copy().astype("float")
@@ -43,13 +40,11 @@ def imgProcess(frame, avg):
     cv.accumulateWeighted(gray, avg, 0.5)
     #compute difference between first frame and cur frame
     frameDelta = cv.absdiff(gray, cv.convertScaleAbs(avg))
-    cv.imshow('frame delta', frameDelta)
-    thresh = cv.threshold(frameDelta, 5, 255, cv.THRESH_BINARY)[1]
+    thresh = cv.threshold(frameDelta, 2, 255, cv.THRESH_BINARY)[1]
     #dilate the threshold image to fill in holes
-    thresh = cv.dilate(thresh, None, iterations=2)
+    dil = cv.dilate(thresh, None, iterations=2)
     #get contours
-    cnts = cv.findContours(thresh.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-    cv.imshow('countours', thresh)
+    cnts = cv.findContours(dil.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     if len(cnts) == 2:
         cnts = cnts[0]
     elif len(cnts) == 3:
@@ -58,31 +53,29 @@ def imgProcess(frame, avg):
         print("something went wrong, exiting program :(")
         exit()
     return avg, cnts
-
-#get background subtraction with k nearest neighbor
-backSubknn = cv.createBackgroundSubtractorKNN()
 #innitial video capture: source ov vid or file path/name for usb cam
 capture = cv.VideoCapture(0)
+if not capture.isOpened():
+    print("camera could not be opened")
+    exit()
 #initialize video capture: source PiCam:
-
 avg = None
-#number of videos to record before shutting down
 #label videos based on date/time
 date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
 #get first frame
 isTrue, frame = capture.read()
 out = setRecording(date_time, frame)
+#number of frames to record per video
 numframes = 0
-numfiles = 0
 #infinate loop and capture video until 'd' is pressed
 while True:
     text = "searching..."
     #read video, gets a bool and frame
     isTrue, frame = capture.read()
-    #resize frame
-    #frame_resized =rescaleFrame(frame, 1)
-    #convert to grayscale image
-    #avg, cnts = imgProcess(frame_resized, avg)
+    if not isTrue:
+        print("could not receive image frame: shutting down")
+        break
+    #update average frame and countour frame
     avg, cnts = imgProcess(frame, avg)
     for c in cnts:
         #if contours are less than desired area cont
@@ -92,11 +85,10 @@ while True:
         (x,y,w,h) = cv.boundingRect(c)
         #set color to draw box:
         color = (0,0,255)
+        #motion box line thickness
         thickness = 2
         #set motion box on frame
-        #cv.rectangle(frame_resized, (x,y), (x+w, y+h), color, thickness)
         cv.rectangle(frame, (x,y), (x+w, y+h), color, thickness)
-        
         #change notification text
         text = "Motion!"
     #add text to frame
@@ -105,11 +97,9 @@ while True:
     else:
         status_color=(0,255,0)
     cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
-    
     #current date/time
     date_time = datetime.now() 
     cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
-    
     #display the image
     cv.imshow('Video', frame)
     #if motion detected record:
@@ -118,17 +108,16 @@ while True:
         out.write(frame)
         cv.imshow('recording', frame)
     #if number of frames in recording is greater than 500 save recording and start new recording file
-    if numframes > 500:
-        numfiles+=1
+    if numframes > 100:
         numframes = 0
         out.release()
         date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
         out= setRecording(date_time, frame)
     #check for interupt
     if cv.waitKey(28) & 0xFF==ord('d'):
-        out.release()
         break
 #if escaped, releas video and destroy windows.
+out.release()
 capture.release()
 cv.destroyAllWindows()
 cv.waitKey(0)
