@@ -1,14 +1,21 @@
 <html>
-
     <head>
         {% load static %}
         {% include "core/bootstrap.html" %}
-
+        <link rel="stylesheet" href="{% static 'core/dash.css' %}">
     </head>
 
-    <body>
-        {% include "core/navigation.html" %}
+    {% include "core/navigation.html" %}
 
-        <h1>Hello, security camera dashboard under construction!</h1>
+    <body>
+        <h1>Hello, security camera dashboard under construction</h1>
+        {% if user.is_authenticated %}
+            <h2>Welcome, {{ user.username }}!</h2>
+        {% elif user.is_anonymous %}
+            <h2>Welcome, non-logged-in person!</h2>
+        {% else %}
+            <h2>Welcome, stranger!</h2>
+        {% endif %}
+
     </body>
 </html>
