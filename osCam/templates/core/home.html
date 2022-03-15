@@ -8,22 +8,30 @@
     {% include "core/navigation.html" %}
 
     <body>
-        <h1>Hello, security camera dashboard under construction</h1>
-        {% if user.is_authenticated %}
-            <h2>Welcome, {{ user.username }}!</h2>
-        {% elif user.is_anonymous %}
-            <h2>Welcome, non-logged-in person!</h2>
-        {% else %}
-            <h2>Welcome, stranger!</h2>
-        {% endif %}
-
+        <div class="text-center">
+            <h1>Hello, security camera dashboard under construction</h1>
+            {% if user.is_authenticated %}
+                <h2>Welcome, {{ user.username }}!</h2>
+            {% elif user.is_anonymous %}
+                <h2>Welcome, non-logged-in person!</h2>
+            {% else %}
+                <h2>Welcome, stranger!</h2>
+            {% endif %}
+        </div>
+        <hr />
         <div class="container-fluid">
             <div class="row">
               <div class="col">
                   <!-- 1 of 3 col -->
                 <!-- user profile information -->
                 <h2>user profile info</h2>
-                {% include "user/profile.html" %}
+                {% if user.is_authenticated %}
+                    {% include "user/profile.html" %}
+                {% else %}
+                    <p>
+                        You are not logged in.
+                    </p>
+                {% endif %}
               </div>
               
               <div class="col-6">
