@@ -32,6 +32,8 @@ def login(request):
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             # First get the username and password supplied
+            # The default encryption algorithm is called PBKDF2 with a SHA256 hash
+            # but we can install custom encryption libraries if needed
             username = login_form.cleaned_data["username"]
             password = login_form.cleaned_data["password"]
             # Django's built-in authentication function:
