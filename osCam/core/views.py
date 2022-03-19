@@ -8,21 +8,18 @@ from cv2 import imshow
 from cv2 import VideoWriter
 from datetime import datetime
 import time
-class VideoCamera(object):
-	def __init__(self):
-        #usb cam for testing, change for pi
-		self.video = cv.VideoCapture(0)
-
-	def __del__(self):
-		self.video.release()
-
-	def get_frame(self):
-		success, image = self.video.read()
-		gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-		ret, jpeg = cv.imencode('.jpg', image)
-		return jpeg.tobytes()
 
 class MotionDetect():
+    def __init__(self):
+        #usb cam for testing, change for pi
+        self.video = cv.VideoCapture(0)
+    def __del__(self):
+        self.video.release()
+    def get_frame(self):
+        success, image = self.video.read()
+        gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+        ret, jpeg = cv.imencode('.jpg', image)
+        return jpeg.tobytes()
     #recoding setup
     def setRecording(fileName, frame):
         #type of codec (os dependent, currently working for ubunto 20.4)
@@ -154,5 +151,5 @@ def gen(camera):
 		yield (b'--frame\r\n'
 				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 def feed(request):
-	return StreamingHttpResponse(gen(VideoCamera()),
+	return StreamingHttpResponse(gen(MotionDetect()),
 					content_type='multipart/x-mixed-replace; boundary=frame')
