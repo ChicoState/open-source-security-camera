@@ -1,4 +1,5 @@
 [![Python application](https://github.com/ChicoState/open-source-security-camera/actions/workflows/actions.yaml/badge.svg)](https://github.com/ChicoState/open-source-security-camera/actions/workflows/actions.yaml)
+[![Python application](https://github.com/melippmann/open-source-security-camera/actions/workflows/actions.yaml/badge.svg)](https://github.com/melippmann/open-source-security-camera/actions/workflows/actions.yaml)
 # open-source-security-camera
 
 ## Team Members
