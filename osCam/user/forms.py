@@ -3,8 +3,10 @@ from core.models import *
 from django import forms
 from django.core import validators
 from django.contrib.auth.models import User
-# from crispy_forms.layout import Field, Layout, Div, HTML, ButtonHolder, Submit
-# from crispy_forms.helper import FormHelper
+
+from crispy_forms.layout import Field, Layout, Div, HTML, ButtonHolder, Submit
+from crispy_forms.helper import FormHelper
+
 
 class JoinForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}))
