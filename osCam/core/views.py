@@ -13,11 +13,17 @@ class MotionDetect():
     def __init__(self):
         #usb cam for testing, change for pi
         self.video = cv.VideoCapture(0)
+        self.codec = cv.VideoWriter_fourcc(*'XVID')
+        self.filePath = "videos/{}.avi".format("firstvid")
         self.avg = None
+        self.out = None
+        self.numframes = 0
+        self.record = True
     def __del__(self):
         self.video.release()
     def get_frame(self):
         success, frame = self.video.read()
+        # frame = cv.flip(frame,0)
         if not success:
             print("could not get image from cammera")
         text = "searching..."
@@ -46,8 +52,21 @@ class MotionDetect():
         date_time = datetime.now() 
         cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
         ret, jpeg = cv.imencode('.jpg', frame)
+        if self.record:
+            if self.out == None:
+                self.out = MotionDetect.setRecording(date_time, frame)
+            if text == "Motion!":
+                self.numframes+=1
+                self.out.write(frame)
+            #if number of frames in recording is greater than 500 save recording and start new recording file
+            if self.numframes > 250:
+                self.numframes = 0
+                self.out.release()
+                date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
+                print(date_time)
+                self.out= MotionDetect.setRecording(date_time, frame)
         return jpeg.tobytes()
-        
+
     #convert frame to grey, compute Gaussian blur for noise reduction, update ave,
     #compute weighted averages, compute difference between wieghted ave and grayscale frame to get delta (background bodel - grayscale frame)
     def imgProcess(frame, self):
@@ -76,6 +95,17 @@ class MotionDetect():
         else:
             print("something went wrong with contours:(")
         return cnts
+    def setRecording(fileName, frame):
+        #type of codec (os dependent, currently working for ubunto 20.4)
+        codec = cv.VideoWriter_fourcc(*'XVID')
+        #where to save files
+        filePath = "videos/{}.avi".format(fileName)
+        print(filePath)
+        #set frame rate for recording
+        fps = 15
+        width, height, channels = frame.shape
+        #return output object
+        return cv.VideoWriter(filePath, codec, fps, (height, width))
 def home(request):
     return render(request, 'core/home.html')
 
