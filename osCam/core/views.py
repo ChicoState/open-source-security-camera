@@ -14,7 +14,7 @@ class MotionDetect():
         #usb cam for testing, change for pi
         self.video = cv.VideoCapture(0)
         self.codec = cv.VideoWriter_fourcc(*'XVID')
-        self.filePath = "videos/{}.avi".format("firstvid")
+        #self.filePath = "videos/{}.avi".format(datetime.now().strftime("%Y_%m_%d, %H:%M:%S"))
         self.avg = None
         self.out = None
         self.numframes = 0
@@ -54,7 +54,7 @@ class MotionDetect():
         ret, jpeg = cv.imencode('.jpg', frame)
         if self.record:
             if self.out == None:
-                self.out = MotionDetect.setRecording(date_time, frame)
+                self.out = MotionDetect.setRecording(date_time.strftime("%Y/%m/%d, %H:%M:%S"), frame)
             if text == "Motion!":
                 self.numframes+=1
                 self.out.write(frame)
