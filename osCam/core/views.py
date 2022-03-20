@@ -63,7 +63,6 @@ class MotionDetect():
                 self.numframes = 0
                 self.out.release()
                 date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
-                print(date_time)
                 self.out= MotionDetect.setRecording(date_time, frame)
         return jpeg.tobytes()
 
@@ -100,7 +99,6 @@ class MotionDetect():
         codec = cv.VideoWriter_fourcc(*'XVID')
         #where to save files
         filePath = "videos/{}.avi".format(fileName)
-        print(filePath)
         #set frame rate for recording
         fps = 15
         width, height, channels = frame.shape
