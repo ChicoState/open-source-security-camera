@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http.response import StreamingHttpResponse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 import cv2 as cv
@@ -49,7 +50,7 @@ class MotionDetect():
             status_color=(0,255,0)
         cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
         #current date/time
-        date_time = datetime.now() 
+        date_time = datetime.now()
         cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
         ret, jpeg = cv.imencode('.jpg', frame)
         if self.record:
@@ -106,6 +107,8 @@ class MotionDetect():
         width, height, channels = frame.shape
         #return output object
         return cv.VideoWriter(filePath, codec, fps, (height, width))
+
+@login_required
 def home(request):
     return render(request, 'core/home.html')
 
