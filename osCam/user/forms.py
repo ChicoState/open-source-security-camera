@@ -17,7 +17,3 @@ class JoinForm(forms.ModelForm):
         help_texts = {
             'username': None
         }
-
-class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput())

@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path
 from core import views as core_views
 from user import views as user_views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', core_views.home, name='home'),
     path('feed/', core_views.feed, name='feed'),
     path('join/', user_views.join, name='join'),
-    path('login/', user_views.login, name='login'),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', user_views.user_logout, name='logout')
 ]
