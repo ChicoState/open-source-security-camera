@@ -15,7 +15,7 @@ class MotionDetect():
         #usb cam for testing, change for pi
         self.video = cv.VideoCapture(0)
         self.codec = cv.VideoWriter_fourcc(*'XVID')
-        self.filePath = "videos/{}.avi".format("firstvid")
+        #self.filePath = "videos/{}.avi".format(datetime.now().strftime("%Y_%m_%d, %H:%M:%S"))
         self.avg = None
         self.out = None
         self.numframes = 0
@@ -24,6 +24,7 @@ class MotionDetect():
         self.video.release()
     def get_frame(self):
         success, frame = self.video.read()
+        frame = MotionDetect.rescaleFrame(frame, .75)
         # frame = cv.flip(frame,0)
         if not success:
             print("could not get image from cammera")
@@ -55,7 +56,7 @@ class MotionDetect():
         ret, jpeg = cv.imencode('.jpg', frame)
         if self.record:
             if self.out == None:
-                self.out = MotionDetect.setRecording(date_time, frame)
+                self.out = MotionDetect.setRecording(date_time.strftime("%Y/%m/%d, %H:%M:%S"), frame)
             if text == "Motion!":
                 self.numframes+=1
                 self.out.write(frame)
@@ -64,7 +65,6 @@ class MotionDetect():
                 self.numframes = 0
                 self.out.release()
                 date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
-                print(date_time)
                 self.out= MotionDetect.setRecording(date_time, frame)
         return jpeg.tobytes()
 
@@ -101,13 +101,18 @@ class MotionDetect():
         codec = cv.VideoWriter_fourcc(*'XVID')
         #where to save files
         filePath = "videos/{}.avi".format(fileName)
-        print(filePath)
         #set frame rate for recording
         fps = 15
         width, height, channels = frame.shape
         #return output object
         return cv.VideoWriter(filePath, codec, fps, (height, width))
-
+    def rescaleFrame(frame, scale):
+        #scale the width and height, (cast to int)
+        width = int(frame.shape[1] * scale)
+        height =int(frame.shape[0] * scale)
+        dimensions = (width, height)
+        #return resize frame to particular dimension
+        return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
 @login_required
 def home(request):
     return render(request, 'core/home.html')

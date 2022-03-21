@@ -39,16 +39,12 @@
                     <!-- 2 of three columns -->
                     <h2>cameras</h2>
                 </div>
-                <div class="row">
-                    <div class="col-8 col-sm-6">
-                      <!-- cameras -->
-                        camera 01 on pi 01
-                    </div>
-                    <div class="col-4 col-sm-6">
-                      <!-- feed / files -->
-                        file 01 <br>
-                        file 02 <br>
-                        file 03 <br>
+                <div class="row justify-content-md-center">
+                    <div class="col-6">
+                        <!-- cameras -->
+                        {% if user.is_authenticated %}
+                        <img src="{% url 'feed' %}">
+                        {% endif %}
                     </div>
                   </div>
               </div>
@@ -60,8 +56,5 @@
               </div> <!-- end of 3 of 3 col -->
             </div> <!-- end of row -->
         </div> <!-- end of container -->
-        {% if user.is_authenticated %}
-          <img src="{% url 'feed' %}">
-        {% endif %}
     </body>
 </html>
