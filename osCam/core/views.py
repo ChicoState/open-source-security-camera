@@ -24,6 +24,7 @@ class MotionDetect():
         self.video.release()
     def get_frame(self):
         success, frame = self.video.read()
+        frame = MotionDetect.rescaleFrame(frame, .75)
         # frame = cv.flip(frame,0)
         if not success:
             print("could not get image from cammera")
@@ -105,7 +106,13 @@ class MotionDetect():
         width, height, channels = frame.shape
         #return output object
         return cv.VideoWriter(filePath, codec, fps, (height, width))
-
+    def rescaleFrame(frame, scale):
+        #scale the width and height, (cast to int)
+        width = int(frame.shape[1] * scale)
+        height =int(frame.shape[0] * scale)
+        dimensions = (width, height)
+        #return resize frame to particular dimension
+        return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
 @login_required
 def home(request):
     return render(request, 'core/home.html')
