@@ -1,3 +1,7 @@
+# Video files #
+**/*.avi
+**/*.mp4
+
 # Django #
 *.log
 *.pot
