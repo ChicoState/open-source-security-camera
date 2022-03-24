@@ -24,8 +24,11 @@ class MotionDetect():
         self.video.release()
     def get_frame(self):
         success, frame = self.video.read()
+        if(not success):
+            print("did not read from camera")
+            time.sleep(2)
+        frame = cv.flip(frame,0)
         frame = MotionDetect.rescaleFrame(frame, .75)
-        # frame = cv.flip(frame,0)
         if not success:
             print("could not get image from cammera")
         text = "searching..."
