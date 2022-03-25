@@ -69,3 +69,6 @@ remove *all* containers and images <br>
 `docker system prune -a` <br>
 
 --- 
+### Database Design:
+[ER Diagram.pdf](https://github.com/ChicoState/open-source-security-camera/files/8346569/ER.Diagram.pdf)
+
