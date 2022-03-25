@@ -1,0 +1,62 @@
+<html>
+    <head>
+        {% load static %}
+        {% include "core/bootstrap.html" %}
+        <link rel="stylesheet" href="{% static 'core/dash.css' %}">
+    </head>
+
+    {% include "core/navigation.html" %}
+
+    <body>
+        <div class="text-center">
+            <h1>Hello, security camera dashboard under construction</h1>
+            {% if user.is_authenticated %}
+                <h2>Welcome, {{ user.username }}!</h2>
+            {% elif user.is_anonymous %}
+                <h2>Welcome, non-logged-in person!</h2>
+            {% else %}
+                <h2>Welcome, stranger!</h2>
+            {% endif %}
+        </div>
+        <hr />
+        <div class="container-fluid">
+            <div class="row">
+              <div class="col">
+                  <!-- 1 of 3 col -->
+                <!-- user profile information -->
+                <h2>user profile info</h2>
+                {% if user.is_authenticated %}
+                    {% include "user/profile.html" %}
+                {% else %}
+                    <p>
+                        You are not logged in.
+                    </p>
+                {% endif %}
+              </div>
+
+              <div class="col-6">
+                <div class="row justify-content-md-center">
+                    <!-- 2 of three columns -->
+                    <h2>cameras</h2>
+                </div>
+                <div class="row justify-content-md-left">
+                    <div class="col-6">
+                        <!-- cameras -->
+                        {% if user.is_authenticated %}
+                        <div class="container-fluid">
+                        <img src="{% url 'feed' %}">
+                        {% endif %}
+                    </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="col">
+                <!-- 3 of three columns -->
+                <!-- statistics based on activity -->
+                <h2>stats</h2>
+                statistics based on activity monitored by system
+              </div> <!-- end of 3 of 3 col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </body>
+</html>
