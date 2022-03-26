@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http.response import StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+# Open CV Motion Detect And Video Stream. Need to refactor and put this in app 'Streams' that already has architecture set .
 import cv2 as cv
 from cv2 import imshow
 from cv2 import VideoWriter
@@ -116,6 +116,8 @@ class MotionDetect():
         dimensions = (width, height)
         #return resize frame to particular dimension
         return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
+
+
 @login_required
 def home(request):
     return render(request, 'core/home.html')
