@@ -1,6 +1,6 @@
 [![Python application](https://github.com/ChicoState/open-source-security-camera/actions/workflows/actions.yaml/badge.svg)](https://github.com/ChicoState/open-source-security-camera/actions/workflows/actions.yaml)
 # open-source-security-camera
-
+(raspberrypi OpenCV setup and partitioning)[https://qengineering.eu/install-opencv-4.5-on-raspberry-pi-4.html]
 ## Team Members
 
 - [Meher Lippmann](https://www.github.com/melippmann)
