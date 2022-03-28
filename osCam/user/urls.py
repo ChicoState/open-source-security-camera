@@ -8,6 +8,6 @@ urlpatterns = [
     path('join/', views.join, name='join'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', views.user_logout, name='logout'),
+    path('send_email/', views.send_email, name='send_email'),
 
-] 
-    
+]

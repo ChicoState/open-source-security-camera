@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from user.forms import JoinForm
+import time
 
 # Create your views here.
 def join(request):
@@ -33,3 +34,9 @@ def user_logout(request):
     logout(request)
     # Return to homepage.
     return redirect("/login/")
+
+def send_email(request):
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    html = "<html><body><b>Current Time Value:</b> %s</body></html>" % current_time
+    return HttpResponse(html)
