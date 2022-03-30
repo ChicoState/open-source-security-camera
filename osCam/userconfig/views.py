@@ -91,7 +91,9 @@ def addConf(request):
                 Network(user=this_user,home_ip_address=network_info['REMOTE_ADDR'], camera_ip_address=network_info['REMOTE_ADDR']).save() 
             # print(key, meta[key] )    # print this to see all Network Information supplied by Django and network packet. If we want more we need send out ARP or get from user directly. 
     # Network(request.get_host())
-    return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'Client IP Address': network_info['REMOTE_ADDR'], 'PAGE': page}, safe=True)
+    #return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'Client IP Address': network_info['REMOTE_ADDR'], 'PAGE': page}, safe=True)
+    page_data = {'cameras': Camera.objects.all(), 'raspberrypis': RaspberryPi.objects.all(), 'networks': Network.objects.all()}
+    return render(request, 'user/add_config.html', page_data)
 
 
 def editConf(request, id):
