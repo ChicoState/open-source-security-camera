@@ -19,7 +19,8 @@ class MotionDetect():
         self.avg = None
         self.out = None
         self.numframes = 0
-        self.record = True
+        self.record = False
+        self.rotate = False
     def __del__(self):
         self.video.release()
     def get_frame(self):
@@ -27,7 +28,8 @@ class MotionDetect():
         if(not success):
             print("did not read from camera")
             time.sleep(2)
-        frame = cv.flip(frame,0)
+        if self.rotate:
+            frame = cv.flip(frame,0)
         frame = MotionDetect.rescaleFrame(frame, .75)
         if not success:
             print("could not get image from cammera")
