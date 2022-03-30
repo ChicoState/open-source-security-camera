@@ -19,7 +19,7 @@ class MotionDetect():
         self.avg = None
         self.out = None
         self.numframes = 0
-        self.record = True
+        self.record = False
     def __del__(self):
         self.video.release()
     def get_frame(self):
@@ -28,7 +28,7 @@ class MotionDetect():
             print("did not read from camera")
             time.sleep(2)
         frame = cv.flip(frame,0)
-        frame = MotionDetect.rescaleFrame(frame, .75)
+        frame = MotionDetect.rescaleFrame(frame, .25)
         if not success:
             print("could not get image from cammera")
         text = "searching..."
@@ -130,3 +130,4 @@ def gen(camera):
 def feed(request):
 	return StreamingHttpResponse(gen(MotionDetect()),
 					content_type='multipart/x-mixed-replace; boundary=frame')
+
