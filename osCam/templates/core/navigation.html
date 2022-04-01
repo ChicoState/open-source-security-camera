@@ -1,15 +1,16 @@
 <nav class="navbar navbar-expand-md navbar-light " style="background-color: grey;">
     <a class="navbar-brand " href="/">Home </a>
       <ul class="navbar-nav mr-auto ">
+          {% if user.is_authenticated %}
+          <li>
+            <a class="nav-link" href="/logout/">Logout</a>
+          </li>
+          {% else %}
           <li>
             <a class="nav-link" href="/login/">Login  </a>
           </li>
           <li>
             <a class="nav-link" href="/join/">Join  </a>
-          </li>
-          {% if user.is_authenticated %}
-          <li>
-            <a class="nav-link" href="/logout/">Logout</a>
           </li>
           <li>
             <a class="nav-link" href="/send_email/">Send Email</a>
@@ -18,4 +19,5 @@
           <li class="nav-item">
             <a class="nav-link" href="/admin" target="_blank">Admin </a>
           </li>
-  </nav>
+</nav>
+
