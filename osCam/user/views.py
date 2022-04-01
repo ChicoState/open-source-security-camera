@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from user.forms import JoinForm
+from django.conf import settings
+from django.core.mail import send_mail
 import time
 
 # Create your views here.
@@ -38,5 +40,13 @@ def user_logout(request):
 def send_email(request):
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
-    html = "<html><body><b>Current Time Value:</b> %s</body></html>" % current_time
-    return HttpResponse(html)
+    #html = "<html><body><b>Current Time Value:</b> %s</body></html>" % current_time
+
+    # send an send_email
+    send_mail(subject='Open Source Security Camera Test Email',
+              message='Test message',
+              from_email=settings.EMAIL_HOST_USER,
+              recipient_list=[settings.RECIPIENT_ADDRESS]
+
+    return redirect("/")
+    #return HttpResponse(html)
