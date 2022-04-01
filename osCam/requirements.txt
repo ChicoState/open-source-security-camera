@@ -1,5 +1,9 @@
 asgiref==3.5.0
+backports.zoneinfo==0.2.1
 Django==4.0.3
 django-crispy-forms==1.14.0
+django-environ==0.8.1
+numpy==1.22.3
+opencv-python==4.5.5.64
 sqlparse==0.4.2
 typing_extensions==4.1.1
