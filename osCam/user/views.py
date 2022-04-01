@@ -40,13 +40,28 @@ def user_logout(request):
 def send_email(request):
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
-    #html = "<html><body><b>Current Time Value:</b> %s</body></html>" % current_time
+
+    file = open("./videos/tmp.txt","r")
+    numVideos = 0
+
+    # Reading from file
+    content = file.read()
+    contentList = content.split("\n")
+
+    for i in contentList:
+        if i:
+            numVideos += 1
+
+    subject = 'Home Security Camera Notifications'
+    message = 'Hello ' + str(request.user.username) + \
+                       ',\n\nMotion was detected ' + \
+                       str(numVideos) + ' times.'
 
     # send an send_email
-    send_mail(subject='Open Source Security Camera Test Email',
-              message='Test message',
+    send_mail(subject=subject,
+              message=message,
               from_email=settings.EMAIL_HOST_USER,
-              recipient_list=[settings.RECIPIENT_ADDRESS]
+              recipient_list=[settings.RECIPIENT_ADDRESS])
 
     return redirect("/")
     #return HttpResponse(html)
