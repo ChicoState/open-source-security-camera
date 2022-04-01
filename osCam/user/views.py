@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from user.forms import JoinForm
 from django.conf import settings
 from django.core.mail import send_mail
-from .tasks import test_func
 import time
 
 # Create your views here.
