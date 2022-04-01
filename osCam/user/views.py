@@ -38,26 +38,29 @@ def user_logout(request):
     return redirect("/login/")
 
 def send_email(request):
-    t = time.localtime()
-    current_time = time.strftime("%H:%M:%S", t)
 
+    # tmp.txt is the temporary file reading motion detection events (date, time, camera)
     file = open("./videos/tmp.txt","r")
     numVideos = 0
 
-    # Reading from file
+    subject = 'Home Security Camera Notifications'
+    videos = 'The following times were recorded:\n\n'
+
+    # Count the number of recorded instances from the tmp.txt file
     content = file.read()
     contentList = content.split("\n")
-
     for i in contentList:
         if i:
             numVideos += 1
+            videos = videos + str(i) + '\n'
 
-    subject = 'Home Security Camera Notifications'
+    # Formatted message for the email
     message = 'Hello ' + str(request.user.username) + \
                        ',\n\nMotion was detected ' + \
-                       str(numVideos) + ' times.'
+                       str(numVideos) + ' times.' + \
+                       videos
 
-    # send an send_email
+    # Send the email
     send_mail(subject=subject,
               message=message,
               from_email=settings.EMAIL_HOST_USER,
