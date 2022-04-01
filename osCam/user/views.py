@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from user.forms import JoinForm
 from django.conf import settings
 from django.core.mail import send_mail
+from .tasks import test_func
 import time
 
 # Create your views here.
@@ -37,6 +38,7 @@ def user_logout(request):
     # Return to homepage.
     return redirect("/login/")
 
+@login_required(login_url='/login/')
 def send_email(request):
 
     # tmp.txt is the temporary file reading motion detection events (date, time, camera)
@@ -67,4 +69,3 @@ def send_email(request):
               recipient_list=[settings.RECIPIENT_ADDRESS])
 
     return redirect("/")
-    #return HttpResponse(html)
