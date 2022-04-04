@@ -6,6 +6,7 @@ import json as Json
 # from core import models
 from userconfig.models import Network, Camera, RaspberryPi
 from django.contrib.auth.models import User
+from userconfig.forms import *
 # from userconfig.models import Network
 
 ################################
@@ -45,8 +46,8 @@ def configPage(request):
     #return JsonResponse({'response': 'SUCCESS', 'type':'GET', "Client-IP::LOOKUP":content, 'PAGE': page, 'data':response.get('response')}, safe=True)
 
     # if there are no cameras create a dummy camera
-    if page_data['cameras'].exists():
-        page_data['cameras'][0] = 'camera 1'
+    # if page_data['cameras'].exists():
+    #    page_data['cameras'][0] = 'camera 1'
 
     return render(request, 'user/config.html', page_data)
 
@@ -93,6 +94,16 @@ def addConf(request):
     # Network(request.get_host())
     #return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'Client IP Address': network_info['REMOTE_ADDR'], 'PAGE': page}, safe=True)
     page_data = {'cameras': Camera.objects.all(), 'raspberrypis': RaspberryPi.objects.all(), 'networks': Network.objects.all()}
+
+    if(request.method == 'POST'):
+        if("add" in request.POST):
+            add_form = CameraEntryForm(request.POST)
+            if(add_form.is_valid()):
+                recording = add_form.cleaned_data['recording']
+
+            # create camera object w the form data
+            # save camera object
+            Camera(user=this_user, recording=recording).save()
     return render(request, 'user/add_config.html', page_data)
 
 

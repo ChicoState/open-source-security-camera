@@ -27,7 +27,7 @@ class Camera(models.Model):
     raspberry_pi = models.ForeignKey( RaspberryPi , on_delete=models.CASCADE, null=True, blank=True)
     model_num = models.IntegerField(blank=True, null=True)
     model_name = models.CharField(max_length=40,blank=True, null=True)
-    camera_index = models.IntegerField(default=0)
+    camera_index = models.IntegerField(default=0, unique=True, editable=False)
     device_name = models.CharField(max_length=40, default='Camera')
     ip_address = models.CharField(max_length=40, default='10.0.0.94')
     port = models.IntegerField(default=80)
