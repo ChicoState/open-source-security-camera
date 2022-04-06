@@ -1,3 +1,4 @@
+from typing_extensions import Required
 from urllib import request
 from django.db import models
 from django.contrib.auth.models import User
@@ -30,7 +31,7 @@ class Camera(models.Model):
     ip_address = models.CharField(max_length=40, default='10.0.0.94')
     port = models.IntegerField(default=80)
     #
-    recording = models.BooleanField(default=False)
+    recording = models.BooleanField(default=False, blank=True)
     fps = models.IntegerField(default=15)
     invert = models.BooleanField(default=False)
     mirror = models.BooleanField(default=False)

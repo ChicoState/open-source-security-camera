@@ -102,16 +102,33 @@ def addConf(request):
         if("add" in request.POST):
             add_form = CameraEntryForm(request.POST)
             if(add_form.is_valid()):
-                recording = add_form.cleaned_data['recording']
+                device_name = add_form.cleaned_data['device_name'],
+                device_ip = add_form.cleaned_data['device_ip'],
+                port = add_form.cleaned_data['port'],
+                recording = add_form.cleaned_data['recording'],
+                fps = add_form.cleaned_data['fps'],
+                invert = add_form.cleaned_data['invert'],
+                mirror = add_form.cleaned_data['mirror'],
+                codec = add_form.cleaned_data['codec'],
 
             # create camera object w the form data
             # save camera object
-            Camera(user=this_user, recording=recording).save()
+            Camera(
+                user=this_user,
+                device_name=device_name,
+                device_ip=device_ip,
+                port=port,
+                recording=recording,
+                fps=fps,
+                invert=invert,
+                mirror=mirror,
+                codec=codec
+            ).save()
 
             return redirect('/')
     else:
         page_data = {
-            "form_data": CameraEntryForm()
+            "form_data": CameraEntryForm(),
         }
     return render(request, 'user/add_config.html', page_data)
 
