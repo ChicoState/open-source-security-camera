@@ -6,4 +6,3 @@ from django.contrib.auth.models import User
 # Using Django Built in User for Now, until we need profile
 
 # class UserProfile(User):
-

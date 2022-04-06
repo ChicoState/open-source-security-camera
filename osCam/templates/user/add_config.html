@@ -1,11 +1,29 @@
 <html>
     <head>
+        <meta charset="utf-8">
+        <title>Add Camera Configuration</title>
         {% load static %}
         {% include "core/bootstrap.html" %}
         <link rel="stylesheet" href="{% static 'core/dash.css' %}">
+
+        {% load crispy_forms_field %}
+        {% load crispy_forms_tags %}
     </head>
         <body>
             {% include "core/navigation.html" %}
+            <div class="Jumbotron"
+                style="color: rgba(15, 34, 75, 0.644); background: beige; margin-left: 30%; margin-right: 30%">
+                <h1 class="text-center">Add Camera Configuration</h1>
+                <div class='crispy_forms_field' style="margin-left: 10%; margin-right: 10%; font-size: 20pt;">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form_data | crispy}}
+                        <a href="/" class="btn btn-secondary">Cancel</a>
+                        <input type="submit" class="btn btn-primary" name="add" value="Add Config">
+                    </form>
+                </div>
+            </div>
+            
 
         </body>
 

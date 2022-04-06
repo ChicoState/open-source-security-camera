@@ -1,6 +1,6 @@
 from ipaddress import ip_address
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import json as Json
 
 # from core import models
@@ -49,6 +49,7 @@ def configPage(request):
     # if page_data['cameras'].exists():
     #    page_data['cameras'][0] = 'camera 1'
 
+
     return render(request, 'user/config.html', page_data)
 
 
@@ -95,6 +96,8 @@ def addConf(request):
     #return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'Client IP Address': network_info['REMOTE_ADDR'], 'PAGE': page}, safe=True)
     page_data = {'cameras': Camera.objects.all(), 'raspberrypis': RaspberryPi.objects.all(), 'networks': Network.objects.all()}
 
+    
+
     if(request.method == 'POST'):
         if("add" in request.POST):
             add_form = CameraEntryForm(request.POST)
@@ -104,6 +107,12 @@ def addConf(request):
             # create camera object w the form data
             # save camera object
             Camera(user=this_user, recording=recording).save()
+
+            return redirect('/')
+    else:
+        page_data = {
+            "form_data": CameraEntryForm()
+        }
     return render(request, 'user/add_config.html', page_data)
 
 
