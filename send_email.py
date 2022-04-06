@@ -47,13 +47,26 @@ def create_connection(db_file):
     :param db_file: database file
     :return: Connection object or None
     """
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-    except Error as e:
-        print(e)
+    sqliteConnection = None
 
-    return conn
+    try:
+        sqliteConnection = sqlite3.connect('SQLite_Python.db')
+        cursor = sqliteConnection.cursor()
+        print("Database created and Successfully Connected to SQLite")
+
+        sqlite_select_Query = "select sqlite_version();"
+        cursor.execute(sqlite_select_Query)
+        record = cursor.fetchall()
+        print("SQLite Database Version is: ", record)
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Error while connecting to sqlite", error)
+    finally:
+        if sqliteConnection:
+            sqliteConnection.close()
+            print("The SQLite connection is closed")
+    #return sqliteConnection
 
 
 def select_all_tasks(conn):
@@ -91,13 +104,11 @@ def main():
     database = r"osCam/db.sqlite3"
 
     send_email()
-
-    # create a database connection
-    #conn = create_connection(database)
+    conn = create_connection(database)
+    
     #with conn:
     #    print("1. Query task by priority:")
-    #    select_task_by_priority(conn, 1)
-
+    #    select_all_tasks(conn)
     #    print("2. Query all tasks")
     #    select_all_tasks(conn)
 
