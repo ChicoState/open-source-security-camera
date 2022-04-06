@@ -34,13 +34,13 @@ class CameraEntryForm( ModelForm ):
 #         fields = ('recording', 'fps', 'invert', 'mirror', 'codec', 'camera_index', 'device_name', 'ip_address', 'port', 'username', 'password')
 
 
-class RaspberryPiEntryForm( ModelForm ):
-    model_num = forms.CharField(label='model number',
-        widget=forms.TextInput(attrs={'size':'80', 'class':"form-control"})
-        )
-    model_name = models.CharField(label='model name',
-        widget=forms.TextInput(attrs={'size':'80', 'class':"form-control"})
-        )
-    class Meta:
-        model = RaspberryPi 
-        fields = ('model_num', 'model_name')
+# class RaspberryPiEntryForm( ModelForm ):
+#     model_num = forms.CharField(label='model number',
+#         widget=forms.TextInput(attrs={'size':'80', 'class':"form-control"})
+#         )
+#     model_name = models.CharField(label='model name',
+#         widget=forms.TextInput(attrs={'size':'80', 'class':"form-control"})
+#         )
+#     class Meta:
+#         model = RaspberryPi 
+#         fields = ('model_num', 'model_name')

@@ -1,11 +1,12 @@
 from ipaddress import ip_address
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import json as Json
 
 # from core import models
 from userconfig.models import Network, Camera, RaspberryPi
 from django.contrib.auth.models import User
+from .forms import CameraEntryForm
 # from userconfig.models import Network
 
 ################################
@@ -47,6 +48,7 @@ def configPage(request):
     # if there are no cameras create a dummy camera
     if page_data['cameras'].exists():
         page_data['cameras'][0] = 'camera 1'
+
 
     return render(request, 'user/config.html', page_data)
 
@@ -91,7 +93,27 @@ def addConf(request):
                 Network(user=this_user,home_ip_address=network_info['REMOTE_ADDR'], camera_ip_address=network_info['REMOTE_ADDR']).save() 
             # print(key, meta[key] )    # print this to see all Network Information supplied by Django and network packet. If we want more we need send out ARP or get from user directly. 
     # Network(request.get_host())
-    return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'Client IP Address': network_info['REMOTE_ADDR'], 'PAGE': page}, safe=True)
+    #return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'Client IP Address': network_info['REMOTE_ADDR'], 'PAGE': page}, safe=True)
+    page_data = {'cameras': Camera.objects.all(), 'raspberrypis': RaspberryPi.objects.all(), 'networks': Network.objects.all()}
+
+    
+
+    if(request.method == 'POST'):
+        if("add" in request.POST):
+            add_form = CameraEntryForm(request.POST)
+            if(add_form.is_valid()):
+                recording = add_form.cleaned_data['recording']
+
+            # create camera object w the form data
+            # save camera object
+            Camera(user=this_user, recording=recording).save()
+
+            return redirect('/')
+    else:
+        page_data = {
+            "form_data": CameraEntryForm()
+        }
+    return render(request, 'user/add_config.html', page_data)
 
 
 def editConf(request, id):
