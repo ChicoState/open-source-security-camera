@@ -1,18 +1,23 @@
-<nav class="navbar navbar-expand-md navbar-light " style="background-color: grey;">
+<head>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'core/navigation.css' %}">
+</head>
+<nav class="navbar navbar-expand-md navbar-light navbar" style="background-color: #D5D5D5">
     <a class="navbar-brand " href="/">Home </a> 
       <ul class="navbar-nav mr-auto ">
+          {% if user.is_authenticated %}
+          <li>
+            <a class="nav-link" href="/logout/">Logout</a>
+          </li>
+          {% else %}
           <li>
             <a class="nav-link" href="/login/">Login  </a>
           </li>
           <li>
             <a class="nav-link" href="/join/">Join  </a>
           </li>
-          {% if user.is_authenticated %}
-          <li>
-            <a class="nav-link" href="/logout/">Logout</a>
-          </li>
           {% endif %}
           <li class="nav-item">
-            <a class="nav-link" href="/admin" target="_blank">Admin </a>
+            <a class="nav-link" href="/admin" target="_blank">Admin</button>
           </li>
-  </nav>  
+  </nav>

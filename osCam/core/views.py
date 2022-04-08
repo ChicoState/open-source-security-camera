@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http.response import StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
 
-# Open CV Motion Detect And Video Stream. Need to refactor and put this in app 'Streams' that already has architecture set .
+#Open CV Motion Detect And Video Stream. Need to refactor and put this in app 'Streams' that already has architecture set .
 import cv2 as cv
 from cv2 import imshow
 from cv2 import VideoWriter
