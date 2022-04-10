@@ -4,7 +4,7 @@
 ## Team Members
 
 - [Meher Lippmann](https://www.github.com/melippmann)
-- [Kevin Douglass](https://www.github.com/kevdouglass) 
+- [Kevin Douglass](https://www.github.com/kevdouglass)
 - [Cameron Watts](https://www.github.com/Zalymo)
 - [Avery Pound](https://www.github.com/DJ-IRL)
 - [Connor Ganaway](https://www.github.com/ConnorGanaway)
@@ -36,7 +36,7 @@ From Docker homepage:
 `docker build -t <your_name>/<your_machine>:osCam_latest .`
 
 *note: everything after the `:` should be consistent across all our builds*
-ex: 
+ex:
 
 `docker build -t ave/local:osCam_latest .`
 
@@ -68,7 +68,25 @@ remove *a single* docker image <br>
 remove *all* containers and images <br>
 `docker system prune -a` <br>
 
---- 
+### Sending Emails <br>
+Create the file ".env" in the same directory as "send_email.py" and format <br>
+the file as following: <br>
+```
+EMAIL_HOST=smtp.gmail.com
+EMAIL_HOST_USER=your_email_address@gmail.com
+EMAIL_HOST_PASSWORD=secret_key
+RECIPIENT_ADDRESS=your_email_address@gmail.com
+```
+
+To generate the secret key follow these steps:
+
+1. [Enable Less Secure Apps with your gmail account](https://myaccount.google.com/lesssecureapps)
+2. Make sure two-factor authentication is enabled.
+3. To get the secret key, you can do this by going to the [Security section](https://myaccount.google.com/security) of your google account, scrolling down to the Signing in to Google section, and clicking on App passwords
+4. Click select app and choose a custom name for the app password such as "Security Camera Notifications". Then click generate.
+5. A new window will show a 16 character password. Copy this and replace it where "secret_key" is.
+6. Remove any spaces shown in the generate app password. (Instead of "abcd efgh ijkl mnop" use "abcdefghijklmnop")
+
+---
 ### Database Design:
 [ER Diagram.pdf](https://github.com/ChicoState/open-source-security-camera/files/8346569/ER.Diagram.pdf)
-
