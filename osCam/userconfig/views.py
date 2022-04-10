@@ -3,6 +3,9 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 import json as Json
 
+from numpy import record
+from userconfig.models import *
+
 # from core import models
 from userconfig.models import Network, Camera, RaspberryPi
 from django.contrib.auth.models import User
@@ -68,89 +71,97 @@ def configPage(request):
 # CONTENT_TYPE text/plain
 # HTTP_HOST 127.0.0.1:8000
 
-def addConf(request):
+def settings(request):
     '''
         View Handles Http response To [ADD] a new Configuration.
             Configuration Could be of Type {RaspberryPi, Camera, Network}
         
         @param  request: Request 
     '''
-    page = "Add Config"
 
-    network_info={"SERVER_NAME": None, "GATEWAY_INTERFACE":None,"SERVER_PORT":None,
-    "REMOTE_HOST":None,"CONTENT_LENGTH":None,"SERVER_PROTOCOL":None,
-    "SERVER_SOFTWARE":None,"REQUEST_METHOD":None,"PATH_INFO":None,
-    "QUERY_STRING":None,"REMOTE_ADDR":None,"CONTENT_TYPE":None,"HTTP_HOST":None}
-     # get the info from httpRequest parameter so we can later use user_id as 'accessor' for our database records
+     # if there are no cameras create a dummy camera
+    if (Camera.objects.count() <= 1):
+        Camera.objects.create(
+            model_num = '04',
+            model_name = 'Raspberry Pi Camera',
+            camera_index = '0',
+            device_name = 'rpi_camera 01',
+            ip_address = '10.0.0.94',
+            port = '8000',
+        )
+
+    # if there are no views create a dummy view
+    if (camera_view.objects.count() <= 1):
+        camera_view.objects.create(
+            show_motion_boxes = 'True',
+            show_contours = 'False',
+            show_text = 'True',
+            text = 'Text overlayed on the feed',
+            contrast = '50',
+            brightness = '50',
+            recording = 'True',
+            fps = '30',
+            invert = 'False',
+            mirror = 'False',
+        )
+
+    # get the info from httpRequest parameter so we can later use user_id as 'accessor' for our database records
     this_user = User.objects.get(id=request.user.id)
-    if network_info['REMOTE_ADDR'] is None:     # should query the Network Model to check if Network is Already saved for the user so we can auto-populate in corresponding Form
-        meta = request.META
-        for key in meta.keys():
-            if key == 'SERVER_NAME' or key == 'SERVER_PORT' \
-            or key=='REMOTE_ADDR' or key=='REMOTE_ADDR' \
-            or key=='HTTP_HOST':
-                network_info[key] = meta[key]
-                Network(user=this_user,home_ip_address=network_info['REMOTE_ADDR'], camera_ip_address=network_info['REMOTE_ADDR']).save() 
-            # print(key, meta[key] )    # print this to see all Network Information supplied by Django and network packet. If we want more we need send out ARP or get from user directly. 
-    # Network(request.get_host())
-    #return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'Client IP Address': network_info['REMOTE_ADDR'], 'PAGE': page}, safe=True)
-    page_data = {'cameras': Camera.objects.all(), 'raspberrypis': RaspberryPi.objects.all(), 'networks': Network.objects.all()}
-
     
+    page_data = {'cameras': Camera.objects.all(), 'views': camera_view.objects.all(),}
 
     if(request.method == 'POST'):
-        if("add" in request.POST):
+        if("add_camera_config" in request.POST):
             add_form = CameraEntryForm(request.POST)
             if(add_form.is_valid()):
-                device_name = add_form.cleaned_data['device_name'],
-                device_ip = add_form.cleaned_data['device_ip'],
-                port = add_form.cleaned_data['port'],
-                recording = add_form.cleaned_data['recording'],
-                fps = add_form.cleaned_data['fps'],
-                invert = add_form.cleaned_data['invert'],
-                mirror = add_form.cleaned_data['mirror'],
-                codec = add_form.cleaned_data['codec'],
+                device_name = add_form.cleaned_data['device_name']
+                ip_address = add_form.cleaned_data['ip_address']
+                port = add_form.cleaned_data['port']
+                #recording = add_form.cleaned_data['recording']
+                #fps = add_form.cleaned_data['fps']
+                #invert = add_form.cleaned_data['invert']
+                #mirror = add_form.cleaned_data['mirror']
+                #codec = add_form.cleaned_data['codec']  
 
-            # create camera object w the form data
-            # save camera object
-            Camera(
-                user=this_user,
-                device_name=device_name,
-                device_ip=device_ip,
-                port=port,
-                recording=recording,
-                fps=fps,
-                invert=invert,
-                mirror=mirror,
-                codec=codec
-            ).save()
+                # create camera object w the form data
+                # save camera object
+                Camera(
+                    user=this_user,
+                    device_name=device_name,
+                    ip_address=ip_address,
+                    port=port,
+                ).save()
 
-            return redirect('/')
+            return redirect('/config/')
+
+        elif("add_view_config" in request.POST):
+            add_form = ViewForm(request.POST)
+            if(add_form.is_valid()):
+                show_motion_boxes = add_form.cleaned_data['show_motion_boxes']
+                show_contours = add_form.cleaned_data['show_contours']
+                show_text = add_form.cleaned_data['show_text']
+                text = add_form.cleaned_data['text']
+                contrast = add_form.cleaned_data['contrast']
+                brightness = add_form.cleaned_data['brightness']
+                recording = add_form.cleaned_data['recording']
+                fps = add_form.cleaned_data['fps']
+                invert = add_form.cleaned_data['invert']
+                mirror = add_form.cleaned_data['mirror']
+
+                camera_view.objects.create(
+                    show_motion_boxes=show_motion_boxes,
+                    show_contours=show_contours,
+                    show_text=show_text,
+                    text=text,
+                    contrast=contrast,
+                    brightness=brightness,
+                    recording=recording,
+                    fps=fps,
+                    invert=invert,
+                    mirror=mirror,
+                )
     else:
         page_data = {
-            "form_data": CameraEntryForm(),
+            "camera_form_data": CameraEntryForm(), "view_form_data": ViewForm() 
         }
     return render(request, 'user/add_config.html', page_data)
-
-
-def editConf(request, id):
-    '''
-        View Handles response To [EDIT] a Configuration of Type::{RaspberryPi, Camera, Network}
-        
-        @param  request: Request 
-                id: Integer
-    '''
-    page = "Edit Config"
-    return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'PAGE': page}, safe=True)
-
-
-
-
-def removeConf(request, id):
-    '''
-        View Handles response To [REMOVE] a Configuration of Type::{RaspberryPi, Camera, Network}
-        @param  request: Request 
-                id: Integer
-    '''
-    page = "Remove Config"
-    return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'PAGE:': page}, safe=True)
