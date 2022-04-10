@@ -6,6 +6,8 @@ from django.utils import timezone
 from django.utils.translation import activate
 
 class Recording(models.Model):
-    recorded_on = models.DateTimeField(auto_now_add=True)
-    recording_length = models.IntegerField(blank=True, null=True)
-    camera_id = models.ForeignKey("userconfig.Camera", on_delete=models.CASCADE, blank=True, null=True)
+    #recordedOn = models.DateTimeField(auto_now_add=True)
+    recordingLength = models.IntegerField(blank=True, null=True)
+    fileName = models.CharField(max_length=40, blank=True, null=True)
+    filePath = models.CharField(max_length=40, blank=True, null=True)
+    cameraId = models.ForeignKey("userconfig.Camera", on_delete=models.CASCADE, blank=True, null=True)

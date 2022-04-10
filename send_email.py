@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import os
+import sys
 import environ
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -63,17 +64,22 @@ def create_connection(db_file):
 
     return sqliteConnection
 
+def insert_recording(connection, file_name, file_path, length, camera_id_id):
 
-def select_all_times(connection):
+    querey = ''' INSERT INTO core_recording(recordingLength, fileName, filePath, cameraId_id)
+                VALUES(?,?,?,?) '''
+
+    new_recording = (length, file_name, file_path, camera_id_id)
+    cur = connection.cursor()
+    cur.execute(querey, new_recording)
+    connection.commit()
+
+
+def select_all_times(connection, file_name):
     cur = connection.cursor()
 
-    cur.execute('SELECT recorded_on FROM core_recording')
-
-    #Additional SQlite query statements to choose which column to format the email with
-    #cur.execute('SELECT * FROM core_recording')
-    #cur.execute('SELECT id FROM core_recording')
-    #cur.execute('SELECT recording_length FROM core_recording')
-    #cur.execute('SELECT camera_id_id FROM core_recording')
+    #Additional SQLite query statements to choose which column to format the email with
+    cur.execute('SELECT * FROM core_recording ORDER BY ID DESC LIMIT 1')
     #cur.execute('SELECT name from sqlite_master where type= "table"')
 
     rows = cur.fetchall()
@@ -84,12 +90,18 @@ def select_all_times(connection):
 
 
 def main():
+
+    file_name = sys.argv[1]
+    file_path = sys.argv[2]
+    length = sys.argv[3]
+    camera_id_id = sys.argv[4]
+
     database = r"osCam/db.sqlite3"
     connection = create_connection(database)
     
     with connection:
-        print("Listing All Times:")
-        times = select_all_times(connection)
+        insert_recording(connection, file_name, file_path, length, camera_id_id)
+        times = select_all_times(connection, file_name)
         send_email(times)
 
     connection.close()
