@@ -1,24 +1,26 @@
+#!/usr/bin/python
 import cv2 as cv
 from cv2 import imshow
 from cv2 import VideoWriter
 from datetime import datetime
 import time
+import os
 class MotionDetect():
     #recoding setup
     def setRecording(fileName, frame):
         #type of codec (os dependent, currently working for ubunto 20.4)
         codec = cv.VideoWriter_fourcc(*'XVID')
         #where to save files
-        filePath = "/static/videos/{}.avi".format(fileName)
+        filePath = "osCam/videos/{}.avi".format(fileName)
         #set frame rate for recording
         fps = 15
         #read from frame
         #isTrue, frame = capture.read()
         width, height, channels = frame.shape
         #return output object
-        return cv.VideoWriter(filePath, codec, fps, (height, width))
+        return fileName, filePath, cv.VideoWriter(filePath, codec, fps, (height, width))
 
-    #works for images, recordings, live video 
+    #works for images, recordings, live video
     def rescaleFrame(frame, scale):
         #scale the width and height, (cast to int)
         width = int(frame.shape[1] * scale)
@@ -66,7 +68,7 @@ class MotionDetect():
         date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
         #get first frame
         isTrue, frame = capture.read()
-        out = MotionDetect.setRecording(date_time, frame)
+        fileName, filePath, out = MotionDetect.setRecording(date_time, frame)
         #number of frames to record per video
         numframes = 0
         #infinate loop and capture video until 'd' is pressed
@@ -100,7 +102,7 @@ class MotionDetect():
                 status_color=(0,255,0)
             cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
             #current date/time
-            date_time = datetime.now() 
+            date_time = datetime.now()
             cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
             #display the image
             cv.imshow('Video', frame)
@@ -113,6 +115,9 @@ class MotionDetect():
             if numframes > 100:
                 numframes = 0
                 out.release()
+                camID = 1
+                #pass database info to subProcess
+                os.system('python send_email.py {} {} {} {}'.format(fileName, filePath, numframes, camID))
                 date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
                 out= MotionDetect.setRecording(date_time, frame)
             #check for interupt

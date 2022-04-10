@@ -8,12 +8,10 @@ class Network(models.Model):
     home_ip_address = models.CharField(max_length=32, null=True, blank=True)
     camera_ip_address = models.CharField(max_length=32, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    # network = models.ForeignKey(RaspberryPi, on_delete=models.DO_NOTHING, null=True, blank=True)
 
 class RaspberryPi(models.Model):
     # User can have Many RaspberryPie (1:Many)
     user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
-    #network can have many RaspberryPie (1:Many) (we could do manyToMany but assuming we're coding MVP model)
     network = models.ForeignKey(Network, on_delete=models.DO_NOTHING, null=True, blank=True)
     model_num = models.IntegerField(blank=True, null=True)
     model_name = models.CharField(max_length=40,blank=True, null=True)
