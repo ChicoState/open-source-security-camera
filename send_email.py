@@ -6,12 +6,14 @@ from email.mime.text import MIMEText
 import sqlite3
 from sqlite3 import Error
 
-def send_email():
+def send_email(times):
     mail_content = "Hello,\n" + \
-    "This is a simple mail. There is only text, no attachments are there The mail is sent using Python SMTP library.\n" + \
-    "Thank You"
+    "This is a test email sent using Python SMTP library.\n"
 
-    # Email Notification Settings
+    for entry in times:
+        mail_content = mail_content + str(entry) + "\n"
+
+    # Read in the private email settings
     env = environ.Env()
     environ.Env.read_env()
 
@@ -25,7 +27,7 @@ def send_email():
     message = MIMEMultipart()
     message['From'] = EMAIL_HOST_USER
     message['To'] = RECIPIENT_ADDRESS
-    message['Subject'] = 'A test mail sent by Python. It has an attachment.'
+    message['Subject'] = 'Security Camera Notifications'
 
     #The body and the attachments for the mail
     message.attach(MIMEText(mail_content, 'plain'))
@@ -33,7 +35,7 @@ def send_email():
     #Create SMTP session, login, and then send email
     session = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
 
-    #enable security
+    #Enable Security and send the email
     session.starttls()
     session.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
     text = message.as_string()
@@ -42,15 +44,10 @@ def send_email():
     print('Mail Sent')
 
 def create_connection(db_file):
-    """ create a database connection to the SQLite database
-        specified by the db_file
-    :param db_file: database file
-    :return: Connection object or None
-    """
     sqliteConnection = None
 
     try:
-        sqliteConnection = sqlite3.connect('SQLite_Python.db')
+        sqliteConnection = sqlite3.connect(db_file)
         cursor = sqliteConnection.cursor()
         print("Database created and Successfully Connected to SQLite")
 
@@ -62,55 +59,39 @@ def create_connection(db_file):
 
     except sqlite3.Error as error:
         print("Error while connecting to sqlite", error)
-    finally:
-        if sqliteConnection:
-            sqliteConnection.close()
-            print("The SQLite connection is closed")
-    #return sqliteConnection
+
+    return sqliteConnection
 
 
 def select_all_tasks(conn):
-    """
-    Query all rows in the tasks table
-    :param conn: the Connection object
-    :return:
-    """
     cur = conn.cursor()
-    cur.execute("SELECT * FROM Camera")
+
+    cur.execute('SELECT recorded_on FROM core_recording')
+
+    # Additional SQlite query statements to choose which column to format the email with
+    #cur.execute('SELECT * FROM core_recording')
+    #cur.execute('SELECT id FROM core_recording')
+    #cur.execute('SELECT recording_length FROM core_recording')
+    #cur.execute('SELECT camera_id_id FROM core_recording')
+    #cur.execute('SELECT name from sqlite_master where type= "table"')
 
     rows = cur.fetchall()
-
     for row in rows:
         print(row)
 
-
-def select_task_by_priority(conn, priority):
-    """
-    Query tasks by priority
-    :param conn: the Connection object
-    :param priority:
-    :return:
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM Camera WHERE priority=?", (priority,))
-
-    rows = cur.fetchall()
-
-    for row in rows:
-        print(row)
+    return rows
 
 
 def main():
     database = r"osCam/db.sqlite3"
-
-    send_email()
     conn = create_connection(database)
-    
-    #with conn:
-    #    print("1. Query task by priority:")
-    #    select_all_tasks(conn)
-    #    print("2. Query all tasks")
-    #    select_all_tasks(conn)
+
+    with conn:
+        print("Listing All Times:")
+        times = select_all_tasks(conn)
+        send_email(times)
+
+    conn.close()
 
 
 if __name__ == '__main__':
