@@ -33,7 +33,7 @@ class CameraEntryForm( ModelForm ):
         widget=forms.TextInput(attrs={'placeholder': '10.0.0.94', 'class':"form-control"}))
     port = forms.IntegerField(
         widget=forms.TextInput(attrs={'placeholder': '80', 'class':"form-control"}))
-    
+
     class Meta:
         model = Camera 
         fields = (
@@ -43,6 +43,13 @@ class CameraEntryForm( ModelForm ):
             )
 
 class ViewForm( ModelForm ):
+    show_motion_boxes = forms.BooleanField(required=False)
+    show_contours = forms.BooleanField(required=False)
+    show_text = forms.BooleanField(required=False)
+    text = forms.CharField(max_length=255, required=False)
+    contrast = forms.IntegerField(required=False)
+    brightness = forms.IntegerField(required=False)
+
     recording = forms.BooleanField(
         label='enable recording',
         widget=forms.CheckboxInput(),
@@ -63,12 +70,17 @@ class ViewForm( ModelForm ):
     class Meta:
         model = camera_view
         fields = (
+            'show_motion_boxes',
+            'show_contours',
+            'show_text',
+            'text',
+            'contrast',
+            'brightness',
             'recording',
             'fps',
             'invert',
             'mirror',
             'codec',)
-
 
 class StorageForm( ModelForm ):
     record_to_device = forms.BooleanField(required=False, label='record to device',)

@@ -10,7 +10,6 @@ class Network(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     # network = models.ForeignKey(RaspberryPi, on_delete=models.DO_NOTHING, null=True, blank=True)
 
-
 class RaspberryPi(models.Model):
     # User can have Many RaspberryPie (1:Many)
     user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
@@ -20,7 +19,6 @@ class RaspberryPi(models.Model):
     model_name = models.CharField(max_length=40,blank=True, null=True)
     username = models.CharField(max_length=40, default='admin')
     password = models.CharField(max_length=40, default='admin')
-
 
 class Camera(models.Model):
     # Rasberry Pi can have Many Camera (1:Many)
@@ -33,19 +31,17 @@ class Camera(models.Model):
     ip_address = models.CharField(max_length=40, default='10.0.0.94')
     port = models.IntegerField(default=80)
 
-
 class camera_view(models.Model):
     show_motion_boxes = models.BooleanField(default=False)
     show_contours = models.BooleanField(default=False)
     show_text = models.BooleanField(default=False)
     text = models.CharField(max_length=255, default='Cam Name :: Date :: Time')
-    contrast = models.IntegerField(default=0)
-    brightness = models.IntegerField(default=0)
+    contrast = models.IntegerField(default=0, blank=True, null=True)
+    brightness = models.IntegerField(default=0, blank=True, null=True)
     recording = models.BooleanField(default=False, blank=True, null=True)
     fps = models.IntegerField(default=15)
     invert = models.BooleanField(default=False)
     mirror = models.BooleanField(default=False)
-
 
 class Storage(models.Model):
     record_to_device = models.BooleanField(default=False)
