@@ -63,12 +63,12 @@ def create_connection(db_file):
     return sqliteConnection
 
 
-def select_all_tasks(conn):
-    cur = conn.cursor()
+def select_all_times(connection):
+    cur = connection.cursor()
 
     cur.execute('SELECT recorded_on FROM core_recording')
 
-    # Additional SQlite query statements to choose which column to format the email with
+    #Additional SQlite query statements to choose which column to format the email with
     #cur.execute('SELECT * FROM core_recording')
     #cur.execute('SELECT id FROM core_recording')
     #cur.execute('SELECT recording_length FROM core_recording')
@@ -84,14 +84,14 @@ def select_all_tasks(conn):
 
 def main():
     database = r"osCam/db.sqlite3"
-    conn = create_connection(database)
+    connection = create_connection(database)
 
-    with conn:
+    with connection:
         print("Listing All Times:")
-        times = select_all_tasks(conn)
+        times = select_all_times(connection)
         send_email(times)
 
-    conn.close()
+    connection.close()
 
 
 if __name__ == '__main__':
