@@ -37,5 +37,7 @@ jobs:
       run: |
         # check cyclomatic complexity of individual file
         radon cc motiondetect.py -a -na
+    - name: Check Complexity with Xenon
+      run: |
         # check cyclomatic complexity of all files in path . (min is 'B')
         xenon -b B -m B -a B .
