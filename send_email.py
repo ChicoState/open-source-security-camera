@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import environ
 import smtplib
@@ -85,7 +86,7 @@ def select_all_times(connection):
 def main():
     database = r"osCam/db.sqlite3"
     connection = create_connection(database)
-
+    
     with connection:
         print("Listing All Times:")
         times = select_all_times(connection)
