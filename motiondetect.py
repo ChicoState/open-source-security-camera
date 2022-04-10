@@ -20,7 +20,7 @@ class MotionDetect():
         #return output object
         return fileName, filePath, cv.VideoWriter(filePath, codec, fps, (height, width))
 
-    #works for images, recordings, live video 
+    #works for images, recordings, live video
     def rescaleFrame(frame, scale):
         #scale the width and height, (cast to int)
         width = int(frame.shape[1] * scale)
@@ -102,7 +102,7 @@ class MotionDetect():
                 status_color=(0,255,0)
             cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
             #current date/time
-            date_time = datetime.now() 
+            date_time = datetime.now()
             cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
             #display the image
             cv.imshow('Video', frame)
@@ -118,7 +118,6 @@ class MotionDetect():
                 camID = 1
                 #pass database info to subProcess
                 os.system('python send_email.py {} {} {} {}'.format(fileName, filePath, numframes, camID))
-                os.system('python send_email.py')
                 date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
                 out= MotionDetect.setRecording(date_time, frame)
             #check for interupt
