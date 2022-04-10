@@ -26,11 +26,7 @@ class Camera(models.Model):
     raspberry_pi = models.ForeignKey( RaspberryPi , on_delete=models.CASCADE, null=True, blank=True)
     model_num = models.IntegerField(blank=True, null=True)
     model_name = models.CharField(max_length=40,blank=True, null=True)
-<<<<<<< HEAD
-    camera_index = models.IntegerField(default=0)
-=======
     camera_index = models.IntegerField(default=0, unique=False, editable=False)
->>>>>>> d18ffbc (Enhanced Camera view/feed forms. Changed all the config pages to just one Settings page.)
     device_name = models.CharField(max_length=40, default='Camera')
     ip_address = models.CharField(max_length=40, default='10.0.0.94')
     port = models.IntegerField(default=80)
