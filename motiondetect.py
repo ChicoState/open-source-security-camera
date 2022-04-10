@@ -6,6 +6,17 @@ from datetime import datetime
 import time
 import os
 class MotionDetect():
+    def __init__(self):
+        #usb cam for testing, change for pi
+        self.video = cv.VideoCapture(0)
+        self.codec = cv.VideoWriter_fourcc(*'XVID')
+        #self.filePath = "videos/{}.avi".format(datetime.now().strftime("%Y_%m_%d, %H:%M:%S"))
+        self.avg = None
+        self.out = None
+        self.numframes = 0
+        self.record = False
+        self.rotate = False
+        self.sendEmailNotification = True
     #recoding setup
     def setRecording(fileName, frame):
         #type of codec (os dependent, currently working for ubunto 20.4)
@@ -117,8 +128,9 @@ class MotionDetect():
                 out.release()
                 camID = 1
                 #pass database info to subProcess
-                os.system('python send_email.py {} {} {} {}'.format(fileName, filePath, numframes, camID))
-                os.system('python send_email.py')
+                if self.sendEmailNotification:
+                    os.system('python send_email.py {} {} {} {}'.format(fileName, filePath, numframes, camID))
+                # os.system('python send_email.py')
                 date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
                 out= MotionDetect.setRecording(date_time, frame)
             #check for interupt
