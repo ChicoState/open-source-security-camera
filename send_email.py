@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import sys
 import environ
@@ -79,7 +80,6 @@ def insert_recording(connection, file_name, file_path, length, camera_id_id):
 
     querey = ''' INSERT INTO core_recording(recordingLength, fileName, filePath, cameraId_id)
                 VALUES(?,?,?,?) '''
-
     new_recording = (length, file_name, file_path, camera_id_id)
     cur = connection.cursor()
     cur.execute(querey, new_recording)
@@ -109,7 +109,7 @@ def main():
 
     database = r"osCam/db.sqlite3"
     connection = create_connection(database)
-
+    
     with connection:
         insert_recording(connection, file_name, file_path, length, camera_id_id)
         times = select_all_times(connection, file_name)
