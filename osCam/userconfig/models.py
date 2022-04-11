@@ -5,34 +5,36 @@ from django.contrib.auth.models import User
 
 
 class Network(models.Model):
-    home_ip_address = models.CharField(max_length=32, null=True, blank=True)
-    camera_ip_address = models.CharField(max_length=32, null=True, blank=True)
+    homeIpAddress = models.CharField(max_length=32, null=True, blank=True)
+    cameraIpAddress = models.CharField(max_length=32, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    # network = models.ForeignKey(RaspberryPi, on_delete=models.DO_NOTHING, null=True, blank=True)
 
 class RaspberryPi(models.Model):
     # User can have Many RaspberryPie (1:Many)
     user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
+    #network can have many RaspberryPie (1:Many) (we could do manyToMany but assuming we're coding MVP model)
     network = models.ForeignKey(Network, on_delete=models.DO_NOTHING, null=True, blank=True)
-    model_num = models.IntegerField(blank=True, null=True)
-    model_name = models.CharField(max_length=40,blank=True, null=True)
+    modelNum = models.IntegerField(blank=True, null=True)
+    modelName = models.CharField(max_length=40,blank=True, null=True)
     username = models.CharField(max_length=40, default='admin')
     password = models.CharField(max_length=40, default='admin')
 
 class Camera(models.Model):
     # Rasberry Pi can have Many Camera (1:Many)
     user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
-    raspberry_pi = models.ForeignKey( RaspberryPi , on_delete=models.CASCADE, null=True, blank=True)
-    model_num = models.IntegerField(blank=True, null=True)
-    model_name = models.CharField(max_length=40,blank=True, null=True)
-    camera_index = models.IntegerField(default=0, unique=False, editable=False)
-    device_name = models.CharField(max_length=40, default='Camera')
-    ip_address = models.CharField(max_length=40, default='10.0.0.94')
+    raspberryPi = models.ForeignKey( RaspberryPi , on_delete=models.CASCADE, null=True, blank=True)
+    modelNum = models.IntegerField(blank=True, null=True)
+    modelName = models.CharField(max_length=40,blank=True, null=True)
+    cameraIndex = models.IntegerField(default=0, unique=False, editable=False)
+    deviceName = models.CharField(max_length=40, default='Camera')
+    ipAddress = models.CharField(max_length=40, default='10.0.0.94')
     port = models.IntegerField(default=80)
 
-class camera_view(models.Model):
-    show_motion_boxes = models.BooleanField(default=False)
-    show_contours = models.BooleanField(default=False)
-    show_text = models.BooleanField(default=False)
+class cameraView(models.Model):
+    showMotionBoxes = models.BooleanField(default=False)
+    showContours = models.BooleanField(default=False)
+    showText = models.BooleanField(default=False)
     text = models.CharField(max_length=255, default='Cam Name :: Date :: Time')
     contrast = models.IntegerField(default=0, blank=True, null=True)
     brightness = models.IntegerField(default=0, blank=True, null=True)
@@ -42,11 +44,11 @@ class camera_view(models.Model):
     mirror = models.BooleanField(default=False)
 
 class Storage(models.Model):
-    record_to_device = models.BooleanField(default=False)
-    record_to_cloud = models.BooleanField(default=False)
-    file_path = models.CharField(max_length=255, default='/home/pi/Videos')
-    max_space = models.IntegerField(default=0)
-    time_to_live = models.IntegerField(default=0)
+    recordToDevice = models.BooleanField(default=False)
+    recordToCloud = models.BooleanField(default=False)
+    filePath = models.CharField(max_length=255, default='/home/pi/Videos')
+    maxSpace = models.IntegerField(default=0)
+    timeToLive = models.IntegerField(default=0)
     archive = models.BooleanField(default=False)
-    length_of_recordings = models.IntegerField(default=0)
+    lengthOfRecordings = models.IntegerField(default=0)
     codec = models.CharField(max_length=40, default='h264') 
