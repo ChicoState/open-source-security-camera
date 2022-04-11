@@ -2,14 +2,16 @@ import os
 import sys
 import environ
 import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 import sqlite3
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
+from email.mime.text import MIMEText
 from sqlite3 import Error
 
-def send_email(times):
-    mail_content = "Hello,\n" + \
-    "This is a test email sent using Python SMTP library.\n"
+def send_email(times, video_file, file_name):
+    mail_content = "Hello,\n\n" + \
+    "The following entry was created in the database:.\n"
 
     for entry in times:
         mail_content = mail_content + str(entry) + "\n"
@@ -32,6 +34,16 @@ def send_email(times):
 
     #The body and the attachments for the mail
     message.attach(MIMEText(mail_content, 'plain'))
+
+    attach_file = open(video_file, 'rb') # Open the file as binary mode
+    payload = MIMEBase('application', 'octate-stream')
+    payload.set_payload((attach_file).read())
+    attach_file.close()
+
+    #add payload header with filename
+    encoders.encode_base64(payload) #encode the attachment
+    payload.add_header("Content-Disposition", "attachment", filename=file_name)
+    message.attach(payload)
 
     #Create SMTP session, login, and then send email
     session = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
@@ -101,7 +113,7 @@ def main():
     with connection:
         insert_recording(connection, file_name, file_path, length, camera_id_id)
         times = select_all_times(connection, file_name)
-        send_email(times)
+        send_email(times, file_path, file_name)
 
     connection.close()
 
