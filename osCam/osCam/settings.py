@@ -134,3 +134,6 @@ STATICFILES_DIRS = [STATIC_DIR]
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
+
+# Automatic Primary Key field
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
