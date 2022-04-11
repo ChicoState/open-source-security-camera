@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import os
-def GetPath(): 
+
+
+def GetPath():
     path = []
     cur_path =''
 
@@ -29,4 +31,6 @@ def GetPath():
         #     print("cur path is: .")
         #     print(os.listdir('.'))
     return path
+
+
 print(GetPath())
