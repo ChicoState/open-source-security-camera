@@ -1,9 +1,6 @@
 # Security Policy
 
-## Supported Versions
-
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+## Supported Version
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -12,3 +9,5 @@ currently being supported with security updates.
 ## Reporting a Vulnerability
 
 To report a vulnerability submit please submit a bug report with the lables "High priority" and  "vulnerability"
+
+- [Issues](https://github.com/ChicoState/open-source-security-camera/issues)
