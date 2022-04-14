@@ -17,6 +17,7 @@ class MotionDetect():
         self.searchTextColor = (0,0,255)
         self.motionTextColor = (0,0,255)
         self.fps = 30
+        self.scale = 1
         # number of frames recorded
         self.numFrames = 0
         # max number of frames to record
@@ -33,7 +34,7 @@ class MotionDetect():
         # has motion been detected?
         self.detected = False
         # should record
-        self.record = True
+        self.record = False
         self.flip = False
         self.mirror = False
         # should send email?
@@ -125,6 +126,7 @@ class MotionDetect():
             return frame
     def Detect(self):
         isTrue, frame = self.capture.read()
+        frame = MotionDetect.rescaleFrame(frame, self.scale)
         frame = MotionDetect.flipFrame(self, frame)
         frame = MotionDetect.mirrorFrame(self, frame)
         if self.record:
