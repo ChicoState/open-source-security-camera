@@ -56,10 +56,10 @@ class MotionDetect():
         #return output object
         return fileName, filePath, cv.VideoWriter(filePath, self.codec, self.fps, (height, width))
     
-    def rescaleFrame(self, frame, scale):
+    def rescaleFrame(self, frame):
         #scale the width and height, (cast to int)
-        width = int(frame.shape[1] * scale)
-        height =int(frame.shape[0] * scale)
+        width = int(frame.shape[1] * self.scale)
+        height =int(frame.shape[0] * self.scale)
         dimensions = (width, height)
         #return resize frame to particular dimension
         return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
@@ -126,7 +126,7 @@ class MotionDetect():
             return frame
     def Detect(self):
         isTrue, frame = self.capture.read()
-        frame = MotionDetect.rescaleFrame(frame, self.scale)
+        frame = MotionDetect.rescaleFrame(self, frame)
         frame = MotionDetect.flipFrame(self, frame)
         frame = MotionDetect.mirrorFrame(self, frame)
         if self.record:
@@ -149,19 +149,19 @@ class MotionDetect():
             self.avg, cnts = MotionDetect.imgProcess(self, frame, self.avg)
             for c in cnts:
                 #if contours are less than desired area cont
-                if cv.contourArea(c) < 5000:
-                    continue
-                #set boundaries for motion box from contours
-                (x,y,w,h) = cv.boundingRect(c)
-                #set color to draw box:
-                color = (0,0,255)
-                #motion box line thickness
-                thickness = 2
-                #set motion box on frame
-                cv.rectangle(frame, (x,y), (x+w, y+h), color, thickness)
-                #change notification text
-                text = self.motionText[int(time.time())%4]
-                self.detected = True
+                if cv.contourArea(c) > 5000:
+                    self.detected = True
+                    if self.showBox:
+                        #set boundaries for motion box from contours
+                        (x,y,w,h) = cv.boundingRect(c)
+                        #set color to draw box:
+                        color = (0,0,255)
+                        #motion box line thickness
+                        thickness = 2
+                        #set motion box on frame
+                        cv.rectangle(frame, (x,y), (x+w, y+h), color, thickness)
+                        #change notification text
+                        text = self.motionText[int(time.time())%4]
             #add text to frame
             status_color = MotionDetect.setStatusColor(self)
             cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
