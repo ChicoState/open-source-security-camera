@@ -22,18 +22,11 @@ class MotionDetect():
         self.scale = .75
         self.avg = None
         self.out = None
-<<<<<<< HEAD
-        self.numframes = 0
-        self.record = False
-
-        self.rotate = False
-=======
         self.flip = False
         self.mirror = False
         self.showBoxes = True
         self.detected = False
     
->>>>>>> ec358846e264688d6d9dd3793c16e7893c474bb3
     def __del__(self):
         self.video.release()
     def setStatusColor(self):
@@ -56,21 +49,11 @@ class MotionDetect():
         if(not success):
             print("did not read from camera")
             time.sleep(2)
-<<<<<<< HEAD
-
-        if self.rotate:
-            frame = cv.flip(frame,0)
-        frame = MotionDetect.rescaleFrame(frame, .75)
-        if not success:
-            print("could not get image from cammera")
-        text = "searching..."
-=======
         frame = MotionDetect.rescaleFrame(frame, self.scale)
         frame = MotionDetect.flipFrame(self, frame)
         frame = MotionDetect.mirrorFrame(self, frame)
         text = self.searchText[int(time.time())%4]
         self.detected = False
->>>>>>> ec358846e264688d6d9dd3793c16e7893c474bb3
         cnts = MotionDetect.imgProcess(frame, self)
         for c in cnts:
             #if contours are less than desired area cont
