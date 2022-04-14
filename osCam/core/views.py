@@ -12,65 +12,72 @@ import time
 
 class MotionDetect():
     def __init__(self):
-        #usb cam for testing, change for pi
         self.video = cv.VideoCapture(0)
         self.codec = cv.VideoWriter_fourcc(*'XVID')
-        #self.filePath = "videos/{}.avi".format(datetime.now().strftime("%Y_%m_%d, %H:%M:%S"))
+        self.BoxColor = (0,0,255)
+        self.searchTextColor = (0,0,255)
+        self.motionTextColor = (0,0,255)
+        self.searchText = ["searching   ", "searching.  ", "searching.. ", "searching..."]
+        self.motionText = ["Motion   ","Motion!  ","Motion!! ","Motion!!!"]
+        self.scale = .75
         self.avg = None
         self.out = None
-        self.numframes = 0
-        self.record = False
-        self.rotate = False
+        self.flip = False
+        self.mirror = False
+        self.showBoxes = True
+        self.detected = False
+    
     def __del__(self):
         self.video.release()
+    def setStatusColor(self):
+        if self.detected:
+                return self.motionTextColor
+        else:
+            return self.searchTextColor
+    def flipFrame(self, frame):
+        if self.flip:
+            return cv.flip(frame,0)
+        else:
+            return frame
+    def mirrorFrame(self, frame):
+        if self.mirror:
+            return cv.flip(frame,1)
+        else:
+            return frame
     def get_frame(self):
         success, frame = self.video.read()
         if(not success):
             print("did not read from camera")
             time.sleep(2)
-        if self.rotate:
-            frame = cv.flip(frame,0)
-        frame = MotionDetect.rescaleFrame(frame, .75)
-        if not success:
-            print("could not get image from cammera")
-        text = "searching..."
+        frame = MotionDetect.rescaleFrame(frame, self.scale)
+        frame = MotionDetect.flipFrame(self, frame)
+        frame = MotionDetect.mirrorFrame(self, frame)
+        text = self.searchText[int(time.time())%4]
+        self.detected = False
         cnts = MotionDetect.imgProcess(frame, self)
         for c in cnts:
             #if contours are less than desired area cont
             if cv.contourArea(c) < 5000:
                 continue
             #set boundaries for motion box from contours
-            (x,y,w,h) = cv.boundingRect(c)
-            #set color to draw box:
-            color = (0,0,255)
-            #motion box line thickness
-            thickness = 2
-            #set motion box on frame
-            cv.rectangle(frame, (x,y), (x+w, y+h), color, thickness)
+            if self.showBoxes:
+                (x,y,w,h) = cv.boundingRect(c)
+                #set color to draw box:
+                color = self.BoxColor
+                #motion box line thickness
+                thickness = 2
+                #set motion box on frame
+                cv.rectangle(frame, (x,y), (x+w, y+h), color, thickness)
             #change notification text
-            text = "Motion!"
+            text = self.motionText[int(time.time())%4]
+            self.detected = True
         #add text to frame
-        if text == "Motion!":
-            status_color = (0,0,255)
-        else:
-            status_color=(0,255,0)
+        status_color = MotionDetect.setStatusColor(self)
         cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
         #current date/time
         date_time = datetime.now()
         cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
         ret, jpeg = cv.imencode('.jpg', frame)
-        if self.record:
-            if self.out == None:
-                self.out = MotionDetect.setRecording(date_time.strftime("%Y/%m/%d, %H:%M:%S"), frame)
-            if text == "Motion!":
-                self.numframes+=1
-                self.out.write(frame)
-            #if number of frames in recording is greater than 500 save recording and start new recording file
-            if self.numframes > 250:
-                self.numframes = 0
-                self.out.release()
-                date_time = datetime.now().strftime("%Y_%m_%d, %H:%M:%S")
-                self.out= MotionDetect.setRecording(date_time, frame)
         return jpeg.tobytes()
 
     #convert frame to grey, compute Gaussian blur for noise reduction, update ave,
@@ -101,16 +108,7 @@ class MotionDetect():
         else:
             print("something went wrong with contours:(")
         return cnts
-    def setRecording(fileName, frame):
-        #type of codec (os dependent, currently working for ubunto 20.4)
-        codec = cv.VideoWriter_fourcc(*'XVID')
-        #where to save files
-        filePath = "videos/{}.avi".format(fileName)
-        #set frame rate for recording
-        fps = 15
-        width, height, channels = frame.shape
-        #return output object
-        return cv.VideoWriter(filePath, codec, fps, (height, width))
+
     def rescaleFrame(frame, scale):
         #scale the width and height, (cast to int)
         width = int(frame.shape[1] * scale)
@@ -118,6 +116,7 @@ class MotionDetect():
         dimensions = (width, height)
         #return resize frame to particular dimension
         return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
+
 @login_required
 def home(request):
     return render(request, 'core/home.html')
