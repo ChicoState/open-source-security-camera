@@ -24,6 +24,7 @@ class MotionDetect():
         self.motionTextColor = (0,0,255)
         self.searchText = ["searching   ", "searching.  ", "searching.. ", "searching..."]
         self.motionText = ["Motion   ","Motion!  ","Motion!! ","Motion!!!"]
+        self.scale = .75
         self.avg = None
         self.out = None
         self.flip = False
@@ -33,15 +34,29 @@ class MotionDetect():
     
     def __del__(self):
         self.video.release()
-
+    def setStatusColor(self):
+        if self.detected:
+                return self.motionTextColor
+        else:
+            return self.searchTextColor
+    def flipFrame(self, frame):
+        if self.flip:
+            return cv.flip(frame,0)
+        else:
+            return frame
+    def mirrorFrame(self, frame):
+        if self.mirror:
+            return cv.flip(frame,1)
+        else:
+            return frame
     def get_frame(self):
         success, frame = self.video.read()
         if(not success):
             print("did not read from camera")
             time.sleep(2)
-        if self.flip:
-            frame = cv.flip(frame,0)
-        frame = MotionDetect.rescaleFrame(frame, .75)
+        frame = MotionDetect.rescaleFrame(frame, self.scale)
+        frame = MotionDetect.flipFrame(self, frame)
+        frame = MotionDetect.mirrorFrame(self, frame)
         text = self.searchText[int(time.time())%4]
         self.detected = False
         cnts = MotionDetect.imgProcess(frame, self)
@@ -62,10 +77,7 @@ class MotionDetect():
             text = self.motionText[int(time.time())%4]
             self.detected = True
         #add text to frame
-        if self.detected:
-            status_color = self.motionTextColor 
-        else:
-            status_color= self.searchTextColor
+        status_color = MotionDetect.setStatusColor(self)
         cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
         #current date/time
         date_time = datetime.now()
