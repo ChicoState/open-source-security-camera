@@ -3,7 +3,6 @@ import os
 def GetPath(): 
     path = []
     cur_path =''
-
     while True:
         cur_path =''
         choice = input("choose directory:")
@@ -25,8 +24,5 @@ def GetPath():
                 subdir = os.path.join(cur_path, sub)
                 if os.path.isdir(subdir):
                     print(sub)
-        # else:
-        #     print("cur path is: .")
-        #     print(os.listdir('.'))
     return path
 print(GetPath())

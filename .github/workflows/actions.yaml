@@ -35,9 +35,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Check Complexity with Radon
       run: |
-        # check cyclomatic complexity of individual file
+        # check cyclomatic complexity of individual files
         radon cc motiondetect.py -a -na
+        radon cc send_email.py -a -na
+        radon cc osCam/core/views.py -a -na
+        radon cc osCam/userconfig/views.py -a -na
     - name: Check Complexity with Xenon
       run: |
-        # check cyclomatic complexity of all files in path . (min is 'B')
-        xenon -b B -m B -a B .
+        # check cyclomatic complexity of all files in path . (min is 'C')
+        xenon -b C -m B -a B .
