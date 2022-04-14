@@ -39,8 +39,8 @@ jobs:
         radon cc motiondetect.py -a -na
         radon cc send_email.py -a -na
         radon cc osCam/core/views.py -a -na
+        radon cc osCam/userconfig/views.py -a -na
     - name: Check Complexity with Xenon
       run: |
         # check cyclomatic complexity of all files in path . (min is 'C')
-        # xenon -b B -m B -a B .
-        xenon -b C -m C -a C .
+        xenon -b B -m A -a A .
