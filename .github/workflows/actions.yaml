@@ -43,4 +43,4 @@ jobs:
     - name: Check Complexity with Xenon
       run: |
         # check cyclomatic complexity of all files in path . (min is 'C')
-        xenon -b B -m A -a A .
+        xenon -b C -m B -a B .
