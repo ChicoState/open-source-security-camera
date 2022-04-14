@@ -10,61 +10,51 @@ import numpy as np
 
 class MotionDetect():
     def __init__(self):
-        #usb cam for testing, change for pi
-        # self.video = cv.VideoCapture(0)
+        self.capture = cv.VideoCapture(0)
         self.codec = cv.VideoWriter_fourcc(*'XVID')
-        self.avg = None
-        self.out = None
-        self.numframes = 0
-        self.record = True
-        self.rotate = False
-        self.mirror = False
-        self.notify = True
-        self.showBox = True
-        self.showContours = False
+        self.date_time = None
+        self.BoxColor = (0,0,255)
+        self.searchTextColor = (0,0,255)
+        self.motionTextColor = (0,0,255)
         self.fps = 30
-
-    sendEmailNotification = True
+        # number of frames recorded
+        self.numFrames = 0
+        # max number of frames to record
+        self.maxFrames = 100
+        # display tests
+        self.searchText = ["searching   ", "searching.  ", "searching.. ", "searching..."]
+        self.motionText = ["Motion   ","Motion!  ","Motion!! ","Motion!!!"]
+        # rolling average of grayscale images
+        self.avg = None
+        # output file
+        self.out = None
+        self.fileName = None
+        self.filePath = None
+        # has motion been detected?
+        self.detected = False
+        # should record
+        self.record = True
+        self.flip = False
+        self.mirror = False
+        # should send email?
+        self.notify = False
+        self.showBox = True
+    def cleanUp(self):
+        if self.out != None:
+            self.out.release()
+        self.capture.release()
+        cv.destroyAllWindows()
+        cv.waitKey(0)
     #recoding setup
     def setRecording(self, fileName, frame):
         #type of codec (os dependent, currently working for ubunto 20.4)
-        codec = cv.VideoWriter_fourcc(*'XVID')
         #where to save files
         filePath = "osCam/videos/{}.avi".format(fileName)
         #set frame rate for recording
-        fps = 15
-        #read from frame
-        #isTrue, frame = capture.read()
         width, height, channels = frame.shape
         #return output object
-        return fileName, filePath, cv.VideoWriter(filePath, codec, fps, (height, width))
-    def skeletonize(self, frame):
-        # Threshold the image
-        # gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-        ret,img = cv.threshold(frame, 200, 255, 0)
-
-        # Step 1: Create an empty skeleton
-        size = np.size(img)
-        skel = np.zeros(img.shape, np.uint8)
-
-        # Get a Cross Shaped Kernel
-        # element = cv.getStructuringElement(cv.MORPH_CROSS, (7,7))
-        element = cv.getStructuringElement(cv.MORPH_CROSS, (17,17))
-        # Repeat steps 2-4
-        tmp = 50
-        while tmp:
-            #Step 2: Open the image
-            open = cv.morphologyEx(img, cv.MORPH_OPEN, element)
-            #Step 3: Substract open from the original image
-            temp = cv.subtract(img, open)
-            #Step 4: Erode the original image and refine the skeleton
-            eroded = cv.erode(img, element)
-            skel = cv.bitwise_or(skel,temp)
-            img = eroded.copy()
-            # Step 5: If there are no white pixels left ie.. the image has been completely eroded, quit the loop
-            tmp-=1
-        cv.imshow("Skeleton",skel)
-        #works for images, recordings, live video
+        return fileName, filePath, cv.VideoWriter(filePath, self.codec, self.fps, (height, width))
+    
     def rescaleFrame(self, frame, scale):
         #scale the width and height, (cast to int)
         width = int(frame.shape[1] * scale)
@@ -72,6 +62,23 @@ class MotionDetect():
         dimensions = (width, height)
         #return resize frame to particular dimension
         return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
+    
+    def actions(self, frame):
+        if self.detected:
+                if self.record:
+                    self.numFrames+=1
+                    self.out.write(frame)
+                    #if number of recorded frames is greater than max frames to record save recording and start new recording file
+                    if self.numFrames > self.maxFrames:
+                        self.numFrames = 0
+                        self.out.release()
+                        camID = 1
+                        #pass database info to subProcess
+                        self.fileName += '.avi'
+                        if self.notify:
+                            os.system('python send_email.py {} {} {} {}'.format(self.fileName, self.filePath, self.numFrames, camID))
+                        date_time = datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
+                        self.fileName, self.filePath, self.out= MotionDetect.setRecording(self, date_time, frame)
 
     #convert frame to grey, compute Gaussian blur for noise reduction, update ave,
     #compute weighted averages, compute difference between wieghted ave and grayscale frame to get delta (background bodel - grayscale frame)
@@ -91,9 +98,7 @@ class MotionDetect():
         #dilate the threshold image to fill in holes
         dil = cv.dilate(thresh, None, iterations=2)
         #get contours
-        cnts = cv.findContours(dil.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-
-        
+        cnts = cv.findContours(dil.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)    
         if len(cnts) == 2:
             cnts = cnts[0]
         elif len(cnts) == 3:
@@ -101,41 +106,45 @@ class MotionDetect():
         else:
             print("something went wrong, exiting program :(")
             exit()
-        # the below code is for potential future developments
-        # if self.showContours:
-        #     e = cv.erode(dil,(11,11), gray)
-        #     contours, hierarchy = cv.findContours(e, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-        #     cv.drawContours(gray, contours, -1, (0,255,0), 3)
-        #     cv.imshow('conts', gray)
-        #     MotionDetect.skeletonize(self, gray)
         return avg, cnts
 
+    def setStatusColor(self):
+        if self.detected:
+                return self.motionTextColor
+        else:
+            return self.searchTextColor
+    def flipFrame(self, frame):
+        if self.flip:
+            return cv.flip(frame,0)
+        else:
+            return frame
+    def mirrorFrame(self, frame):
+        if self.mirror:
+            return cv.flip(frame,1)
+        else:
+            return frame
     def Detect(self):
-        #innitial video capture: source ov vid or file path/name for usb cam
-        capture = cv.VideoCapture(0)
-        if not capture.isOpened():
-            print("camera could not be opened")
-            exit()
-        #initialize video capture: source PiCam:
-        avg = None
-        #label videos based on date/time
-        date_time = datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
-        #get first frame
-        isTrue, frame = capture.read()
+        isTrue, frame = self.capture.read()
+        frame = MotionDetect.flipFrame(self, frame)
+        frame = MotionDetect.mirrorFrame(self, frame)
         if self.record:
-            fileName, filePath, self.out = MotionDetect.setRecording(self, date_time, frame)
-            #number of frames to record per video
-            numframes = 0
+            #label videos based on date/time
+            date_time = datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
+            #initialize file recoding
+            self.fileName, self.filePath, self.out = MotionDetect.setRecording(self, date_time, frame)
+            #write first frame
+            self.out.write(frame)
+            self.numFrames+=1
         #infinate loop and capture video until 'd' is pressed
-        while True:
-            text = "searching..."
+        while not (cv.waitKey(28) & 0xFF==ord('d')):
+            # image text if motion not found
+            text = self.searchText[int(time.time())%4]
             #read video, gets a bool and frame
-            isTrue, frame = capture.read()
-            if not isTrue:
-                print("could not receive image frame: shutting down")
-                break
-            #update average frame and countour frame
-            avg, cnts = MotionDetect.imgProcess(self, frame, avg)
+            isTrue, frame = self.capture.read()
+            frame = MotionDetect.flipFrame(self, frame)
+            frame = MotionDetect.mirrorFrame(self, frame)
+            #process image
+            self.avg, cnts = MotionDetect.imgProcess(self, frame, self.avg)
             for c in cnts:
                 #if contours are less than desired area cont
                 if cv.contourArea(c) < 5000:
@@ -149,55 +158,20 @@ class MotionDetect():
                 #set motion box on frame
                 cv.rectangle(frame, (x,y), (x+w, y+h), color, thickness)
                 #change notification text
-                text = "Motion!"
+                text = self.motionText[int(time.time())%4]
+                self.detected = True
             #add text to frame
-            if text == "Motion!":
-                status_color = (0,0,255)
-            else:
-                status_color=(0,255,0)
+            status_color = MotionDetect.setStatusColor(self)
             cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
             #current date/time
             date_time = datetime.now()
-            cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
+            cv.putText(frame, "{}".format(date_time.strftime("%d/%m/%Y, %H:%M:%S")), (450,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
             #display the image
             cv.imshow('Video', frame)
-            #if motion detected record:
-            if text == "Motion!":
-                if self.record:
-                    numframes+=1
-                    self.out.write(frame)
-                    # cv.imshow('recording', frame)
-            #if number of frames in recording is greater than 500 save recording and start new recording file
-            if self.record:
-                if numframes > 100:
-                    numframes = 0
-                    self.out.release()
-                    camID = 1
-                    #pass database info to subProcess
-                    fileName += '.avi'
-                    if self.notify:
-                        os.system('python send_email.py {} {} {} {}'.format(fileName, filePath, numframes, camID))
-                    date_time = datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
-                    fileName, filePath, self.out= MotionDetect.setRecording(self, date_time, frame)
-            if self.showContours:
-                gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-                gray = cv.GaussianBlur(gray, (7,7),0)
-                thresh = cv.threshold(gray, 100, 255, cv.THRESH_BINARY)[1]
-                dil = cv.dilate(thresh, None, iterations=2)
-                eroded = cv.erode(dil,(11,11), gray)
-                contours, hierarchy = cv.findContours(eroded, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-                cv.drawContours(gray, contours, -1, (0,255,0), 3)
-                # cv.drawContours(frame, contours, 3, (0,255,0), 3)
-                cv.imshow('solid', gray)
-            #check for interupt
-            if cv.waitKey(28) & 0xFF==ord('d'):
-                break
-        #if escaped, releas video and destroy windows.
-        if self.out != None:
-            self.out.release()
-        capture.release()
-        cv.destroyAllWindows()
-        cv.waitKey(0)
+            # if record, record, if notify, notify, etc.
+            MotionDetect.actions(self, frame)
+        MotionDetect.cleanUp(self)
+
 if __name__=="__main__":
     detect=MotionDetect()
     detect.Detect()

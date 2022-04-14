@@ -16,9 +16,9 @@ from django.contrib.auth.models import User
 
 
 class MotionDetect():
-    
     def __init__(self):
         self.video = cv.VideoCapture(0)
+        self.codec = cv.VideoWriter_fourcc(*'XVID')
         self.BoxColor = (0,0,255)
         self.searchTextColor = (0,0,255)
         self.motionTextColor = (0,0,255)
@@ -27,6 +27,7 @@ class MotionDetect():
         self.avg = None
         self.out = None
         self.flip = False
+        self.mirror = False
         self.showBoxes = True
         self.detected = False
     
