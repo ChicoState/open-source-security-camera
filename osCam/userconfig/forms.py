@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models import fields
 from django.forms import widgets
 from django.forms.fields import ChoiceField
-from .models import Network, RaspberryPi, Camera, Storage, cameraView
+from .models import Network, RaspberryPi, Camera, Storage, CameraView
 from django import forms    
 from django.forms import ModelForm
 
@@ -66,7 +66,7 @@ class ViewForm( ModelForm ):
         choices=(('h264', 'h264'), ('mjpeg', 'mjpeg'), ('avi', 'avi')),)
 
     class Meta:
-        model = cameraView
+        model = CameraView
         fields = (
             'showMotionBoxes',
             'showContours',

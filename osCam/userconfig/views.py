@@ -1,25 +1,13 @@
 from django.contrib.auth.models import User
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
-import json as Json
-
-from numpy import record
-
-from userconfig.models import *
-from userconfig.models import Network, Camera, RaspberryPi
 from userconfig.forms import *
+from userconfig.models import *
 
 def settings(request):
-    '''
-        View Handles Http response To [ADD] a new Configuration.
-            Configuration Could be of Type {RaspberryPi, Camera, Network}
-        
-        @param  request: Request 
-    '''
 
-    from userconfig.models import cameraView
+    from userconfig.models import Camera
 
-     # if there are no cameras create a dummy camera
+    # if there are no cameras create a dummy camera
     if (Camera.objects.count() <= 1):
         Camera.objects.create(
             modelNum = '04',
@@ -30,9 +18,11 @@ def settings(request):
             port = '8000',
         )
 
+    from userconfig.models import CameraView
+
     # if there are no views create a dummy view
-    if (cameraView.objects.count() <= 1):
-        cameraView.objects.create(
+    if (CameraView.objects.count() <= 1):
+        CameraView.objects.create(
             showMotionBoxes = 'True',
             showContours = 'False',
             showText = 'True',
@@ -44,11 +34,10 @@ def settings(request):
             invert = 'False',
             mirror = 'False',
         )
-
-    this_user = User.objects.get(username=request.user)
     
-    page_data = {'cameras': Camera.objects.all(), 'views': cameraView.objects.all(),}
+    page_data = {'cameras': Camera.objects.all(), 'views': CameraView.objects.all(),}
 
+    # save camera settings 
     if(request.method == 'POST'):
         if("add_camera_config" in request.POST):
             add_form = CameraEntryForm(request.POST)
@@ -57,15 +46,15 @@ def settings(request):
                 ipAddress = add_form.cleaned_data['ipAddress']
                 port = add_form.cleaned_data['port']
 
-                Camera(
-                    user=this_user,
-                    deviceName=deviceName,
-                    ipAddress=ipAddress,
-                    port=port,
-                ).save()
+                this_cam_instance = Camera.objects.get(id=1)
+                this_cam_instance.deviceName = deviceName
+                this_cam_instance.ipAddress = ipAddress
+                this_cam_instance.port = port
+                this_cam_instance.save()
 
             return redirect('/config/')
 
+        # save view settings
         elif("add_view_config" in request.POST):
             add_form = ViewForm(request.POST)
             if(add_form.is_valid()):
@@ -80,7 +69,7 @@ def settings(request):
                 invert = add_form.cleaned_data['invert']
                 mirror = add_form.cleaned_data['mirror']
 
-                cameraView(
+                CameraView(
                     showMotionBoxes=showMotionBoxes,
                     showContours=showContours,
                     showText=showText,
@@ -95,21 +84,21 @@ def settings(request):
                 return redirect('/config/')
 
     elif(request.method == "GET"):
-        cameraView = cameraView.objects.get(id=1)
-        view_form = ViewForm(instance=cameraView,
+        CameraView = CameraView.objects.get(id=1)
+        view_form = ViewForm(instance=CameraView,
         initial={
-            'showMotionBoxes': cameraView.showMotionBoxes,
-            'showContours': cameraView.showContours,
-            'showText': cameraView.showText,
-            'text': cameraView.text,
-            'contrast': cameraView.contrast,
-            'brightness': cameraView.brightness,
-            'recording': cameraView.recording,
-            'fps': cameraView.fps,
-            'invert': cameraView.invert,
-            'mirror': cameraView.mirror,
+            'showMotionBoxes': CameraView.showMotionBoxes,
+            'showContours': CameraView.showContours,
+            'showText': CameraView.showText,
+            'text': CameraView.text,
+            'contrast': CameraView.contrast,
+            'brightness': CameraView.brightness,
+            'recording': CameraView.recording,
+            'fps': CameraView.fps,
+            'invert': CameraView.invert,
+            'mirror': CameraView.mirror,
         })
-        cameraView = view_form.save(commit=False)
+        CameraView = view_form.save(commit=False)
 
         page_data = {
             "camera_form_data": CameraEntryForm(), "view_form_data": view_form, 

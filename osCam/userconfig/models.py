@@ -3,12 +3,14 @@ from urllib import request
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Network(models.Model):
     homeIpAddress = models.CharField(max_length=32, null=True, blank=True)
     cameraIpAddress = models.CharField(max_length=32, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     # network = models.ForeignKey(RaspberryPi, on_delete=models.DO_NOTHING, null=True, blank=True)
+
+    def __str__(self):
+        return self.homeIpAddress
 
 class RaspberryPi(models.Model):
     # User can have Many RaspberryPie (1:Many)
@@ -20,8 +22,10 @@ class RaspberryPi(models.Model):
     username = models.CharField(max_length=40, default='admin')
     password = models.CharField(max_length=40, default='admin')
 
+    def __str__(self):
+        return self.modelName
+
 class Camera(models.Model):
-    # Rasberry Pi can have Many Camera (1:Many)
     user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
     raspberryPi = models.ForeignKey( RaspberryPi , on_delete=models.CASCADE, null=True, blank=True)
     modelNum = models.IntegerField(blank=True, null=True)
@@ -31,7 +35,12 @@ class Camera(models.Model):
     ipAddress = models.CharField(max_length=40, default='10.0.0.94')
     port = models.IntegerField(default=80)
 
-class cameraView(models.Model):
+    def __str__(self):
+        return self.deviceName
+
+class CameraView(models.Model):
+    #user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
+    #camera = models.ForeignKey( Camera, on_delete=models.CASCADE, null=True, blank=True)
     showMotionBoxes = models.BooleanField(default=False)
     showContours = models.BooleanField(default=False)
     showText = models.BooleanField(default=False)
@@ -43,6 +52,9 @@ class cameraView(models.Model):
     invert = models.BooleanField(default=False)
     mirror = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.camera.deviceName
+
 class Storage(models.Model):
     recordToDevice = models.BooleanField(default=False)
     recordToCloud = models.BooleanField(default=False)
@@ -52,3 +64,6 @@ class Storage(models.Model):
     archive = models.BooleanField(default=False)
     lengthOfRecordings = models.IntegerField(default=0)
     codec = models.CharField(max_length=40, default='h264') 
+
+    def __str__(self):
+        return self.filePath
