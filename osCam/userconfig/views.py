@@ -96,7 +96,7 @@ def settings(request):
                 this_cam_instance.port = port
                 this_cam_instance.save()
 
-            return redirect('/config/')
+            return redirect('user/settings.html')
 
         # save view settings
         elif("add_view_config" in request.POST):
@@ -126,7 +126,7 @@ def settings(request):
                 this_view_instance.mirror = mirror
                 this_view_instance.save()
 
-            return redirect('/config/')
+            return redirect('user/settings.html')
 
         elif ("add_storage_config" in request.POST):
             add_form = StorageForm(request.POST)
@@ -151,7 +151,7 @@ def settings(request):
                 this_storage_instance.codec = codec
                 this_storage_instance.save()
 
-                return redirect('/config/')
+                return redirect('user/settings.html')
                 
         elif ("add_network_config" in request.POST):
             add_form = NetworkEntryForm(request.POST)
@@ -166,7 +166,7 @@ def settings(request):
                 this_network_instance.cameraIpAddress = cameraIpAddress
                 this_network_instance.save()
 
-                return redirect('/config/')
+                return redirect('user/settings.html')
 
     elif(request.method == "GET"):
 
@@ -228,4 +228,4 @@ def settings(request):
             "network_form_data": network_form_data,
         }
 
-    return render(request, 'user/add_config.html', page_data)
+    return render(request, 'user/settings.html', page_data)
