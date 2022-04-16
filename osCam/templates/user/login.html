@@ -9,12 +9,18 @@
       <div class = "jumbotron">
         <h1>Login</h1>
         <form action="/login/" method="POST">{% csrf_token %}
+          <div style="color: red">
+          {{ form.non_field_errors }}
+          </div>
           <table>
-            {{ login_form.as_table }}
+            <label>{{ form.username.label_tag }}</label>
+            {{ form.username }} <br>
+            <label>{{ form.password.label_tag }}</label>
+            {{ form.password }} <br>
             <tr><td>
               <input type="submit" class="btn btn-primary" value = "Login"/>
             </td></tr>
-            <tr><td>Click <a href="/join">here</a> to register.</td></tr>
+            <tr><td style="padding-top: 25px">Don't have an account? <a href="/join" class="btn btn-secondary">Register</a></td></tr>
           </table>
         </form>
       </div>
