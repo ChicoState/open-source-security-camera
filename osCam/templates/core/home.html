@@ -5,9 +5,8 @@
         <link rel="stylesheet" href="{% static 'core/dash.css' %}">
     </head>
 
-    {% include "core/navigation.html" %}
-
     <body>
+        {% include "core/navigation.html" %}
         <div class="text-center">
             <h1>Hello, security camera dashboard under construction</h1>
             {% if user.is_authenticated %}

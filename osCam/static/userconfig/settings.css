@@ -1,3 +1,11 @@
+/* background image from ../images/vault.jpg */
+body {
+  background-image: url("../images/vault.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+}
+
 #cameraSettings {
   color: rgba(15, 34, 75, 0.644);
   background: rgb(56, 115, 95); 
