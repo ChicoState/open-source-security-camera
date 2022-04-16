@@ -7,21 +7,21 @@ from .models import Network, RaspberryPi, Camera, Storage, CameraView
 from django import forms    
 from django.forms import ModelForm
 
-# Class for Network form
-# uses the Network model
-
+# Class for Network Settings
 class NetworkEntryForm( ModelForm ):
-    homeIpAddress = forms.CharField(label='home ip address',
+    homeIpAddress = forms.CharField(label='home ip address', required=False,
         widget=forms.TextInput(attrs={'size':'80', 'class':"form-control"})
         )
-    cameraIpAddress = forms.CharField(label='camera ip address',
+    cameraIpAddress = forms.CharField(label='camera ip address', required=False,
         widget=forms.TextInput(attrs={'size':'80', 'class':"form-control"})
         )
+    homeNetmask = forms.CharField(label='home netmask', required=False,)
+
     class Meta:
         model = Network 
-        fields = ('homeIpAddress', 'cameraIpAddress')
+        fields = ('homeIpAddress', 'cameraIpAddress', 'homeNetmask',)
 
-
+# Class for Camera Settings
 class CameraEntryForm( ModelForm ):
     deviceName = forms.CharField(max_length=255, required=True, 
         widget=forms.TextInput(attrs={
@@ -40,7 +40,9 @@ class CameraEntryForm( ModelForm ):
             'port',
             )
 
-class ViewForm( ModelForm ):
+# Class for view settings
+# this affects how the 'feed' from the camera is 'viewed'
+class CameraViewForm( ModelForm ):
     showMotionBoxes = forms.BooleanField(required=False)
     showContours = forms.BooleanField(required=False)
     showText = forms.BooleanField(required=False)
@@ -80,6 +82,7 @@ class ViewForm( ModelForm ):
             'mirror',
             'codec',)
 
+# class for Storage settings
 class StorageForm( ModelForm ):
     recordToDevice = forms.BooleanField(required=False, label='record to device',)
     recordToCloud = forms.BooleanField(required=False, label='record to cloud',)
@@ -87,7 +90,7 @@ class StorageForm( ModelForm ):
     maxSpace = forms.IntegerField(required=False, label='max space',)
     timeToLive = forms.IntegerField(required=False, label='time to live',)
     archive = forms.BooleanField(required=False, label='archive',)
-    length_of_record = forms.IntegerField(required=False, label='length of record',)
+    lengthOfRecordings = forms.IntegerField(required=False, label='length of record',)
     codec = forms.ChoiceField(
         choices=(('h264', 'h264'), ('mjpeg', 'mjpeg'), ('avi', 'avi')),)
     
@@ -100,5 +103,5 @@ class StorageForm( ModelForm ):
             'maxSpace',
             'timeToLive',
             'archive',
-            'length_of_record',
+            'lengthOfRecordings',
             'codec',)
