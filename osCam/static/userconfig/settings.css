@@ -1,0 +1,49 @@
+#cameraSettings {
+  color: rgba(15, 34, 75, 0.644);
+  background: rgb(56, 115, 95); 
+  margin-left: 30%; margin-right: 30%
+}
+
+#cameraFormField{
+  margin-left: 10%; 
+  margin-right: 10%; font-size: 20pt;
+}
+
+#viewSettings {
+  color: rgba(15, 34, 75, 0.644); 
+  background: rgb(101, 64, 64); 
+  margin-left: 30%; 
+  margin-right: 30%;
+}
+
+#viewFormField {
+  margin-left: 10%; 
+  margin-right: 10%; 
+  font-size: 20pt;
+}
+
+#networkSettings {
+  color: rgba(211, 219, 236, 0.644); 
+  background: rgb(33, 49, 69); 
+  margin-left: 30%; 
+  margin-right: 30%;
+}
+
+#networkFormField {
+  margin-left: 10%; 
+  margin-right: 10%; 
+  font-size: 20pt;
+}
+
+#storageSettings {
+  color: rgba(211, 219, 236, 0.644); 
+  background: rgb(33, 33, 72); 
+  margin-left: 30%; 
+  margin-right: 30%;
+}
+
+#storageFormField {
+  margin-left: 10%; 
+  margin-right: 10%; 
+  font-size: 20pt;
+}
