@@ -23,22 +23,68 @@ class NetworkEntryForm( ModelForm ):
 
 # Class for Camera Settings
 class CameraEntryForm( ModelForm ):
-    deviceName = forms.CharField(max_length=255, required=True, 
+    deviceName = forms.CharField(
+        max_length=255, 
+        required=True, 
         widget=forms.TextInput(attrs={
             'placeholder': 'Backyard Cam', 
-            'class':"form-control"}))
-    ipAddress = forms.CharField(max_length=255, 
-        widget=forms.TextInput(attrs={'placeholder': '10.0.0.94', 'class':"form-control"}))
+            'class':"form-control"}
+        )
+    )
+    ipAddress = forms.CharField(
+        max_length=255, 
+        widget=forms.TextInput(attrs={
+            'placeholder': '10.0.0.94', 
+            'class':"form-control"}
+        )
+    )
     port = forms.IntegerField(
-        widget=forms.TextInput(attrs={'placeholder': '80', 'class':"form-control"}))
-
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': '80', 
+            'class':"form-control"}
+        )
+    )
+    modelNum = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': '4', 
+            'class':"form-control"}
+        )
+    )
+    modelName = forms.CharField(
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Raspberry Pi',
+            'class':"form-control"}
+        )
+    )
+    cameraIndex = forms.IntegerField(
+        disabled=True, 
+        widget=forms.TextInput(attrs={
+            'placeholder': '0', 
+            'class':"form-control"}
+        )
+    )
     class Meta:
         model = Camera 
         fields = (
             'deviceName', 
             'ipAddress',
             'port',
-            )
+            'modelNum',
+            'modelName',
+        )
+    # labels
+    def __init__(self, *args, **kwargs):
+        super(CameraEntryForm, self).__init__(*args, **kwargs)
+        self.fields['deviceName'].label = "Device Name"
+        self.fields['ipAddress'].label = "IP Address"
+        self.fields['port'].label = "Port"
+        self.fields['modelNum'].label = "Model Number"
+        self.fields['modelName'].label = "Model Name"
+        self.fields['cameraIndex'].label = "Camera Index"
 
 # Class for view settings
 # this affects how the 'feed' from the camera is 'viewed'
@@ -81,6 +127,20 @@ class CameraViewForm( ModelForm ):
             'invert',
             'mirror',
             'codec',)
+    # labels
+    def __init__(self, *args, **kwargs):
+        super(CameraViewForm, self).__init__(*args, **kwargs)
+        self.fields['showMotionBoxes'].label = "Show Motion Boxes"
+        self.fields['showContours'].label = "Show Contours"
+        self.fields['showText'].label = "Show Text"
+        self.fields['text'].label = "Text"
+        self.fields['contrast'].label = "Contrast"
+        self.fields['brightness'].label = "Brightness"
+        self.fields['recording'].label = "Enable Recording"
+        self.fields['fps'].label = "FPS"
+        self.fields['invert'].label = "Invert Image"
+        self.fields['mirror'].label = "Mirror Image"
+        self.fields['codec'].label = "Codec"
 
 # class for Storage settings
 class StorageForm( ModelForm ):
@@ -105,3 +165,14 @@ class StorageForm( ModelForm ):
             'archive',
             'lengthOfRecordings',
             'codec',)
+    # labels
+    def __init__(self, *args, **kwargs):
+        super(StorageForm, self).__init__(*args, **kwargs)
+        self.fields['recordToDevice'].label = "Record to Device"
+        self.fields['recordToCloud'].label = "Record to Cloud"
+        self.fields['filePath'].label = "File Path"
+        self.fields['maxSpace'].label = "Max Space"
+        self.fields['timeToLive'].label = "Time to Live"
+        self.fields['archive'].label = "Archive"
+        self.fields['lengthOfRecordings'].label = "Length of Recordings"
+        self.fields['codec'].label = "Codec"
