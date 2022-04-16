@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Add Camera Configuration</title>
+        <title>Settings</title>
         {% load static %}
         {% include static/}
         {% include "core/bootstrap.html" %}
@@ -13,7 +13,7 @@
         <body>
             {% include "core/navigation.html" %}
             <div class="Jumbotron" id="cameraSettings">
-                <h1 class="text-center">Camera & Recording Config</h1>
+                <h1 class="text-center">Camera & Recording</h1>
                 <div class='crispy_forms_field' id="cameraFormField">
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -25,7 +25,7 @@
             </div>
 
             <div class="Jumbotron" id="viewSettings">
-            <h1 class="text-center">View / Feed Config</h1>
+            <h1 class="text-center">View / Feed</h1>
                 <div class='crispy_forms_field' id="viewFormField">
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -37,7 +37,7 @@
             </div>
 
             <div class="Jumbotron" id="networkSettings">
-            <h1 class="text-center color: rgb(255, 255, 255)">Network Config</h1>
+            <h1 class="text-center color: rgb(255, 255, 255)">Network</h1>
                 <div class='crispy_forms_field' id="networkFormField">
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -49,7 +49,7 @@
             </div>
 
             <div class="Jumbotron" id="storageSettings">
-            <h1 class="text-center color: rgb(255, 255, 255)">Storage Config</h1>
+            <h1 class="text-center color: rgb(255, 255, 255)">Storage</h1>
                 <div class='crispy_forms_field' id="storageFormField">
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
