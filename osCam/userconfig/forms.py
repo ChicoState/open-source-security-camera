@@ -87,7 +87,7 @@ class StorageForm( ModelForm ):
     recordToDevice = forms.BooleanField(required=False, label='record to device',)
     recordToCloud = forms.BooleanField(required=False, label='record to cloud',)
     filePath = forms.CharField(max_length=255, required=False, label='file path',)
-    maxSpace = forms.IntegerField(required=False, label='max space',)
+    maxSpace = forms.IntegerField(required=False, label='max space', )
     timeToLive = forms.IntegerField(required=False, label='time to live',)
     archive = forms.BooleanField(required=False, label='archive',)
     lengthOfRecordings = forms.IntegerField(required=False, label='length of record',)
