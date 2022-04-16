@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 
 class Network(models.Model):
     homeIpAddress = models.CharField(max_length=32, null=True, blank=True)
+    homeNetmask = models.CharField(max_length=32, null=True, blank=True)
     cameraIpAddress = models.CharField(max_length=32, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    # network = models.ForeignKey(RaspberryPi, on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
         return self.homeIpAddress
@@ -31,7 +31,7 @@ class Camera(models.Model):
     modelNum = models.IntegerField(blank=True, null=True)
     modelName = models.CharField(max_length=40,blank=True, null=True)
     cameraIndex = models.IntegerField(default=0, unique=False, editable=False)
-    deviceName = models.CharField(max_length=40, default='Camera')
+    deviceName = models.CharField(max_length=40, default='Camera 01')
     ipAddress = models.CharField(max_length=40, default='10.0.0.94')
     port = models.IntegerField(default=80)
 
@@ -39,8 +39,8 @@ class Camera(models.Model):
         return self.deviceName
 
 class CameraView(models.Model):
-    #user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
-    #camera = models.ForeignKey( Camera, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
+    # camera = models.ForeignKey( Camera, on_delete=models.CASCADE, null=True, blank=True)
     showMotionBoxes = models.BooleanField(default=False)
     showContours = models.BooleanField(default=False)
     showText = models.BooleanField(default=False)
@@ -53,16 +53,16 @@ class CameraView(models.Model):
     mirror = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.camera.deviceName
+        return "Camera View settings"
 
 class Storage(models.Model):
     recordToDevice = models.BooleanField(default=False)
     recordToCloud = models.BooleanField(default=False)
     filePath = models.CharField(max_length=255, default='/home/pi/Videos')
-    maxSpace = models.IntegerField(default=0)
-    timeToLive = models.IntegerField(default=0)
-    archive = models.BooleanField(default=False)
-    lengthOfRecordings = models.IntegerField(default=0)
+    maxSpace = models.IntegerField(default=0, blank=True, null=True)
+    timeToLive = models.IntegerField(default=0, blank=True, null=True)
+    archive = models.BooleanField(default=False, blank=True, null=True)
+    lengthOfRecordings = models.IntegerField(default=0, blank=True, null=True)
     codec = models.CharField(max_length=40, default='h264') 
 
     def __str__(self):
