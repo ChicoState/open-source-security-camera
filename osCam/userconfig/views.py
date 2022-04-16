@@ -9,6 +9,7 @@ def settings(request):
 
     this_user = User.objects.get(username=request.user.username)
 
+    from userconfig.models import Network
     # if there is no Network settings, create
     if (Network.objects.count() < 1):
         Network.objects.create(
@@ -168,6 +169,15 @@ def settings(request):
                 return redirect('/config/')
 
     elif(request.method == "GET"):
+
+        Camera = Camera.objects.get(id=1)
+        camera_form_data = CameraEntryForm(initial={
+            'deviceName': Camera.deviceName,
+            'ipAddress': Camera.ipAddress,
+            'port': Camera.port,
+        })
+        Camera = camera_form_data.save(commit = False)
+
         CameraView = CameraView.objects.get(id=1)
         view_form = CameraViewForm(instance=CameraView,
         initial={
@@ -184,11 +194,38 @@ def settings(request):
         })
         CameraView = view_form.save(commit=False)
 
+        Storage = Storage.objects.get(id=1)
+        storage_form_data = StorageForm(
+            instance=Storage,
+            initial={
+                'recordToDevice': Storage.recordToDevice,
+                'recordToCloud': Storage.recordToCloud,
+                'filePath': Storage.filePath,
+                'maxSpace': Storage.maxSpace,
+                'timeToLive': Storage.timeToLive,
+                'archive': Storage.archive,
+                'lengthOfRecordings': Storage.lengthOfRecordings,
+                'codec': Storage.codec,
+            }
+        )
+        Storage = storage_form_data.save(commit=False)
+
+        Network = Network.objects.get(id=1)
+        network_form_data = NetworkEntryForm(
+            instance=Network,
+            initial={
+                'homeIpAddress': Network.homeIpAddress,
+                'homeNetmask': Network.homeNetmask,
+                'cameraIpAddress': Network.cameraIpAddress,
+            }
+        )
+        Network = network_form_data.save(commit=False)
+
         page_data = {
-            "camera_form_data": CameraEntryForm(), 
+            "camera_form_data": camera_form_data, 
             "view_form_data": view_form, 
-            "storage_form_data": StorageForm(),
-            "network_form_data": NetworkEntryForm(),
+            "storage_form_data": storage_form_data,
+            "network_form_data": network_form_data,
         }
 
     return render(request, 'user/add_config.html', page_data)
