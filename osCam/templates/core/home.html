@@ -43,9 +43,9 @@
                     <div class="col-6">
                         <!-- cameras -->
                         {% if user.is_authenticated %}
-                            <div class="container-fluid">
-                            <img src="{% url 'feed' %}">
                           
+                        <div class="container-fluid">
+                        <img src="{% url 'feed' %}" style="border: 1px solid #eee">
                         {% endif %}
 
                     </div>
