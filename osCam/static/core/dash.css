@@ -3,8 +3,12 @@ body {
     color: rgb(255, 255, 255);}
 
 
-hr{
+hr {
     height: 1px;
     background-color: #ccc;
     border: none;
+}
+
+.vid-feed {
+    border: 1px solid #eee
 }

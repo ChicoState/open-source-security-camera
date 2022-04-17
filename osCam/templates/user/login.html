@@ -2,6 +2,7 @@
   <head>
     {% include "core/bootstrap.html" %}
     {% load static %}
+    <link rel="stylesheet" href="{% static 'core/login.css' %}">
   </head>
   <body>
     {% include "core/navigation.html" %}
@@ -20,7 +21,7 @@
             <tr><td>
               <input type="submit" class="btn btn-primary" value = "Login"/>
             </td></tr>
-            <tr><td style="padding-top: 25px">Don't have an account? <a href="/join" class="btn btn-secondary">Register</a></td></tr>
+            <tr><td class="register-row">Don't have an account? <a href="/join" class="btn btn-secondary">Register</a></td></tr>
           </table>
         </form>
       </div>
