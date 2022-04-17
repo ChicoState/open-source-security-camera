@@ -8,4 +8,5 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),    
     path('feed/', views.feed, name='feed'),
+    # path('/settings/', views.settings, name='settings'),
 ]

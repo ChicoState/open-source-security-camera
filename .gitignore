@@ -9,9 +9,17 @@
 __pycache__
 db.sqlite3
 media
+osCam/core/migrations/**
+osCam/userconfig/migrations/**
 
-# Backup files #
-*.bak
+# MacOS #
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Backup files # 
+*.bak 
+
 
 # If you are using PyCharm #
 # User-specific stuff
