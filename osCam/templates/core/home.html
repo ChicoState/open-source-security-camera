@@ -2,7 +2,8 @@
     <head>
         {% load static %}
         {% include "core/bootstrap.html" %}
-        <link rel="stylesheet" href="{% static 'core/dash.css' %}">
+        <!-- osCam/static/core/dash.css -->
+        <link rel="stylesheet" href="{% static '/core/dash.css' %}">
     </head>
 
     {% include "core/navigation.html" %}
@@ -77,30 +78,110 @@
             
                 </div>
                   
-                  <script>
-                      var form = document.getElementById('path_dialog')
-                        // form.addEventListener('submit', (e) => {
-                        //     console.log("Path Dialog CLicked")
-                        //     e.preventDefault()
-                        // })
-                    //   doc.addEventListener('submit', (e) => {
-                    //   e.preventDefault();
-                    // //   e.stopPropagation();
-                    // console.log("Path Dialog CLicked")
-                    
-
- 
-                    // });
-                    // // doc.submit()
-            
-                  </script>
-                <!-- {% comment %}
-               
-                {% endcomment %} -->
-                <!-- <p>no path set..</p> -->
                 </div>
               </div> <!-- end of 3 of 3 col -->
             </div> <!-- end of row -->
+        <!-- {% include 'core/gridview.html' %} -->
+        <div class="container">
+            <div class="space">
+                <br><br><br>
+            </div>
+            <div class="row">
+                <h1 class="gridview-header">Recordings<hr></h1>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="video-card">
+                        <video width="300" height="300" controls>
+                            <source src="../../videos/istock-1016926172_preview.mp4" type="video/mp4">
+                            <!-- <source src="movie.ogg" type="video/ogg"> -->
+                            Video cannot be displayed. Your browser does not support the video tag.
+                          </video>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="video-card">
+                        <video width="300" height="300" controls>
+                            <source src="movie.mp4" type="video/mp4">
+                            <source src="movie.ogg" type="video/ogg">
+                            Video cannot be displayed. Your browser does not support the video tag.
+                          </video>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="video-card">
+                        <video width="300" height="300" 
+                        controls preload="auto" poster="{% static 'core/media/img/camera.jpeg' %}">
+                            <source src="{% static 'core/media/mov/istock-1016926172_preview.mp4' %}" type="video/mp4">
+                            Video cannot be displayed. Your browser does not support the video tag.
+                          </video>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="video-card">
+
+                        <video width="300" height="300" controls preload="auto">
+                            <source src="movie.mp4" type="video/mp4">
+                            <source src="movie.ogg" type="video/ogg">
+                            Video cannot be displayed. Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="video-card">
+
+                        <video width="300" height="300" controls preload="auto" 
+                        poster="https://www.videvo.net/video/a-moonshiner-blows-homemade-alcohol-into-a-fire-causing-an-explosion-of-flames-1/631539/">
+                            <source src="https://www.videvo.net/video/a-moonshiner-blows-homemade-alcohol-into-a-fire-causing-an-explosion-of-flames-1/631539/" type="video/mov">
+                            Video cannot be displayed
+                    </video>
+                </div>
+                </div>
+                <div class="col">
+                    <div class="video-card">
+                        <video width="300" height="300" controls>
+                            <source src="movie.mp4" type="video/mp4">
+                            <source src="movie.ogg" type="video/ogg">
+                            Video cannot be displayed. Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="video-card">
+
+                        <video width="300" height="300" controls>
+                            <source src="movie.mp4" type="video/mp4">
+                            <source src="movie.ogg" type="video/ogg">
+                            Video cannot be displayed. Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="video-card">
+
+                        <video width="300" height="300" controls>
+                            <source src="movie.mp4" type="video/mp4">
+                            <source src="movie.ogg" type="video/ogg">
+                            Video cannot be displayed. Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="video-card">
+
+                        <video width="300" height="300" controls>
+                            <source src="movie.mp4" type="video/mp4">
+                            <source src="movie.ogg" type="video/ogg">
+                            Video cannot be displayed. Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div> <!-- end of container -->
     </body>
 </html>
