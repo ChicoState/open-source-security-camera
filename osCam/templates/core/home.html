@@ -63,23 +63,26 @@
                 <br>
                 <hr>
                 <div class="container">
-                    <form id="path_dialog" method="post" action="{% url 'home' %}"> {% csrf_token %}
-                        <label for="path">Choose File Path:</label>
-                        {% for subPath in nextpaths %}
-                            <!-- <a type="submit" name="path" value="{{ subPath }}">{{subPath}}</a> -->
-                            <input type="submit" id="path" name="$PATH" value="{{ subPath }}">
-                            <!-- <a href="" class="btn btn-primary">{{subPath}}</a> -->
-                        {% endfor %}
-                    </form>
+                    <p>Current Upload Path: <a href="#" class="btn btn-primary">{{ path }}</a></p>
+                    {% if update_path_dialog %}
+                     <form id="path_dialog" method="post" action="{% url 'home' %}"> {% csrf_token %}
+                            <label for="path">[UPDATE] Choose File Path:</label>
+                            {% for subPath in nextpaths %}
+                                <!-- <a type="submit" name="path" value="{{ subPath }}">{{subPath}}</a> -->
+                                <input type="submit" id="path" name="$PATH" value="{{ subPath }}">
+                                <!-- <a href="" class="btn btn-primary">{{subPath}}</a> -->
+                            {% endfor %}
+                        </form>
+                    {% endif %}
             
                 </div>
                   
                   <script>
                       var form = document.getElementById('path_dialog')
-                        form.addEventListener('submit', (e) => {
-                            console.log("Path Dialog CLicked")
-                            e.preventDefault()
-                        })
+                        // form.addEventListener('submit', (e) => {
+                        //     console.log("Path Dialog CLicked")
+                        //     e.preventDefault()
+                        // })
                     //   doc.addEventListener('submit', (e) => {
                     //   e.preventDefault();
                     // //   e.stopPropagation();

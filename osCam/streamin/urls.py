@@ -1,4 +1,5 @@
 
+# from msilib.schema import Media
 from django.urls import path
 from . import views
 
@@ -9,4 +10,6 @@ urlpatterns = [
     path('add/', views.add_stream, name=f"add-{TYPE}"),
     path('edit/<int:id>/', views.edit_stream, name=f"edit-{TYPE}"),
     path('remove/<int:id>/', views.remove_stream, name=f"remove-{TYPE}"),
-] 
+]
+
+# +Media.____
