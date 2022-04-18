@@ -6,6 +6,7 @@ from . import views
 # global TYPE="stream"
 
 urlpatterns = [
-    path('', views.home, name='home'),    
+    path('', views.home, name='home'),   
+    # path('<str>/',views.getFilePath, name='filepath') ,
     path('feed/', views.feed, name='feed'),
 ]
