@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http.response import StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
-
+from userconfig.models import CameraView
 # Create your views here.
 import cv2 as cv
 from cv2 import imshow
@@ -14,18 +14,22 @@ class MotionDetect():
     def __init__(self):
         self.video = cv.VideoCapture(0)
         self.codec = cv.VideoWriter_fourcc(*'XVID')
-        self.BoxColor = (0,0,255)
-        self.searchTextColor = (0,0,255)
-        self.motionTextColor = (0,0,255)
         self.searchText = ["searching   ", "searching.  ", "searching.. ", "searching..."]
         self.motionText = ["Motion   ","Motion!  ","Motion!! ","Motion!!!"]
-        self.scale = .75
         self.avg = None
         self.out = None
+        self.detected = False
+        
+        # user settings
+        self.searchTextColor = (0,0,255)
+        self.motionTextColor = (0,0,255)
+        self.BoxColor = (0,0,255)
+        
+        self.scale = .75
         self.flip = False
         self.mirror = False
-        self.showBoxes = True
-        self.detected = False
+        self.showBoxes = False
+        
     
     def __del__(self):
         self.video.release()
@@ -44,21 +48,35 @@ class MotionDetect():
             return cv.flip(frame,1)
         else:
             return frame
+    def setSettings(self):
+        obj = CameraView.objects.get(id=1)
+        self.showBoxes = obj.showMotionBoxes
+        self.scale = obj.scale
+        self.mirror= obj.mirror
+        self.flip= obj.invert
+
+
     def get_frame(self):
         success, frame = self.video.read()
         if(not success):
             print("did not read from camera")
             time.sleep(2)
-        frame = MotionDetect.rescaleFrame(frame, self.scale)
+        # get settings from database
+        # obj = CameraView.objects.get(id=1)
+        # print(obj.showMotionBoxes)
+        MotionDetect.setSettings(self)
+        frame = MotionDetect.rescaleFrame(self, frame)
         frame = MotionDetect.flipFrame(self, frame)
         frame = MotionDetect.mirrorFrame(self, frame)
+        
         text = self.searchText[int(time.time())%4]
         self.detected = False
-        cnts = MotionDetect.imgProcess(frame, self)
+        cnts = MotionDetect.imgProcess(self, frame)
         for c in cnts:
             #if contours are less than desired area cont
             if cv.contourArea(c) < 5000:
                 continue
+            
             #set boundaries for motion box from contours
             if self.showBoxes:
                 (x,y,w,h) = cv.boundingRect(c)
@@ -82,7 +100,7 @@ class MotionDetect():
 
     #convert frame to grey, compute Gaussian blur for noise reduction, update ave,
     #compute weighted averages, compute difference between wieghted ave and grayscale frame to get delta (background bodel - grayscale frame)
-    def imgProcess(frame, self):
+    def imgProcess(self, frame):
         #convert to grayscale image
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         #blur image to reduce noise (filter size 21X21)
@@ -109,10 +127,10 @@ class MotionDetect():
             print("something went wrong with contours:(")
         return cnts
 
-    def rescaleFrame(frame, scale):
+    def rescaleFrame(self, frame):
         #scale the width and height, (cast to int)
-        width = int(frame.shape[1] * scale)
-        height =int(frame.shape[0] * scale)
+        width = int(frame.shape[1] * self.scale)
+        height =int(frame.shape[0] * self.scale)
         dimensions = (width, height)
         #return resize frame to particular dimension
         return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)

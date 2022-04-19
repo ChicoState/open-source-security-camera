@@ -57,6 +57,7 @@ def settings(request):
             fps = '30',
             invert = 'False',
             mirror = 'False',
+            scale = '0.75'
         )
 
     from userconfig.models import Storage
@@ -96,8 +97,7 @@ def settings(request):
                 this_cam_instance.port = port
                 this_cam_instance.save()
 
-            return redirect('user/settings.html')
-
+            return redirect('/settings')
         # save view settings
         elif("add_view_config" in request.POST):
             add_form = CameraViewForm(request.POST)
@@ -112,7 +112,7 @@ def settings(request):
                 fps = add_form.cleaned_data['fps']
                 invert = add_form.cleaned_data['invert']
                 mirror = add_form.cleaned_data['mirror']
-
+                scale = add_form.cleaned_data['scale']
                 this_view_instance = CameraView.objects.get(id=1)
                 this_view_instance.showMotionBoxes = showMotionBoxes
                 this_view_instance.showContours = showContours
@@ -124,9 +124,10 @@ def settings(request):
                 this_view_instance.fps = fps
                 this_view_instance.invert = invert
                 this_view_instance.mirror = mirror
+                this_view_instance.scale = scale
                 this_view_instance.save()
 
-            return redirect('user/settings.html')
+            return redirect('/settings')
 
         elif ("add_storage_config" in request.POST):
             add_form = StorageForm(request.POST)
@@ -151,7 +152,7 @@ def settings(request):
                 this_storage_instance.codec = codec
                 this_storage_instance.save()
 
-                return redirect('user/settings.html')
+                return redirect('/settings')
                 
         elif ("add_network_config" in request.POST):
             add_form = NetworkEntryForm(request.POST)
@@ -166,7 +167,7 @@ def settings(request):
                 this_network_instance.cameraIpAddress = cameraIpAddress
                 this_network_instance.save()
 
-                return redirect('user/settings.html')
+                return redirect('/settings')
 
     elif(request.method == "GET"):
 
@@ -191,6 +192,7 @@ def settings(request):
             'fps': CameraView.fps,
             'invert': CameraView.invert,
             'mirror': CameraView.mirror,
+            'scale': CameraView.scale,
         })
         CameraView = view_form.save(commit=False)
 

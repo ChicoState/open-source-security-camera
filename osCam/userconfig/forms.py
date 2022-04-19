@@ -107,7 +107,9 @@ class CameraViewForm( ModelForm ):
         widget=forms.CheckboxInput())
     codec = forms.ChoiceField(
         choices=(('h264', 'h264'), ('mjpeg', 'mjpeg'), ('avi', 'avi')),)
-
+    
+    scale = forms.ChoiceField( 
+        choices=((1.00, '1.00'), (0.75, '0.75'), (0.50, '0.50'), (0.25, '0.25')), )
     class Meta:
         model = CameraView
         fields = (
@@ -121,7 +123,8 @@ class CameraViewForm( ModelForm ):
             'fps',
             'invert',
             'mirror',
-            'codec',)
+            'codec',
+            'scale',)
     # labels
     def __init__(self, *args, **kwargs):
         super(CameraViewForm, self).__init__(*args, **kwargs)
@@ -136,6 +139,7 @@ class CameraViewForm( ModelForm ):
         self.fields['invert'].label = "Invert Image"
         self.fields['mirror'].label = "Mirror Image"
         self.fields['codec'].label = "Codec"
+        self.fields['scale'].label = "scale"
 
 # class for Storage settings
 class StorageForm( ModelForm ):

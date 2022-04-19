@@ -51,7 +51,7 @@ class CameraView(models.Model):
     fps = models.IntegerField(default=15)
     invert = models.BooleanField(default=False)
     mirror = models.BooleanField(default=False)
-
+    scale = models.DecimalField(max_digits=3, decimal_places=2,default=0.75)
     def __str__(self):
         return "Camera View settings"
 
