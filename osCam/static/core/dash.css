@@ -7,8 +7,12 @@ body {
     padding: 0px;
 }
 
-hr{
+hr {
     height: 1px;
     background-color: #ccc;
     border: none;
+}
+
+.vid-feed {
+    border: 1px solid #eee
 }
