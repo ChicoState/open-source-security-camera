@@ -5,8 +5,43 @@ from cv2 import VideoWriter
 from datetime import datetime
 import time
 import os
-from cv2 import erode
-import numpy as np
+import sqlite3
+from sqlite3 import Error
+
+class dataBase():
+    def create_connection(db_file):
+        sqliteConnection = None
+
+        try:
+            sqliteConnection = sqlite3.connect(db_file)
+            cursor = sqliteConnection.cursor()
+            print("Database created and Successfully Connected to SQLite")
+
+            sqlite_select_Query = "select sqlite_version();"
+            cursor.execute(sqlite_select_Query)
+            record = cursor.fetchall()
+            print("SQLite Database Version is: ", record)
+            cursor.close()
+
+        except sqlite3.Error as error:
+            print("Error while connecting to sqlite", error)
+
+        return sqliteConnection
+    
+    def GetSettingsFromDB(connection):
+        cur = connection.cursor()
+        cur.execute('SELECT * FROM userconfig_storage')
+        # get all rows from DB (there should be only 1)
+        rows = cur.fetchall()
+        l = []
+        # loop through the rows
+        for row in rows:
+            # loop through all attributes in the row and store them in list
+            for attribute in row:
+                l.append(attribute)
+        # return list of attributes (user storage settings from DB
+        # print(l)
+        return l
 
 class MotionDetect():
     def __init__(self):
@@ -40,12 +75,26 @@ class MotionDetect():
         # should send email?
         self.notify = False
         self.showBox = True
+
     def cleanUp(self):
         if self.out != None:
             self.out.release()
         self.capture.release()
         cv.destroyAllWindows()
         cv.waitKey(0)
+
+    def updateSettings(self, row):
+        a =2
+        if len(row) > 0:
+            self.record = row[1]                #recordToDevice = 'False',
+            # self.useDropBox = row[2]            #recordToCloud = 'F
+            # self.filePath = row[3]              #filePath = '/home/pi/open-source-security-camera/osCam/videos/',
+            # self.maxSpace = row[4]             #maxSpace = '100',
+            # self.ttl = row[5]            #timeToLive = '60',
+            # self.archive = row[6]               #archive = 'False',
+            self.maxFrames = row[7]  #lengthOfRecordings = '10',
+            # self.codec = row[9]                 #codec = 'h264',
+    
     #recoding setup
     def setRecording(self, fileName, frame):
         #type of codec (os dependent, currently working for ubunto 20.4)
@@ -67,6 +116,10 @@ class MotionDetect():
     def actions(self, frame):
         if self.detected:
                 if self.record:
+                    if self.out == None:
+                        date_time = datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
+                        #initialize file recoding
+                        self.fileName, self.filePath, self.out = MotionDetect.setRecording(self, date_time, frame)
                     self.numFrames+=1
                     self.out.write(frame)
                     #if number of recorded frames is greater than max frames to record save recording and start new recording file
@@ -129,16 +182,24 @@ class MotionDetect():
         frame = MotionDetect.rescaleFrame(self, frame)
         frame = MotionDetect.flipFrame(self, frame)
         frame = MotionDetect.mirrorFrame(self, frame)
-        if self.record:
-            #label videos based on date/time
-            date_time = datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
-            #initialize file recoding
-            self.fileName, self.filePath, self.out = MotionDetect.setRecording(self, date_time, frame)
-            #write first frame
-            self.out.write(frame)
-            self.numFrames+=1
+    
+        # if self.record:
+        #     #label videos based on date/time
+        #     date_time = datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
+        #     #initialize file recoding
+        #     self.fileName, self.filePath, self.out = MotionDetect.setRecording(self, date_time, frame)
+        #     #write first frame
+        #     self.out.write(frame)
+        #     self.numFrames+=1
+    
+        # set up database
+        database = r"osCam/db.sqlite3"
+        connection = dataBase.create_connection(database)
         #infinate loop and capture video until 'd' is pressed
         while not (cv.waitKey(28) & 0xFF==ord('d')):
+            with connection:
+                row = dataBase.GetSettingsFromDB(connection)
+            MotionDetect.updateSettings(self, row)
             # image text if motion not found
             text = self.searchText[int(time.time())%4]
             #read video, gets a bool and frame
@@ -172,6 +233,7 @@ class MotionDetect():
             cv.imshow('Video', frame)
             # if record, record, if notify, notify, etc.
             MotionDetect.actions(self, frame)
+        connection.close()
         MotionDetect.cleanUp(self)
 
 if __name__=="__main__":
