@@ -5,17 +5,11 @@
           <li>
             <a class="nav-link" href="/login/">Login</a>
           </li>
-          <li>
-            <a class="nav-link" href="/join/">Join</a>
-          </li>
           {% endif %}
 
           {% if user.is_authenticated %}
           <li>
             <a class="nav-link" href="/settings/">Settings</a>
-          </li>
-          <li>
-            <a class="nav-link" href="/send_email/">Send Email</a>
           </li>
           <li>
             <a class="nav-link" href="/logout/">Logout</a>
