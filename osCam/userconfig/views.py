@@ -1,75 +1,14 @@
 from ipaddress import ip_address
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 import json as Json
 
 from numpy import record
+
 from userconfig.models import *
-
-# from core import models
 from userconfig.models import Network, Camera, RaspberryPi
-from django.contrib.auth.models import User
-from .forms import CameraEntryForm
-# from userconfig.models import Network
-
-################################
-################################
-#  Views used for User Configurations: .
-#       e.g. A Config is of Type::{RaspberryPi, Camera, Network}
-def configPage(request):
-    '''
-        View Handles Http response To Display all user defined Configuration.
-            Configuration Could be of Type::{RaspberryPi, Camera, Network}.
-        
-        @param  request: Request 
-    '''
-    page = "User Configuration Page"
-    page_data = {'cameras': Camera.objects.all(), 'raspberrypis': RaspberryPi.objects.all(), 'networks': Network.objects.all()}
-    
-    response = {'response':None}
-    if request.method == 'GET':
-        print('HOST: ', request.get_host())
-        user = User.objects.get(id=request.user.id)
-        print("User Id:: ", user.id)
-        # buildable_str = f"{user.id} + "
-        lookup =  Network.objects.filter(user=user)
-        usermp = []
-        for record in Network.objects.all():
-            if record is not None:
-                if record.user is not None:
-                    name = record.user.username
-                    name_id = record.user.id
-                    ip_addr = record.home_ip_address
-                    print(name)
-                    print(name_id)
-                    print(ip_addr)
-                    usermp.append({"username": name, "user_id":name_id, "IP ADDRESS":ip_addr})
-
-        content = Json.dumps(usermp)
-    #return JsonResponse({'response': 'SUCCESS', 'type':'GET', "Client-IP::LOOKUP":content, 'PAGE': page, 'data':response.get('response')}, safe=True)
-
-    # if there are no cameras create a dummy camera
-    if page_data['cameras'].exists():
-        page_data['cameras'][0] = 'camera 1'
-
-
-    return render(request, 'user/config.html', page_data)
-
-
-# SERVER_NAME localhost
-# GATEWAY_INTERFACE CGI/1.1
-# SERVER_PORT 8000
-# REMOTE_HOST
-# CONTENT_LENGTH
-# SCRIPT_NAME
-# SERVER_PROTOCOL HTTP/1.1
-# SERVER_SOFTWARE WSGIServer/0.2
-# REQUEST_METHOD GET
-# PATH_INFO /config/
-# QUERY_STRING
-# REMOTE_ADDR 127.0.0.1
-# CONTENT_TYPE text/plain
-# HTTP_HOST 127.0.0.1:8000
+from userconfig.forms import *
 
 def settings(request):
     '''
@@ -78,6 +17,8 @@ def settings(request):
         
         @param  request: Request 
     '''
+
+    from userconfig.models import camera_view
 
      # if there are no cameras create a dummy camera
     if (Camera.objects.count() <= 1):
@@ -96,7 +37,7 @@ def settings(request):
             show_motion_boxes = 'True',
             show_contours = 'False',
             show_text = 'True',
-            text = 'Text overlayed on the feed',
+            text = 'Cam Name :: Date :: Time',
             contrast = '50',
             brightness = '50',
             recording = 'True',
@@ -105,8 +46,7 @@ def settings(request):
             mirror = 'False',
         )
 
-    # get the info from httpRequest parameter so we can later use user_id as 'accessor' for our database records
-    this_user = User.objects.get(id=request.user.id)
+    this_user = User.objects.get(username=request.user)
     
     page_data = {'cameras': Camera.objects.all(), 'views': camera_view.objects.all(),}
 
@@ -117,14 +57,7 @@ def settings(request):
                 device_name = add_form.cleaned_data['device_name']
                 ip_address = add_form.cleaned_data['ip_address']
                 port = add_form.cleaned_data['port']
-                #recording = add_form.cleaned_data['recording']
-                #fps = add_form.cleaned_data['fps']
-                #invert = add_form.cleaned_data['invert']
-                #mirror = add_form.cleaned_data['mirror']
-                #codec = add_form.cleaned_data['codec']  
 
-                # create camera object w the form data
-                # save camera object
                 Camera(
                     user=this_user,
                     device_name=device_name,
@@ -148,7 +81,7 @@ def settings(request):
                 invert = add_form.cleaned_data['invert']
                 mirror = add_form.cleaned_data['mirror']
 
-                camera_view.objects.create(
+                camera_view(
                     show_motion_boxes=show_motion_boxes,
                     show_contours=show_contours,
                     show_text=show_text,
@@ -159,9 +92,28 @@ def settings(request):
                     fps=fps,
                     invert=invert,
                     mirror=mirror,
-                )
-    else:
+                ).save()
+                return redirect('/config/')
+
+    elif(request.method == "GET"):
+        camera_view = camera_view.objects.get(id=1)
+        view_form = ViewForm(instance=camera_view,
+        initial={
+            'show_motion_boxes': camera_view.show_motion_boxes,
+            'show_contours': camera_view.show_contours,
+            'show_text': camera_view.show_text,
+            'text': camera_view.text,
+            'contrast': camera_view.contrast,
+            'brightness': camera_view.brightness,
+            'recording': camera_view.recording,
+            'fps': camera_view.fps,
+            'invert': camera_view.invert,
+            'mirror': camera_view.mirror,
+        })
+        camera_view = view_form.save(commit=False)
+
         page_data = {
-            "camera_form_data": CameraEntryForm(), "view_form_data": ViewForm() 
+            "camera_form_data": CameraEntryForm(), "view_form_data": view_form, 
         }
+
     return render(request, 'user/add_config.html', page_data)
