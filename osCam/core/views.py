@@ -230,6 +230,3 @@ def gen(camera):
 def feed(request):
 	return StreamingHttpResponse(gen(None),
 					content_type='multipart/x-mixed-replace; boundary=frame')
-
-	# return StreamingHttpResponse(gen(MotionDetect()),
-	# 				content_type='multipart/x-mixed-replace; boundary=frame')
