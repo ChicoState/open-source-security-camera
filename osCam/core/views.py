@@ -124,7 +124,96 @@ class MotionDetect():
 
 @login_required
 def home(request):
-    return render(request, 'core/home.html')
+	# path = None
+	# cpath="/"
+	pathDataDialog = PathDataDialog()
+	this_user = User.objects.get(id=request.user.id)
+	path_list = []
+	print("REQUEST_post: ",request.POST)
+
+	print("REQUEST_get: ",request.GET)
+
+	if request.method == 'POST':
+		if "$PATH" in request.POST:
+			print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+			builder = request.POST.get("$PATH")
+			print("\n\n%%%[MAIN__HOME.path-builder]: {}".format(builder))
+			print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+			ui_context = displaySetStoragePath(request)
+			return render(request, 'core/home.html', ui_context)
+		else:
+			print("[MAIN_HOME.request.isEMpty()]")
+			
+	elif request.method == 'GET':
+		print("\n\nFound Path: {}".format(str(request.GET)))
+		print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+		print("Request.GET")
+		print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+		displayCurrentStorageView(request, this_user)
+			
+		next_path_list: list = []
+		default_path_builder: Path = None
+		storage_rule: StorageHandler = None
+		if "$EDIT" in request.GET:
+			print("\n\n$edit REQUEST: {}".format(request.GET))
+			if Path.objects.get(user=this_user).exists():
+				default_path_builder = Path.objects.get(user=this_user)
+				# print(f"Most Recent Path: {default_path_builder.path} \n\n")
+				default_path_builder.storage.objects.update_or_Create(
+					update=True
+				)
+				next_path_list = getNextPathList(curUser=this_user, pathBuilder=default_path_builder)
+				context = {"pathBuilder":default_path_builder, "nextPathList": next_path_list}
+				print("path-builder: {}".format(default_path_builder))
+				print("\n\tNextPath: {}".format(next_path_list))
+				storage_rule=default_path_builder.storage.objects.get(id=default_path_builder.id)
+				next_path_list = getNextPathList(curUser=this_user, pathBuilder=default_path_builder)
+				# make sure to turn off after editing..
+				storage_rule.update_or_create(
+					update=False
+				)
+				return render(request, 'core/home.html', {
+					"update_path_dialog":True,
+					"path":default_path_builder.path, 
+					"nextpaths":next_path_list
+					})
+
+		else: #no Request Query Params..
+			if Path.objects.filter(user=this_user).exists():
+				display = Path.objects.get(user=this_user)
+				
+				# display_storage_rule = storage_rule.objects.get(user=aUser)
+				display_nextPathList = getNextPathList(this_user, display)
+				return render(request, 'core/home.html', {
+						"update_path_dialog":True,
+						"path":display.path,
+						"nextpaths":display_nextPathList
+						})
+			else:
+				# display Default $Path info
+				displayStorage = Path.objects.all()
+				builder = {"fullpath":[]}
+				stringifyBuilder = None
+				for displayPath in displayStorage:
+					builder["fullpath"].append(displayPath.path)
+				stringifyBuilder = json.dumps(builder)
+				display_storage_rule,created = StorageHandler.objects.get_or_create(user=this_user, 
+					update=True,
+					fullpath=stringifyBuilder,
+				)
+				return render(request, 'core/home.html', {
+						"update_path_dialog":display_storage_rule.update,
+						"path":PathDataDialog.DEFAULT_PATH,
+						"nextpaths":getNextPathList(this_user, Path(PathDataDialog.DEFAULT_PATH))
+						})
+
+	# return render(request, 'core/home.html', {
+	# 		"path_dialog":pathDataDialog.showDialog(),
+	# 		"path":"$PAth is empty!", 
+	# 		"nextpaths":["$EDIT"]
+	# 		})
+
+
 
 def gen(camera):
 	while True:
@@ -136,3 +225,5 @@ def feed(request):
 	return StreamingHttpResponse(gen(None),
 					content_type='multipart/x-mixed-replace; boundary=frame')
 
+	# return StreamingHttpResponse(gen(MotionDetect()),
+	# 				content_type='multipart/x-mixed-replace; boundary=frame')
