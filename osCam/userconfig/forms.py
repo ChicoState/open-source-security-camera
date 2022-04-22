@@ -27,6 +27,12 @@ class CameraEntryForm( ModelForm ):
         model = Camera 
         fields = ('model_info',)
 
+# alternate carera form whoops
+# class CameraForm(forms.ModelForm):
+#     class Meta():
+#         model = Camera
+#         fields = ('recording', 'fps', 'invert', 'mirror', 'codec', 'camera_index', 'device_name', 'ip_address', 'port', 'username', 'password')
+
 
 class RaspberryPiEntryForm( ModelForm ):
     model_num = forms.CharField(label='model number',

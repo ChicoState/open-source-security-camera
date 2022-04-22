@@ -20,6 +20,7 @@ def configPage(request):
         @param  request: Request 
     '''
     page = "User Configuration Page"
+    page_data = {'cameras': Camera.objects.all(), 'raspberrypis': RaspberryPi.objects.all(), 'networks': Network.objects.all()}
     
     response = {'response':None}
     if request.method == 'GET':
@@ -41,7 +42,13 @@ def configPage(request):
                     usermp.append({"username": name, "user_id":name_id, "IP ADDRESS":ip_addr})
 
         content = Json.dumps(usermp)
-    return JsonResponse({'response': 'SUCCESS', 'type':'GET', "Client-IP::LOOKUP":content, 'PAGE': page, 'data':response.get('response')}, safe=True)
+    #return JsonResponse({'response': 'SUCCESS', 'type':'GET', "Client-IP::LOOKUP":content, 'PAGE': page, 'data':response.get('response')}, safe=True)
+
+    # if there are no cameras create a dummy camera
+    if page_data['cameras'].exists():
+        page_data['cameras'][0] = 'camera 1'
+
+    return render(request, 'user/config.html', page_data)
 
 
 # SERVER_NAME localhost
@@ -85,7 +92,6 @@ def addConf(request):
             # print(key, meta[key] )    # print this to see all Network Information supplied by Django and network packet. If we want more we need send out ARP or get from user directly. 
     # Network(request.get_host())
     return JsonResponse({'response': 'SUCCESS', 'type':'GET', 'Client IP Address': network_info['REMOTE_ADDR'], 'PAGE': page}, safe=True)
-
 
 
 def editConf(request, id):

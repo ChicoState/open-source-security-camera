@@ -3,6 +3,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+<<<<<<< HEAD
 import json as JSON
 
 class Recording(models.Model):
@@ -46,3 +47,6 @@ class Path(models.Model):
 
 
 
+=======
+from django.utils.translation import activate
+>>>>>>> f78c4c4 (Adding configuration page, added variables in models for Camera setup.)
