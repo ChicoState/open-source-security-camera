@@ -1,63 +1,55 @@
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Settings</title>
-        {% load static %}
-        
-        {% include "core/bootstrap.html" %}
-        <link rel="stylesheet" href="{% static 'core/dash.css' %}">
-        <link rel="stylesheet" href="{% static 'userconfig/settings.css' %}">
-        {% load crispy_forms_field %}
-        {% load crispy_forms_tags %}
-    </head>
-        <body>
-            {% include "core/navigation.html" %}
-            <div class="Jumbotron" id="cameraSettings">
-                <h1 class="text-center">Camera & Recording</h1>
-                <div class='crispy_forms_field' id="cameraFormField">
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ camera_form_data | crispy}}
-                        <a href="/" class="btn btn-secondary">Cancel</a>
-                        <input type="submit" class="btn btn-primary" name="add_camera_config" value="Save">
-                    </form>
-                </div>
-            </div>
+{% extends '../shared/base.html' %}
+<!--  load static %} -->
+{% load crispy_forms_field %}
+{% load crispy_forms_tags %}
+<!-- <title>Settings</title> -->
 
-            <div class="Jumbotron" id="viewSettings">
-            <h1 class="text-center">View / Feed</h1>
-                <div class='crispy_forms_field' id="viewFormField">
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ view_form_data | crispy}}
-                        <a href="/" class="btn btn-secondary">Cancel</a>
-                        <input type="submit" class="btn btn-primary" name="add_view_config" value="Save">
-                    </form>
-                </div>
-            </div>
+{% block content %}
+<div class="Jumbotron" id="cameraSettings">
+    <h1 class="text-center">Camera & Recording</h1>
+    <div class='crispy_forms_field' id="cameraFormField">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ camera_form_data | crispy }}
+            <a href="/" class="btn btn-secondary">Cancel</a>
+            <input type="submit" class="btn btn-primary" name="add_camera_config" value="Save">
+        </form>
+    </div>
+</div>
 
-            <div class="Jumbotron" id="networkSettings">
-            <h1 class="text-center color: rgb(255, 255, 255)">Network</h1>
-                <div class='crispy_forms_field' id="networkFormField">
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ network_form_data | crispy}}
-                        <a href="/" class="btn btn-secondary">Cancel</a>
-                        <input type="submit" class="btn btn-primary" name="add_network_config" value="Save">
-                    </form>
-                </div>
-            </div>
+<div class="Jumbotron" id="viewSettings">
+    <h1 class="text-center">View / Feed</h1>
+    <div class='crispy_forms_field' id="viewFormField">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ view_form_data | crispy}}
+            <a href="/" class="btn btn-secondary">Cancel</a>
+            <input type="submit" class="btn btn-primary" name="add_view_config" value="Save">
+        </form>
+    </div>
+</div>
 
-            <div class="Jumbotron" id="storageSettings">
-            <h1 class="text-center color: rgb(255, 255, 255)">Storage</h1>
-                <div class='crispy_forms_field' id="storageFormField">
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ storage_form_data | crispy}}
-                        <a href="/" class="btn btn-secondary">Cancel</a>
-                        <input type="submit" class="btn btn-primary" name="add_storage_config" value="Save">
-                    </form>
-                </div>
-            </div>
-        </body>
-</html>
+<div class="Jumbotron" id="networkSettings">
+    <h1 class="text-center color: rgb(255, 255, 255)">Network</h1>
+    <div class='crispy_forms_field' id="networkFormField">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ network_form_data | crispy}}
+            <a href="/" class="btn btn-secondary">Cancel</a>
+            <input type="submit" class="btn btn-primary" name="add_network_config" value="Save">
+        </form>
+    </div>
+</div>
+
+<div class="Jumbotron" id="storageSettings">
+    <h1 class="text-center color: rgb(255, 255, 255)">Storage</h1>
+    <div class='crispy_forms_field' id="storageFormField">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ storage_form_data | crispy}}
+            <a href="/" class="btn btn-secondary">Cancel</a>
+            <input type="submit" class="btn btn-primary" name="add_storage_config" value="Save">
+        </form>
+    </div>
+</div>
+{% endblock %}

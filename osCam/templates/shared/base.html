@@ -1,0 +1,20 @@
+<html>
+    <head>
+        {% load static %}
+        
+        {% include "shared/bootstrap.html" %}
+ 
+        <!-- osCam/static/core/dash.css -->
+        <link rel="stylesheet" href="{% static '/core/dash.css' %}">
+        <link rel="stylesheet" href="{% static 'core/login.css' %}">
+        <link rel="stylesheet" href="{% static 'userconfig/settings.css' %}">
+    </head>
+
+    <body>
+        {% include "shared/navigation.html" %}
+
+        <!-- All other HTML pages that Share Navbar and CSS will 'extend' this page and receive all its properties -->
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>
