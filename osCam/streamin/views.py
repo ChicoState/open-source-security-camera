@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-def view_stream_gallery(request):
+def videoStreamGallery(request):
     pageTitle = "Video Stream Gallery"
     pageData = {
         'response': request.get_full_path(), 
@@ -18,15 +18,15 @@ def view_stream_gallery(request):
     return JsonResponse(pageData)
 
 @ensure_csrf_cookie
-def add_stream(request):
+def addStream(request):
     page = "Add Video Stream"
     return JsonResponse({'response': request.get_full_path(), 'type':request.method, 'PAGE:': page}, safe=True)
 
 @ensure_csrf_cookie
-def edit_stream(request, id):
+def editStream(request, id):
     page = "Edit Video Stream"
     return JsonResponse({'response': request.get_full_path(), 'type':request.method, 'PAGE:': page}, safe=True)
 
-def remove_stream(request, id):
+def removeStream(request, id):
     page = "View Video Stream"
     return JsonResponse({'response': request.get_full_path(), 'type':request.method, 'PAGE:': page}, safe=True)
