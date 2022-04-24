@@ -9,8 +9,12 @@
         <link rel="stylesheet" href="{% static 'core/login.css' %}">
         <link rel="stylesheet" href="{% static 'userconfig/settings.css' %}">
     </head>
-
     <body>
+        <!-- Your file should use this block if you want to change page title -->
+        {% block pageTitle %}
+        <title>Base</title>
+        {% endblock %}
+
         {% include "shared/navigation.html" %}
 
         <!-- All other HTML pages that Share Navbar and CSS will 'extend' this page and receive all its properties -->
