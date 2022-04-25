@@ -1,9 +1,16 @@
+#django imports
+import os
+from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http.response import StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
 from userconfig.models import CameraView
 # Create your views here.
+# from requests import request
+from django.contrib.auth.models import User
+from unittest.mock import DEFAULT
+# Open CV
 import cv2 as cv
 from cv2 import imshow
 from cv2 import VideoWriter
@@ -61,9 +68,6 @@ class MotionDetect():
         if(not success):
             print("did not read from camera")
             time.sleep(2)
-        # get settings from database
-        # obj = CameraView.objects.get(id=1)
-        # print(obj.showMotionBoxes)
         MotionDetect.setSettings(self)
         frame = MotionDetect.rescaleFrame(self, frame)
         frame = MotionDetect.flipFrame(self, frame)
@@ -137,14 +141,25 @@ class MotionDetect():
 
 @login_required
 def home(request):
-    return render(request, 'core/home.html')
+
+    pageTitle= home.__name__
+    showPathForm = True
+    fakeFullPath='/usr/media/uploads/'
+
+    pageData = {
+        "pageTitle": pageTitle,
+        "update_path_dialog": showPathForm, 
+        "path": fakeFullPath,
+        "nextpaths":['videos', 'thumbnails']
+    }
+    return render(request, 'core/home.html', pageData)
 
 def gen(camera):
 	while True:
 		frame = camera.get_frame()
 		yield (b'--frame\r\n'
 				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
 def feed(request):
 	return StreamingHttpResponse(gen(MotionDetect()),
 					content_type='multipart/x-mixed-replace; boundary=frame')
-

@@ -69,11 +69,11 @@ class MotionDetect():
         # has motion been detected?
         self.detected = False
         # should record
-        self.record = False
+        self.record = True
         self.flip = False
         self.mirror = False
         # should send email?
-        self.notify = False
+        self.notify = True
         self.showBox = True
 
     def cleanUp(self):
@@ -129,7 +129,9 @@ class MotionDetect():
                         camID = 1
                         #pass database info to subProcess
                         self.fileName += '.avi'
+                        print("should send?")
                         if self.notify:
+                            print("here")
                             os.system('python send_email.py {} {} {} {}'.format(self.fileName, self.filePath, self.numFrames, camID))
                         date_time = datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
                         self.fileName, self.filePath, self.out= MotionDetect.setRecording(self, date_time, frame)
@@ -229,8 +231,10 @@ class MotionDetect():
             #current date/time
             date_time = datetime.now()
             cv.putText(frame, "{}".format(date_time.strftime("%d/%m/%Y, %H:%M:%S")), (450,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
+            
             #display the image
             cv.imshow('Video', frame)
+            
             # if record, record, if notify, notify, etc.
             MotionDetect.actions(self, frame)
         connection.close()

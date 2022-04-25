@@ -18,6 +18,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'core',
     'user',
     'userconfig',
+    'pathbuilder',
     'streamin',
     'crispy_forms',
 ]
@@ -120,9 +122,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+#Django models extra
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
+
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR]
@@ -130,6 +135,6 @@ STATICFILES_DIRS = [STATIC_DIR]
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-
-# Automatic Primary Key field
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+# Media will point to local storage on user's Pi, but we can add additional Media Url for drop-box, google drive for additional storage.
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

@@ -24,7 +24,7 @@ import userconfig as user_config
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls'), name='core'),
-    path('', include('user.urls'), name='onboarding'),
+    path('onboard/', include('user.urls'), name='onboarding'),
     path('settings/', include('userconfig.urls'), name='settings'),
     path('stream/', include('streamin.urls'), name='stream'),
 ]
