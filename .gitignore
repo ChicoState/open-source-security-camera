@@ -11,6 +11,7 @@ db.sqlite3
 media
 osCam/core/migrations/**
 osCam/userconfig/migrations/**
+/migrations/**
 
 # MacOS #
 .DS_Store
@@ -155,3 +156,4 @@ GitHub.sublime-settings
 
 # Email Notification Settings
 .env
+
