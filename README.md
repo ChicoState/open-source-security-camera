@@ -94,7 +94,7 @@ Hold Ctrl-C to stop the dashboard. Next type the following command to list the c
 ps
 ```
 
-From here type the following command followed by the process listed as "Python3". This will stop the the motion detection script from running.
+From here type the following command followed by the process listed as "Python3". This will stop the motion detection script from running.
 
 ```
 kill <PID Number>
