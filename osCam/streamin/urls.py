@@ -1,12 +1,11 @@
-
 from django.urls import path
 from . import views
 
 TYPE="stream"
 
 urlpatterns = [
-    path('', views.view_stream, name=f'{TYPE}-page'),
-    path('add/', views.add_stream, name=f"add-{TYPE}"),
-    path('edit/<int:id>/', views.edit_stream, name=f"edit-{TYPE}"),
-    path('remove/<int:id>/', views.remove_stream, name=f"remove-{TYPE}"),
-] 
+    path('', views.videoStreamGallery, name=f'gallery-{TYPE}'),
+    path('add/', views.addStream, name=f"add-{TYPE}"),
+    path('edit/<int:id>/', views.editStream, name=f"edit-{TYPE}"),
+    path('remove/<int:id>/', views.removeStream, name=f"remove-{TYPE}"),
+]

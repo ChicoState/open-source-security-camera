@@ -1,21 +1,32 @@
-import imp
+# import imp
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.http import JsonResponse
-# Create your views here.
 
-def view_stream(request):
-    page = "View Video Stream"
-    return JsonResponse({'response': request.get_full_path(), 'type':request.method, 'PAGE:': page}, safe=True)
+from django.shortcuts import render
+from django.views.decorators.csrf import ensure_csrf_cookie
 
-def add_stream(request):
+def videoStreamGallery(request):
+    pageTitle = "Video Stream Gallery"
+    pageData = {
+        'response': request.get_full_path(), 
+        'type':request.method, 
+        'PAGE_TITLE:': pageTitle, 
+        'videos':[], 
+        'MEDIA_URL': '/videos/'
+    }
+    return JsonResponse(pageData)
+
+@ensure_csrf_cookie
+def addStream(request):
     page = "Add Video Stream"
     return JsonResponse({'response': request.get_full_path(), 'type':request.method, 'PAGE:': page}, safe=True)
 
-def edit_stream(request, id):
+@ensure_csrf_cookie
+def editStream(request, id):
     page = "Edit Video Stream"
     return JsonResponse({'response': request.get_full_path(), 'type':request.method, 'PAGE:': page}, safe=True)
 
-def remove_stream(request, id):
+def removeStream(request, id):
     page = "View Video Stream"
     return JsonResponse({'response': request.get_full_path(), 'type':request.method, 'PAGE:': page}, safe=True)
