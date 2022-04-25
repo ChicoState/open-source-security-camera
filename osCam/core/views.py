@@ -1,5 +1,8 @@
 #django imports
 import os
+from tkinter import font
+from tokenize import Double
+from unicodedata import decimal
 from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -95,10 +98,11 @@ class MotionDetect():
             self.detected = True
         #add text to frame
         status_color = MotionDetect.setStatusColor(self)
-        cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
+        fontsize = .5
+        cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, fontsize, status_color, 1)
         #current date/time
         date_time = datetime.now()
-        cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
+        cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, fontsize, status_color, 1)
         ret, jpeg = cv.imencode('.jpg', frame)
         return jpeg.tobytes()
 
