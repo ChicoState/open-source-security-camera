@@ -68,7 +68,7 @@ class MotionDetect():
         # has motion been detected?
         self.detected = False
         # should record
-        self.record = True
+        self.record = False
         self.flip = False
         self.mirror = False
         # should send email?
