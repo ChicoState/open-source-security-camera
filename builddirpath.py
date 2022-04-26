@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import os
+
+
 def GetPath():
 
     path = []
@@ -20,10 +22,12 @@ def GetPath():
             print()
             print("cur path is: " + cur_path)
             print()
-            nextpaths=[]
+            nextpaths = []
             for sub in os.listdir(cur_path):
                 subdir = os.path.join(cur_path, sub)
                 if os.path.isdir(subdir):
                     nextpaths.append(sub)
                     print(sub)
+
+
 print(GetPath())
