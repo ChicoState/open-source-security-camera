@@ -76,6 +76,7 @@ class MotionDetect():
         self.showBox = True
         self.maxNumberVidoes = 10
         self.timeToLive = None #need to implement time to live funciton
+        self.showText = True
 
     def cleanUp(self):
         if self.out != None:
@@ -87,6 +88,7 @@ class MotionDetect():
     def updateSettings(self, row):
         if len(row) > 0:
             self.record = row[1]
+            self.showText = row[2]
             self.maxNumberVidoes = row[3]
             self.timeToLive = row[4]
             self.maxFrames = row[5]

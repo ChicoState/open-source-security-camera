@@ -39,6 +39,7 @@ class MotionDetect():
         self.flip = False
         self.mirror = False
         self.showBoxes = False
+        self.showText = True
         
     
     def __del__(self):
@@ -64,8 +65,17 @@ class MotionDetect():
         self.scale = obj.scale
         self.mirror= obj.mirror
         self.flip= obj.invert
+        self.showText = obj.showText
 
-
+    def setShowText(self, frame, text):
+        if self.showText:
+            status_color = MotionDetect.setStatusColor(self)
+            fontsize = .5
+            cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, fontsize, status_color, 1)
+            #current date/time
+            date_time = datetime.now()
+            cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, fontsize, status_color, 1)
+        return frame
     def get_frame(self):
         success, frame = self.video.read()
         if(not success):
@@ -75,7 +85,6 @@ class MotionDetect():
         frame = MotionDetect.rescaleFrame(self, frame)
         frame = MotionDetect.flipFrame(self, frame)
         frame = MotionDetect.mirrorFrame(self, frame)
-        
         text = self.searchText[int(time.time())%4]
         self.detected = False
         cnts = MotionDetect.imgProcess(self, frame)
@@ -97,12 +106,7 @@ class MotionDetect():
             text = self.motionText[int(time.time())%4]
             self.detected = True
         #add text to frame
-        status_color = MotionDetect.setStatusColor(self)
-        fontsize = .5
-        cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, fontsize, status_color, 1)
-        #current date/time
-        date_time = datetime.now()
-        cv.putText(frame, "Date/Time: {}".format(date_time.strftime("%Y/%m/%d, %H:%M:%S")), (200,15), cv.FONT_HERSHEY_SIMPLEX, fontsize, status_color, 1)
+        frame = MotionDetect.setShowText(self, frame, text)
         ret, jpeg = cv.imencode('.jpg', frame)
         return jpeg.tobytes()
 
