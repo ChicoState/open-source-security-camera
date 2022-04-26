@@ -40,10 +40,10 @@ def settings(request):
     # save camera settings
     if(request.method == 'POST'):
         if("add_camera_config" in request.POST):
-            add_form = CameraEntryForm(request.POST)
+            addForm = CameraEntryForm(request.POST)
             # check that form is valid
-            if(add_form.is_valid()):
-                deviceName = add_form.cleaned_data['deviceName']
+            if(addForm.is_valid()):
+                deviceName = addForm.cleaned_data['deviceName']
                 thisCamInstance = Camera.objects.get(id=1)
                 thisCamInstance.deviceName = deviceName
                 thisCamInstance.save()
@@ -51,7 +51,7 @@ def settings(request):
         # save view settings
         elif("add_view_config" in request.POST):
             addForm = CameraViewForm(request.POST)
-            if(add_form.is_valid()):
+            if(addForm.is_valid()):
                 showMotionBoxes = addForm.cleaned_data['showMotionBoxes']
                 showText = addForm.cleaned_data['showText']
                 text = addForm.cleaned_data['text']
@@ -74,7 +74,7 @@ def settings(request):
         elif ("add_storage_config" in request.POST):
             addForm = StorageForm(request.POST)
             # check submision form valididity
-            if(add_form.is_valid()):
+            if(addForm.is_valid()):
                 recordToDevice = addForm.cleaned_data['recordToDevice']
                 filePath = addForm.cleaned_data['filePath']
                 maxSpace = addForm.cleaned_data['maxSpace']
