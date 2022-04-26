@@ -28,10 +28,6 @@ class CameraViewForm( ModelForm ):
     showMotionBoxes = forms.BooleanField(required=False)
     showText = forms.BooleanField(required=False)
     text = forms.CharField(max_length=255, required=False)
-    recording = forms.BooleanField(
-        label='enable recording',
-        widget=forms.CheckboxInput(),
-        required=False)
     fps = forms.ChoiceField(
         choices=((15, '15'), (30, '30'), (60, '60')),)
     invert = forms.BooleanField(
@@ -50,7 +46,6 @@ class CameraViewForm( ModelForm ):
             'showMotionBoxes',
             'showText',
             'text',
-            'recording',
             'fps',
             'invert',
             'mirror',
@@ -61,7 +56,6 @@ class CameraViewForm( ModelForm ):
         self.fields['showMotionBoxes'].label = "Show Motion Boxes"
         self.fields['showText'].label = "Show Text"
         self.fields['text'].label = "Text"
-        self.fields['recording'].label = "Enable Recording"
         self.fields['fps'].label = "FPS"
         self.fields['invert'].label = "Invert Image"
         self.fields['mirror'].label = "Mirror Image"

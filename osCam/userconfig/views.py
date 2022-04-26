@@ -19,7 +19,6 @@ def settings(request):
             showMotionBoxes = 'True',
             showText = 'True',
             text = 'Cam Name :: Date :: Time',
-            recording = 'True',
             fps = '30',
             invert = 'False',
             mirror = 'False',
@@ -57,7 +56,6 @@ def settings(request):
                 showMotionBoxes = add_form.cleaned_data['showMotionBoxes']
                 showText = add_form.cleaned_data['showText']
                 text = add_form.cleaned_data['text']
-                recording = add_form.cleaned_data['recording']
                 fps = add_form.cleaned_data['fps']
                 invert = add_form.cleaned_data['invert']
                 mirror = add_form.cleaned_data['mirror']
@@ -67,7 +65,6 @@ def settings(request):
                 this_view_instance.showMotionBoxes = showMotionBoxes
                 this_view_instance.showText = showText
                 this_view_instance.text = text
-                this_view_instance.recording = recording
                 this_view_instance.fps = fps
                 this_view_instance.invert = invert
                 this_view_instance.mirror = mirror

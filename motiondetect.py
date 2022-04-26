@@ -33,7 +33,6 @@ class dataBase():
         cur.execute('SELECT * FROM userconfig_storage')
         # get all rows from DB (there should be only 1)
         rows = cur.fetchall()
-        
         l = []
         # loop through the rows
         for row in rows:

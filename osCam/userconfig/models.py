@@ -16,7 +16,6 @@ class CameraView(models.Model):
     showMotionBoxes = models.BooleanField(default=False)
     showText = models.BooleanField(default=False)
     text = models.CharField(max_length=255, default='Cam Name :: Date :: Time')
-    recording = models.BooleanField(default=False, blank=True, null=True)
     fps = models.IntegerField(default=15)
     invert = models.BooleanField(default=False)
     mirror = models.BooleanField(default=False)
