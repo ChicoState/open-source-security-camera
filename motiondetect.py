@@ -33,6 +33,7 @@ class dataBase():
         cur.execute('SELECT * FROM userconfig_storage')
         # get all rows from DB (there should be only 1)
         rows = cur.fetchall()
+        
         l = []
         # loop through the rows
         for row in rows:
@@ -40,7 +41,6 @@ class dataBase():
             for attribute in row:
                 l.append(attribute)
         # return list of attributes (user storage settings from DB
-        # print(l)
         return l
 
 class MotionDetect():
@@ -75,6 +75,8 @@ class MotionDetect():
         # should send email?
         self.notify = False
         self.showBox = True
+        self.maxNumberVidoes = 10
+        self.timeToLive = None #need to implement time to live funciton
 
     def cleanUp(self):
         if self.out != None:
@@ -84,17 +86,12 @@ class MotionDetect():
         cv.waitKey(0)
 
     def updateSettings(self, row):
-        a =2
         if len(row) > 0:
-            self.record = row[1]                #recordToDevice = 'False',
-            # self.useDropBox = row[2]            #recordToCloud = 'F
-            # self.filePath = row[3]              #filePath = '/home/pi/open-source-security-camera/osCam/videos/',
-            # self.maxSpace = row[4]             #maxSpace = '100',
-            # self.ttl = row[5]            #timeToLive = '60',
-            # self.archive = row[6]               #archive = 'False',
-            self.maxFrames = row[7]  #lengthOfRecordings = '10',
-            # self.codec = row[9]                 #codec = 'h264',
-    
+            self.record = row[1]
+            self.maxNumberVidoes = row[3]
+            self.timeToLive = row[4]
+            self.maxFrames = row[5]
+
     #recoding setup
     def setRecording(self, fileName, frame):
         #type of codec (os dependent, currently working for ubunto 20.4)
@@ -182,15 +179,6 @@ class MotionDetect():
         frame = MotionDetect.rescaleFrame(self, frame)
         frame = MotionDetect.flipFrame(self, frame)
         frame = MotionDetect.mirrorFrame(self, frame)
-    
-        # if self.record:
-        #     #label videos based on date/time
-        #     date_time = datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
-        #     #initialize file recoding
-        #     self.fileName, self.filePath, self.out = MotionDetect.setRecording(self, date_time, frame)
-        #     #write first frame
-        #     self.out.write(frame)
-        #     self.numFrames+=1
     
         # set up database
         database = r"osCam/db.sqlite3"
