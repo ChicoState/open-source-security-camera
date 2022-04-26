@@ -1,30 +1,36 @@
 from .models import Camera, Storage, CameraView
-from django import forms    
+from django import forms
 from django.forms import ModelForm
 
+
 # Class for Camera Settings
-class CameraEntryForm( ModelForm ):
+class CameraEntryForm(ModelForm):
     deviceName = forms.CharField(
-        max_length=255, 
-        required=True, 
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Backyard Cam', 
-            'class':"form-control"}
+        max_length=255,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Backyard Cam',
+                'class': "form-control"
+            }
         )
     )
+
     class Meta:
-        model = Camera 
+        model = Camera
         fields = (
-            'deviceName', 
+            'deviceName',
         )
+
     # labels
     def __init__(self, *args, **kwargs):
         super(CameraEntryForm, self).__init__(*args, **kwargs)
         self.fields['deviceName'].label = "Device Name"
 
+
 # Class for view settings
 # this affects how the 'feed' from the camera is 'viewed'
-class CameraViewForm( ModelForm ):
+class CameraViewForm(ModelForm):
     showMotionBoxes = forms.BooleanField(required=False)
     showText = forms.BooleanField(required=False)
     text = forms.CharField(max_length=255, required=False)
@@ -38,8 +44,15 @@ class CameraViewForm( ModelForm ):
         required=False,
         label='mirror image',
         widget=forms.CheckboxInput())
-    scale = forms.ChoiceField( 
-        choices=((1.00, '1.00'), (0.75, '0.75'), (0.50, '0.50'), (0.25, '0.25')), )
+    scale = forms.ChoiceField(
+        choices=(
+            (1.00, '1.00'),
+            (0.75, '0.75'),
+            (0.50, '0.50'),
+            (0.25, '0.25')
+        ),
+    )
+
     class Meta:
         model = CameraView
         fields = (
@@ -49,7 +62,9 @@ class CameraViewForm( ModelForm ):
             'fps',
             'invert',
             'mirror',
-            'scale',)
+            'scale',
+        )
+
     # labels
     def __init__(self, *args, **kwargs):
         super(CameraViewForm, self).__init__(*args, **kwargs)
@@ -61,14 +76,31 @@ class CameraViewForm( ModelForm ):
         self.fields['mirror'].label = "Mirror Image"
         self.fields['scale'].label = "scale"
 
+
 # class for Storage settings
-class StorageForm( ModelForm ):
-    recordToDevice = forms.BooleanField(required=False, label='record to device',)
-    filePath = forms.CharField(max_length=255, required=False, label='file path',)
-    maxSpace = forms.IntegerField(required=False, label='max space', )
-    timeToLive = forms.IntegerField(required=False, label='time to live',)
-    lengthOfRecordings = forms.IntegerField(required=False, label='length of record',)
-    
+class StorageForm(ModelForm):
+    recordToDevice = forms.BooleanField(
+        required=False,
+        label='record to device',
+    )
+    filePath = forms.CharField(
+        max_length=255,
+        required=False,
+        label='file path',
+    )
+    maxSpace = forms.IntegerField(
+        required=False,
+        label='max space',
+    )
+    timeToLive = forms.IntegerField(
+        required=False,
+        label='time to live',
+    )
+    lengthOfRecordings = forms.IntegerField(
+        required=False,
+        label='length of record',
+    )
+
     class Meta:
         model = Storage
         fields = (
@@ -78,6 +110,7 @@ class StorageForm( ModelForm ):
             'timeToLive',
             'lengthOfRecordings',
         )
+
     # labels
     def __init__(self, *args, **kwargs):
         super(StorageForm, self).__init__(*args, **kwargs)
