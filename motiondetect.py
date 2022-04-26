@@ -175,6 +175,14 @@ class MotionDetect():
             return cv.flip(frame,1)
         else:
             return frame
+    def setShowText(self, frame, text):
+        if self.showText:
+            status_color = MotionDetect.setStatusColor(self)
+            cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
+            #current date/time
+            date_time = datetime.now()
+            cv.putText(frame, "{}".format(date_time.strftime("%d/%m/%Y, %H:%M:%S")), (450,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
+        return frame
     def Detect(self):
         isTrue, frame = self.capture.read()
         frame = MotionDetect.rescaleFrame(self, frame)
@@ -213,12 +221,7 @@ class MotionDetect():
                         #change notification text
                         text = self.motionText[int(time.time())%4]
             #add text to frame
-            status_color = MotionDetect.setStatusColor(self)
-            cv.putText(frame, "Status: {}".format(text), (15,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
-            #current date/time
-            date_time = datetime.now()
-            cv.putText(frame, "{}".format(date_time.strftime("%d/%m/%Y, %H:%M:%S")), (450,15), cv.FONT_HERSHEY_SIMPLEX, .5, status_color, 1)
-            
+            frame = MotionDetect.setShowText(self, frame, text)
             #display the image
             cv.imshow('Video', frame)
             
