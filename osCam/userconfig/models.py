@@ -1,27 +1,47 @@
-from typing_extensions import Required
-from urllib import request
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Camera(models.Model):
-    user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
-    deviceName = models.CharField(max_length=40, default='Camera 01')
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    deviceName = models.CharField(
+        max_length=40,
+        default='Camera 01'
+    )
 
     def __str__(self):
         return self.deviceName
 
+
 class CameraView(models.Model):
-    user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
-    camera = models.ForeignKey( Camera, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    camera = models.ForeignKey(
+        Camera,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     showMotionBoxes = models.BooleanField(default=False)
     showText = models.BooleanField(default=False)
     text = models.CharField(max_length=255, default='Cam Name :: Date :: Time')
     fps = models.IntegerField(default=15)
     invert = models.BooleanField(default=False)
     mirror = models.BooleanField(default=False)
-    scale = models.DecimalField(max_digits=3, decimal_places=2,default=0.75)
+    scale = models.DecimalField(max_digits=3, decimal_places=2, default=0.75)
+
     def __str__(self):
         return "Camera View settings"
+
 
 class Storage(models.Model):
     recordToDevice = models.BooleanField(default=False)
