@@ -11,6 +11,8 @@ db.sqlite3
 media
 osCam/core/migrations/**
 osCam/userconfig/migrations/**
+osCam/pathbuilder/migrations/**
+osCam/user/migrations/**
 /migrations/**
 
 # MacOS #
@@ -18,8 +20,8 @@ osCam/userconfig/migrations/**
 .AppleDouble
 .LSOverride
 
-# Backup files # 
-*.bak 
+# Backup files #
+*.bak
 
 
 # If you are using PyCharm #
@@ -156,4 +158,3 @@ GitHub.sublime-settings
 
 # Email Notification Settings
 .env
-
