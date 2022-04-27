@@ -19,7 +19,7 @@ def settings(request):
             cameraIpAddress = '192.168.0.70',
         )
 
-    # if there are no pis, create a starter pi 
+    # if there are no pis, create a starter pi
     if (RaspberryPi.objects.count() < 1):
         RaspberryPi.objects.create(
             user = this_user,
@@ -72,16 +72,16 @@ def settings(request):
             lengthOfRecordings = '10',
             codec = 'h264',
         )
-    
+
     page_data = {
-        'cameras': Camera.objects.all(), 
-        'views': CameraView.objects.all(), 
+        'cameras': Camera.objects.all(),
+        'views': CameraView.objects.all(),
         'network': Network.objects.get(id=1),
         'storages': Storage.objects.all(),
         'raspberrypis': RaspberryPi.objects.all(),
         }
 
-    # save camera settings 
+    # save camera settings
     if(request.method == 'POST'):
         if("add_camera_config" in request.POST):
             add_form = CameraEntryForm(request.POST)
@@ -152,7 +152,7 @@ def settings(request):
                 this_storage_instance.save()
 
                 return redirect('user/settings.html')
-                
+
         elif ("add_network_config" in request.POST):
             add_form = NetworkEntryForm(request.POST)
             if(add_form.is_valid()):
@@ -167,6 +167,19 @@ def settings(request):
                 this_network_instance.save()
 
                 return redirect('user/settings.html')
+
+        if("add_email_config" in request.POST):
+            add_form = EmailEntryForm(request.POST)
+            if(add_form.is_valid()):
+                email = add_form.cleaned_data['email']
+                emailKey = add_form.cleaned_data['emailKey']
+
+                user_instance = User.objects.get(id=1)
+                user_instance.email = email
+                user_instance.emailKey = emailKey
+                user_instance.save()
+
+            return redirect('user/settings.html')
 
     elif(request.method == "GET"):
 
@@ -221,9 +234,11 @@ def settings(request):
         )
         Network = network_form_data.save(commit=False)
 
+        email_form_data
+
         page_data = {
-            "camera_form_data": camera_form_data, 
-            "view_form_data": view_form, 
+            "camera_form_data": camera_form_data,
+            "view_form_data": view_form,
             "storage_form_data": storage_form_data,
             "network_form_data": network_form_data,
         }

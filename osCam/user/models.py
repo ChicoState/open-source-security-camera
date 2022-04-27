@@ -7,4 +7,4 @@ from django.contrib.auth.models import AbstractUser
 # Using Django Built in User for Now, until we need profile
 
 class CustomUser(AbstractUser):
-     email_key = models.CharField(max_length=16, blank=True)
+     emailKey = models.CharField(max_length=16, blank=True)
