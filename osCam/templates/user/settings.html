@@ -8,6 +8,19 @@
 {% endblock %}
 
 {% block content %}
+<br><br>
+<div class="Jumbotron" id="cameraSettings">
+    <h1 class="text-center">Email Notifications</h1>
+    <div class='crispy_forms_field' id="cameraFormField">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ email_form_data | crispy }}
+            <a href="/" class="btn btn-secondary">Cancel</a>
+            <input type="submit" class="btn btn-primary" name="add_camera_config" value="Save">
+        </form>
+    </div>
+</div>
+
 <div class="Jumbotron" id="cameraSettings">
     <h1 class="text-center">Camera & Recording</h1>
     <div class='crispy_forms_field' id="cameraFormField">
