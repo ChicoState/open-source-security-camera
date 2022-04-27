@@ -17,6 +17,7 @@ def send_email(connection, times, video_file, file_name):
     for entry in times:
         mail_content = mail_content + str(entry) + "\n"
 
+    #Assign vairables for smtplib functions
     django_email = str(get_email(connection))
     django_email_key = str(get_key(connection))
 
@@ -85,43 +86,22 @@ def insert_recording(connection, file_name, file_path, length, camera_id_id):
     connection.commit()
 
 
-def select_all_times(connection, file_name):
+def select_all_times(connection):
     cur = connection.cursor()
-
-    #Additional SQLite query statements to choose which column to format the email with
     cur.execute('SELECT * FROM core_recording ORDER BY ID DESC LIMIT 1')
-    #cur.execute('SELECT name from sqlite_master where type= "table"')
-
     rows = cur.fetchall()
-    for row in rows:
-        print(row)
-
     return rows
 
 def get_email(connection):
     cur = connection.cursor()
-
-    #Additional SQLite query statements to choose which column to format the email with
-    #cur.execute('SELECT * FROM core_recording ORDER BY ID DESC LIMIT 1')
     cur.execute('SELECT email FROM user_customuser ORDER BY ID DESC LIMIT 1')
-
     rows = cur.fetchall()
-    for row in rows:
-        print(row)
-
     return rows[0]
 
 def get_key(connection):
     cur = connection.cursor()
-
-    #Additional SQLite query statements to choose which column to format the email with
-    #cur.execute('SELECT * FROM core_recording ORDER BY ID DESC LIMIT 1')
     cur.execute('SELECT emailKey FROM user_customuser ORDER BY ID DESC LIMIT 1')
-
     rows = cur.fetchall()
-    for row in rows:
-        print(row)
-
     return rows[0]
 
 
@@ -137,7 +117,7 @@ def main():
 
     with connection:
         insert_recording(connection, file_name, file_path, length, camera_id_id)
-        times = select_all_times(connection, file_name)
+        times = select_all_times(connection)
         send_email(connection, times, file_path, file_name)
 
     connection.close()
