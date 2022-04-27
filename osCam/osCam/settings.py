@@ -133,8 +133,8 @@ STATICFILES_DIRS = [STATIC_DIR]
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-# Media will point to local storage on user's Pi, 
-# but we can add additional Media Url for drop-box, 
+# Media will point to local storage on user's Pi,
+# but we can add additional Media Url for drop-box,
 # google drive for additional storage.
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
