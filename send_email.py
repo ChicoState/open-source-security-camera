@@ -17,14 +17,14 @@ def send_email(connection, times, video_file, file_name):
     for entry in times:
         mail_content = mail_content + str(entry) + "\n"
 
-    django_email = get_email(connection)
-    django_email_key = get_key(connection)
+    django_email = str(get_email(connection))
+    django_email_key = str(get_key(connection))
 
     EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
-    EMAIL_HOST_USER = django_email
-    EMAIL_HOST_PASSWORD = django_email_key
-    RECIPIENT_ADDRESS = django_email
+    EMAIL_HOST_USER = django_email[2:(len(django_email)-3)]
+    EMAIL_HOST_PASSWORD = django_email_key[2:(len(django_email_key)-3)]
+    RECIPIENT_ADDRESS = django_email[2:(len(django_email)-3)]
 
     #Setup the MIME (From, to, subject)
     message = MIMEMultipart()
@@ -102,27 +102,27 @@ def get_email(connection):
     cur = connection.cursor()
 
     #Additional SQLite query statements to choose which column to format the email with
+    #cur.execute('SELECT * FROM core_recording ORDER BY ID DESC LIMIT 1')
     cur.execute('SELECT email FROM user_customuser ORDER BY ID DESC LIMIT 1')
-    #cur.execute('SELECT name from sqlite_master where type= "table"')
 
     rows = cur.fetchall()
     for row in rows:
         print(row)
 
-    return rows
+    return rows[0]
 
 def get_key(connection):
     cur = connection.cursor()
 
     #Additional SQLite query statements to choose which column to format the email with
+    #cur.execute('SELECT * FROM core_recording ORDER BY ID DESC LIMIT 1')
     cur.execute('SELECT emailKey FROM user_customuser ORDER BY ID DESC LIMIT 1')
-    #cur.execute('SELECT name from sqlite_master where type= "table"')
 
     rows = cur.fetchall()
     for row in rows:
         print(row)
 
-    return rows
+    return rows[0]
 
 
 def main():
