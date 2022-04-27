@@ -16,7 +16,7 @@ fi
 echo "Starting Open-Source Security Camera..."
 echo "Go to http://127.0.0.1:8000/ to view your dashboard"
 echo "Type Ctrl-C to exit"
-sleep 3
+sleep 2
 
 python motiondetect.py &
 cd osCam/
