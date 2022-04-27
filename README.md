@@ -70,7 +70,7 @@ remove *all* containers and images <br>
 
 ### Running the Application <br>
 
-To begin, OpenCV will need to be installed on the Raspberry Pi to make use of the motion detection feature. Run the following commands to enable and run this. *Note: This process will take around 2 hours to complete. *
+To begin, OpenCV will need to be installed on the Raspberry Pi to make use of the motion detection feature. Run the following commands to enable and run this. *Note: This process will take around 2 hours to complete.*
 
 ```
 chmod +x OpenCV-4-5-5.sh
@@ -102,7 +102,7 @@ kill <PID Number>
 
 ### Sending Emails <br>
 
-While running this script, it will prompt if you want to configure using your email to send notifications. To enable this feature, it will ask for a secrete key to have access to send from your email address. To generate the secret key follow these steps:
+To enable this feature go to the settings page of the application. It will ask for a email authentication key. This is required to give the app access to send emails to and from the email provided. To generate the authentication key follow these steps:
 
 1. [Enable Less Secure Apps with your gmail account](https://myaccount.google.com/lesssecureapps)
 2. Make sure two-factor authentication is enabled.
