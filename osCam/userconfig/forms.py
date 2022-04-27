@@ -1,5 +1,6 @@
 from .models import Network, RaspberryPi, Camera, Storage, CameraView
-from django import forms    
+from user.models import CustomUser
+from django import forms
 from django.forms import ModelForm
 
 # Class for Network Settings
@@ -13,37 +14,37 @@ class NetworkEntryForm( ModelForm ):
     homeNetmask = forms.CharField(label='home netmask', required=False,)
 
     class Meta:
-        model = Network 
+        model = Network
         fields = ('homeIpAddress', 'cameraIpAddress', 'homeNetmask',)
 
 # Class for Camera Settings
 class CameraEntryForm( ModelForm ):
     deviceName = forms.CharField(
-        max_length=255, 
-        required=True, 
+        max_length=255,
+        required=True,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Backyard Cam', 
+            'placeholder': 'Backyard Cam',
             'class':"form-control"}
         )
     )
     ipAddress = forms.CharField(
-        max_length=255, 
+        max_length=255,
         widget=forms.TextInput(attrs={
-            'placeholder': '10.0.0.94', 
+            'placeholder': '10.0.0.94',
             'class':"form-control"}
         )
     )
     port = forms.IntegerField(
         required=False,
         widget=forms.TextInput(attrs={
-            'placeholder': '80', 
+            'placeholder': '80',
             'class':"form-control"}
         )
     )
     modelNum = forms.IntegerField(
         required=False,
         widget=forms.TextInput(attrs={
-            'placeholder': '4', 
+            'placeholder': '4',
             'class':"form-control"}
         )
     )
@@ -56,16 +57,16 @@ class CameraEntryForm( ModelForm ):
         )
     )
     cameraIndex = forms.IntegerField(
-        disabled=True, 
+        disabled=True,
         widget=forms.TextInput(attrs={
-            'placeholder': '0', 
+            'placeholder': '0',
             'class':"form-control"}
         )
     )
     class Meta:
-        model = Camera 
+        model = Camera
         fields = (
-            'deviceName', 
+            'deviceName',
             'ipAddress',
             'port',
             'modelNum',
@@ -148,7 +149,7 @@ class StorageForm( ModelForm ):
     lengthOfRecordings = forms.IntegerField(required=False, label='length of record',)
     codec = forms.ChoiceField(
         choices=(('h264', 'h264'), ('mjpeg', 'mjpeg'), ('avi', 'avi')),)
-    
+
     class Meta:
         model = Storage
         fields = (
@@ -171,3 +172,21 @@ class StorageForm( ModelForm ):
         self.fields['archive'].label = "Archive"
         self.fields['lengthOfRecordings'].label = "Length of Recordings"
         self.fields['codec'].label = "Codec"
+
+class EmailEntryForm( ModelForm ):
+    email = forms.CharField(label='email address', required=False,
+        widget=forms.TextInput(attrs={'size':'80', 'class':"form-control"})
+        )
+    emailKey = forms.CharField(label='email authentication key', required=False,
+        widget=forms.TextInput(attrs={'size':'80', 'class':"form-control"})
+        )
+
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'emailKey',)
+
+    # labels
+    def __init__(self, *args, **kwargs):
+        super(EmailEntryForm, self).__init__(*args, **kwargs)
+        self.fields['email'].label = "Email Address"
+        self.fields['emailKey'].label = "Email Authenticaion Key"

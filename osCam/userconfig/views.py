@@ -1,13 +1,14 @@
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from userconfig.forms import *
 from userconfig.models import *
+from user.models import *
 
 def settings(request):
 
     from userconfig.models import Camera
+    from user.models import CustomUser
 
-    this_user = User.objects.get(username=request.user.username)
+    this_user = CustomUser.objects.get(username=request.user.username)
 
     from userconfig.models import Network
     # if there is no Network settings, create
@@ -174,7 +175,7 @@ def settings(request):
                 email = add_form.cleaned_data['email']
                 emailKey = add_form.cleaned_data['emailKey']
 
-                user_instance = User.objects.get(id=1)
+                user_instance = CustomUser.objects.get(id=1)
                 user_instance.email = email
                 user_instance.emailKey = emailKey
                 user_instance.save()
@@ -234,13 +235,21 @@ def settings(request):
         )
         Network = network_form_data.save(commit=False)
 
-        email_form_data
+        User = CustomUser.objects.get(id=1)
+        email_form_data = EmailEntryForm(
+            instance=User,
+            initial={
+                'email': User.email,
+                'emailKey': User.emailKey,
+            }
+        )
 
         page_data = {
             "camera_form_data": camera_form_data,
             "view_form_data": view_form,
             "storage_form_data": storage_form_data,
             "network_form_data": network_form_data,
+            "email_form_data": email_form_data,
         }
 
     return render(request, 'user/settings.html', page_data)
