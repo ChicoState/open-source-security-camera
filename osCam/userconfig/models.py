@@ -1,20 +1,20 @@
 from typing_extensions import Required
 from urllib import request
 from django.db import models
-from django.contrib.auth.models import User
+from user.models import CustomUser
 
 class Network(models.Model):
     homeIpAddress = models.CharField(max_length=32, null=True, blank=True)
     homeNetmask = models.CharField(max_length=32, null=True, blank=True)
     cameraIpAddress = models.CharField(max_length=32, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.homeIpAddress
 
 class RaspberryPi(models.Model):
     # User can have Many RaspberryPie (1:Many)
-    user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
+    user = models.ForeignKey( CustomUser, on_delete=models.CASCADE, null=True, blank=True )
     #network can have many RaspberryPie (1:Many) (we could do manyToMany but assuming we're coding MVP model)
     network = models.ForeignKey(Network, on_delete=models.DO_NOTHING, null=True, blank=True)
     modelNum = models.IntegerField(blank=True, null=True)
@@ -26,7 +26,7 @@ class RaspberryPi(models.Model):
         return self.modelName
 
 class Camera(models.Model):
-    user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
+    user = models.ForeignKey( CustomUser, on_delete=models.CASCADE, null=True, blank=True )
     raspberryPi = models.ForeignKey( RaspberryPi , on_delete=models.CASCADE, null=True, blank=True)
     modelNum = models.IntegerField(blank=True, null=True)
     modelName = models.CharField(max_length=40,blank=True, null=True)
@@ -39,7 +39,7 @@ class Camera(models.Model):
         return self.deviceName
 
 class CameraView(models.Model):
-    user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
+    user = models.ForeignKey( CustomUser, on_delete=models.CASCADE, null=True, blank=True )
     # camera = models.ForeignKey( Camera, on_delete=models.CASCADE, null=True, blank=True)
     showMotionBoxes = models.BooleanField(default=False)
     showContours = models.BooleanField(default=False)
@@ -63,7 +63,7 @@ class Storage(models.Model):
     timeToLive = models.IntegerField(default=0, blank=True, null=True)
     archive = models.BooleanField(default=False, blank=True, null=True)
     lengthOfRecordings = models.IntegerField(default=0, blank=True, null=True)
-    codec = models.CharField(max_length=40, default='h264') 
+    codec = models.CharField(max_length=40, default='h264')
 
     def __str__(self):
         return self.filePath
