@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-TYPE="stream"
+TYPE = "stream"
 
 urlpatterns = [
     path('', views.videoStreamGallery, name=f'gallery-{TYPE}'),
