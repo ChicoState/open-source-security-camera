@@ -10,22 +10,21 @@ from email import encoders
 from email.mime.text import MIMEText
 from sqlite3 import Error
 
-def send_email(times, video_file, file_name):
+def send_email(connection, times, video_file, file_name):
     mail_content = "Hello,\n\n" + \
     "The following entry was created in the database:.\n"
 
     for entry in times:
         mail_content = mail_content + str(entry) + "\n"
 
-    # Read in the private email settings
-    env = environ.Env()
-    environ.Env.read_env()
+    django_email = get_email(connection)
+    django_email_key = get_key(connection)
 
-    EMAIL_HOST = env('EMAIL_HOST')
+    EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
-    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-    RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS')
+    EMAIL_HOST_USER = django_email
+    EMAIL_HOST_PASSWORD = django_email_key
+    RECIPIENT_ADDRESS = django_email
 
     #Setup the MIME (From, to, subject)
     message = MIMEMultipart()
@@ -99,6 +98,32 @@ def select_all_times(connection, file_name):
 
     return rows
 
+def get_email(connection):
+    cur = connection.cursor()
+
+    #Additional SQLite query statements to choose which column to format the email with
+    cur.execute('SELECT email FROM user_customuser ORDER BY ID DESC LIMIT 1')
+    #cur.execute('SELECT name from sqlite_master where type= "table"')
+
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+
+    return rows
+
+def get_key(connection):
+    cur = connection.cursor()
+
+    #Additional SQLite query statements to choose which column to format the email with
+    cur.execute('SELECT emailKey FROM user_customuser ORDER BY ID DESC LIMIT 1')
+    #cur.execute('SELECT name from sqlite_master where type= "table"')
+
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+
+    return rows
+
 
 def main():
 
@@ -109,11 +134,11 @@ def main():
 
     database = r"osCam/db.sqlite3"
     connection = create_connection(database)
-    
+
     with connection:
         insert_recording(connection, file_name, file_path, length, camera_id_id)
         times = select_all_times(connection, file_name)
-        send_email(times, file_path, file_name)
+        send_email(connection, times, file_path, file_name)
 
     connection.close()
 
