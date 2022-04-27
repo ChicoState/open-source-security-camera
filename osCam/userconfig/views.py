@@ -243,6 +243,7 @@ def settings(request):
                 'emailKey': User.emailKey,
             }
         )
+        User = email_form_data.save(commit=False)
 
         page_data = {
             "camera_form_data": camera_form_data,
