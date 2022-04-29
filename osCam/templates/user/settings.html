@@ -18,9 +18,6 @@
             <input type="submit" class="btn btn-primary" name="add_camera_config" value="Save">
         </form>
     </div>
-</div>
-
-<div class="Jumbotron" id="viewSettings">
     <h1 class="text-center">View / Feed</h1>
     <div class='crispy_forms_field' id="viewFormField">
         <form method="POST" enctype="multipart/form-data">
@@ -30,21 +27,6 @@
             <input type="submit" class="btn btn-primary" name="add_view_config" value="Save">
         </form>
     </div>
-</div>
-
-<div class="Jumbotron" id="networkSettings">
-    <h1 class="text-center color: rgb(255, 255, 255)">Network</h1>
-    <div class='crispy_forms_field' id="networkFormField">
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ network_form_data | crispy}}
-            <a href="/" class="btn btn-secondary">Cancel</a>
-            <input type="submit" class="btn btn-primary" name="add_network_config" value="Save">
-        </form>
-    </div>
-</div>
-
-<div class="Jumbotron" id="storageSettings">
     <h1 class="text-center color: rgb(255, 255, 255)">Storage</h1>
     <div class='crispy_forms_field' id="storageFormField">
         <form method="POST" enctype="multipart/form-data">
