@@ -16,7 +16,6 @@ def join(request):
         numUser = CustomUser.objects.count()
         if numUser >= 1:
             return redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-        return render(request, '/')
 
     if (request.method == "POST"):
 
