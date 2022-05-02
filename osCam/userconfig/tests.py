@@ -6,11 +6,6 @@ class smokeTest(TestCase):
     def test_smoke(self):
         self.assertEqual(1, 1)
 
-    def test_joke(self):
-        x = 69
-        self.assertNotEqual(x, 420)
-
-
 class userTest(TestCase):
     def test_user(self):
         u = User.objects.create(
@@ -33,37 +28,52 @@ class userTest(TestCase):
         self.assertNotEqual(u.username, 'KAJLHSF*(#UIONFN')
         self.assertNotEqual(u.password, 'KMFK(I*(*$(#KF')
 
-
-class CameraTestCase(TestCase):
-    def test_camera(self):
-        c = Camera.objects.create(
-          deviceName="Camera 1",
-        )
-        self.assertEqual(c.user.username, "testuser")
-        self.assertEqual(c.user.password, "testpassword")
-        self.assertEqual(c.deviceName, "Camera 1")
+    def test_user_4(self):
+        u = User.objects.create(
+          username='@(#)@(#)@EWJEKJWEK',
+          password='@(#)@(#)@EWJEKJWEKK')
+        self.assertNotEqual(u.username, 'testuser')
+        self.assertNotEqual(u.password, 'testpassword')
 
 
 class CameraViewTestCase(TestCase):
-    def test_camera_view(self):
+    def testCameraView01(self):
         cv = CameraView.objects.create(
           showMotionBoxes="True",
           showText="True",
           text="test",
-          fps="1",
+          fps="30",
           invert="True",
           mirror="True",
         )
         self.assertEqual(cv.showMotionBoxes, "True")
         self.assertEqual(cv.showText, "True")
         self.assertEqual(cv.text, "test")
-        self.assertEqual(cv.fps, "1")
+        self.assertEqual(cv.fps, "30")
         self.assertEqual(cv.invert, "True")
         self.assertEqual(cv.mirror, "True")
 
+    def testCameraView01(self):
+        cv = CameraView.objects.create(
+          showMotionBoxes="False",
+          showText="False",
+          text="test02",
+          fps="60",
+          invert="False",
+          mirror="False",
+        )
+        self.assertEqual(cv.showMotionBoxes, "False")
+        self.assertEqual(cv.showText, "False")
+        self.assertEqual(cv.text, "test02")
+        self.assertEqual(cv.fps, "60")
+        self.assertEqual(cv.invert, "False")
+        self.assertEqual(cv.mirror, "False")
+
+
+
 
 class StorageTestCase(TestCase):
-    def test_storage(self):
+    def test_storage_happy_01(self):
         s = Storage.objects.create(
           recordToDevice="True",
           filePath="test",
@@ -76,3 +86,17 @@ class StorageTestCase(TestCase):
         self.assertEqual(s.maxSpace, "1")
         self.assertEqual(s.timeToLive, "1")
         self.assertEqual(s.lengthOfRecordings, "1")
+
+    def test_storage_happy_02(self):
+      s = Storage.objects.create(
+        recordToDevice="False",
+        filePath="test01",
+        maxSpace="100",
+        timeToLive="100",
+        lengthOfRecordings="100",
+      )
+      self.assertEqual(s.recordToDevice, "False")
+      self.assertEqual(s.filePath, "test01")
+      self.assertEqual(s.maxSpace, "100")
+      self.assertEqual(s.timeToLive, "100")
+      self.assertEqual(s.lengthOfRecordings, "100")
