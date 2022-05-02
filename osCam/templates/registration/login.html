@@ -11,7 +11,7 @@
     <div class="container">
       <div class = "jumbotron">
         <h1>Login</h1>
-        <form action="/login/" method="POST">{% csrf_token %}
+        <form action="{% url 'login' %}" method="POST">{% csrf_token %}
           <div style="color: red">
           {{ form.non_field_errors }}
           </div>
