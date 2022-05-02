@@ -1,5 +1,5 @@
 from django.db import models
-from user.models import CustomUser
+from userconfig.models import CustomUser
 
 
 class PathBuilderHandler(models.Model):

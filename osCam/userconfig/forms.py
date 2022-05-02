@@ -119,7 +119,6 @@ class StorageForm(ModelForm):
         self.fields['maxSpace'].label = "Max Space"
         self.fields['timeToLive'].label = "Time to Live"
         self.fields['lengthOfRecordings'].label = "Length of Recordings"
-        self.fields['codec'].label = "Codec"
 
 class EmailEntryForm( ModelForm ):
     email = forms.CharField(label='email address', required=False,
