@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import os
 import sys
 import environ
 import smtplib
@@ -8,11 +7,11 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 from email.mime.text import MIMEText
-from sqlite3 import Error
+
 
 def send_email(connection, times, video_file, file_name):
     mail_content = "Hello,\n\n" + \
-    "The following entry was created in the database:.\n"
+        "The following entry was created in the database:.\n"
 
     for entry in times:
         mail_content = mail_content + str(entry) + "\n"
@@ -27,35 +26,36 @@ def send_email(connection, times, video_file, file_name):
     EMAIL_HOST_PASSWORD = django_email_key[2:(len(django_email_key)-3)]
     RECIPIENT_ADDRESS = django_email[2:(len(django_email)-3)]
 
-    #Setup the MIME (From, to, subject)
+    # Setup the MIME (From, to, subject)
     message = MIMEMultipart()
     message['From'] = EMAIL_HOST_USER
     message['To'] = RECIPIENT_ADDRESS
     message['Subject'] = 'Security Camera Notifications'
 
-    #The body and the attachments for the mail
+    # The body and the attachments for the mail
     message.attach(MIMEText(mail_content, 'plain'))
 
-    attach_file = open(video_file, 'rb') # Open the file as binary mode
+    attach_file = open(video_file, 'rb')    # Open the file as binary mode
     payload = MIMEBase('application', 'octate-stream')
     payload.set_payload((attach_file).read())
     attach_file.close()
 
-    #add payload header with filename
-    encoders.encode_base64(payload) #encode the attachment
+    # add payload header with filename
+    encoders.encode_base64(payload)     # encode the attachment
     payload.add_header("Content-Disposition", "attachment", filename=file_name)
     message.attach(payload)
 
-    #Create SMTP session, login, and then send email
+    # Create SMTP session, login, and then send email
     session = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
 
-    #Enable Security and send the email
+    # Enable Security and send the email
     session.starttls()
     session.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
     text = message.as_string()
     session.sendmail(EMAIL_HOST_USER, RECIPIENT_ADDRESS, text)
     session.quit()
     print('Mail Sent')
+
 
 def create_connection(db_file):
     sqliteConnection = None
@@ -76,10 +76,15 @@ def create_connection(db_file):
 
     return sqliteConnection
 
+
 def insert_recording(connection, file_name, file_path, length, camera_id_id):
 
-    querey = ''' INSERT INTO core_recording(recordingLength, fileName, filePath, cameraId_id)
-                VALUES(?,?,?,?) '''
+    querey = ''' INSERT INTO core_recording(recordingLength,
+                fileName,
+                filePath,
+                cameraId_id)
+                VALUES(?,?,?,?)
+            '''
     new_recording = (length, file_name, file_path, camera_id_id)
     cur = connection.cursor()
     cur.execute(querey, new_recording)
@@ -116,9 +121,20 @@ def main():
     connection = create_connection(database)
 
     with connection:
-        insert_recording(connection, file_name, file_path, length, camera_id_id)
+        insert_recording(
+            connection,
+            file_name,
+            file_path,
+            length,
+            camera_id_id
+        )
         times = select_all_times(connection)
-        send_email(connection, times, file_path, file_name)
+        send_email(
+            connection,
+            times,
+            file_path,
+            file_name
+        )
 
     connection.close()
 
