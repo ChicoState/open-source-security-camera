@@ -1,5 +1,7 @@
 #django imports
 import os
+from typing import Tuple
+from typing_extensions import Self
 from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -8,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 # from requests import request
 from django.contrib.auth.models import User
 from unittest.mock import DEFAULT
+
+from django.urls import reverse
 # Open CV
 import cv2 as cv
 from cv2 import imshow
@@ -49,14 +53,21 @@ class MotionDetect():
             return cv.flip(frame,1)
         else:
             return frame
+    def setupFrame(self, frame: Self) -> Tuple[Self, bool]:
+        frame = MotionDetect.rescaleFrame(frame, self.scale)
+        frame = MotionDetect.flipFrame(self, frame)
+        frame = MotionDetect.mirrorFrame(self, frame)
+        return frame, (frame is not None)
+
     def get_frame(self):
         success, frame = self.video.read()
         if(not success):
             print("did not read from camera")
             time.sleep(2)
-        frame = MotionDetect.rescaleFrame(frame, self.scale)
-        frame = MotionDetect.flipFrame(self, frame)
-        frame = MotionDetect.mirrorFrame(self, frame)
+            if frame is None:
+                return b'0'
+        
+        self.setupFrame(frame)
         text = self.searchText[int(time.time())%4]
         self.detected = False
         cnts = MotionDetect.imgProcess(frame, self)
@@ -122,26 +133,33 @@ class MotionDetect():
         #return resize frame to particular dimension
         return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
 
-@login_required
+@login_required(login_url='/login')
 def home(request):
 
     pageTitle= home.__name__
     showPathForm = True
     fakeFullPath='/usr/media/uploads/'
-
+    
     pageData = {
         "pageTitle": pageTitle,
         "update_path_dialog": showPathForm, 
         "path": fakeFullPath,
         "nextpaths":['videos', 'thumbnails']
     }
+    
     return render(request, 'core/home.html', pageData)
 
 def gen(camera):
-	while True:
-		frame = camera.get_frame()
-		yield (b'--frame\r\n'
-				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+    '''
+        generates a frame from Camera:MotionDetect that builds up the Video stream.
+        if MotionDetect's current frame is 0-bytes then we stop. Otherwise a user with no camera capability gets stuck with page hanging
+    '''
+    while True:
+        frame = camera.get_frame()
+        if frame == b'0':
+            return False
+        yield (b'--frame\r\n'
+            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
 def feed(request):
 	return StreamingHttpResponse(gen(MotionDetect()),
