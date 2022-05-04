@@ -1,17 +1,20 @@
 from django.shortcuts import render, redirect
 from userconfig.forms import CameraEntryForm, CameraViewForm, StorageForm
 
-
-def settings(request):
-    # this_user = User.objects.get(username=request.user.username)
+def checkIfCameraExists():
     from userconfig.models import Camera
-    from userconfig.models import CameraView
-    from userconfig.models import Storage
-    # if there are no cameras create a dummy camera
     if (Camera.objects.count() < 1):
         Camera.objects.create(
             deviceName='rpi camera 01',
         )
+
+def settings(request):
+    # this_user = User.objects.get(username=request.user.username)
+    from userconfig.models import CameraView
+    from userconfig.models import Storage
+    # if there are no cameras create a dummy camera
+    checkIfCameraExists()
+
     # if there are no views create a dummy view
     if (CameraView.objects.count() < 1):
         CameraView.objects.create(
