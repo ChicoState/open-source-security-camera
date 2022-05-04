@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 class CustomUser(AbstractUser):
     emailKey = models.CharField(max_length=16, blank=True)
+
 
 class Camera(models.Model):
     user = models.ForeignKey(
@@ -18,6 +20,7 @@ class Camera(models.Model):
 
     def __str__(self):
         return self.deviceName
+
 
 class CameraView(models.Model):
     user = models.ForeignKey(
@@ -42,6 +45,7 @@ class CameraView(models.Model):
 
     def __str__(self):
         return "Camera View settings"
+
 
 class Storage(models.Model):
     recordToDevice = models.BooleanField(default=False)
