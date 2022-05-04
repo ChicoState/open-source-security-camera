@@ -15,8 +15,10 @@ from django.contrib.auth.models import User
 
 
 
-
-
+# Create your tests here.
+class smokeTest(TestCase):
+    def test_smoke(self):
+        self.assertEqual(1, 1)
 
 class SetupMotionDetectCamera(TestCase):
     
@@ -51,21 +53,16 @@ class SetupMotionDetectCamera(TestCase):
             first_name=self.objects.get("USER_FIRST"),
             phone=self.objects.get("USER_LAST"),
         )
-    # @staticmethod
+        
     def getUrl(self, type, data: Optional[str]= ...):
         if isinstance(type, HttpRequest):
             return HttpRequest.get_full_path()
-        elif isinstance(type, HttpResponse):
-            # for key in HttpResponse.headers.keys():
-                print("[HttpResponse]: ") #,key, HttpResponse.headers[key])   
-            # [print("[HttpResponse]: ",key, HttpResponse.headers[key]) ]
         else:
             return reverse(self.urlNameAlias)
 
     def testEnabled(self):
         self.available, self.working, self.response = VideoPortScan.create().availableAndWorkingPorts()
     
-
 class VideoCapture(SetupMotionDetectCamera):
 
     def testAddVideoHomePage(self):
@@ -77,3 +74,4 @@ class VideoCapture(SetupMotionDetectCamera):
     def invalidVideoDataView(self):
         self.assertEquals(reverse("home"), HttpRequest.get_host())
         _response = self.client.post()
+
