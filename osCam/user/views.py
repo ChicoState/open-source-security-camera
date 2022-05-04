@@ -2,11 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from user.forms import JoinForm
-
-from django.contrib.auth import get_user_model
-User = get_user_model()
-
 from userconfig.models import CustomUser
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your views here.
 def join(request):
