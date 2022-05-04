@@ -69,9 +69,6 @@ class CameraViewTestCase(TestCase):
         self.assertEqual(cv.invert, "False")
         self.assertEqual(cv.mirror, "False")
 
-
-
-
 class StorageTestCase(TestCase):
     def test_storage_happy_01(self):
         s = Storage.objects.create(

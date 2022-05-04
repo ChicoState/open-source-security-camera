@@ -8,25 +8,21 @@ def checkIfCameraExists():
             deviceName='rpi camera 01',
         )
 
-def settings(request):
-    # this_user = User.objects.get(username=request.user.username)
+def checkIfCameraViewExists():
     from userconfig.models import CameraView
-    from userconfig.models import Storage
-    # if there are no cameras create a dummy camera
-    checkIfCameraExists()
-
-    # if there are no views create a dummy view
     if (CameraView.objects.count() < 1):
-        CameraView.objects.create(
-            showMotionBoxes='True',
-            showText='True',
-            text='Cam Name :: Date :: Time',
-            fps='30',
-            invert='False',
-            mirror='False',
-            scale='0.75'
-        )
-    # if there are no storages create a dummy storage
+            CameraView.objects.create(
+                showMotionBoxes='True',
+                showText='True',
+                text='Cam Name :: Date :: Time',
+                fps='30',
+                invert='False',
+                mirror='False',
+                scale='0.75'
+            )
+
+def checkIfStorageExists():
+    from userconfig.models import Storage
     if (Storage.objects.count() < 1):
         Storage.objects.create(
             recordToDevice='False',
@@ -35,6 +31,12 @@ def settings(request):
             timeToLive='60',
             lengthOfRecordings='10',
         )
+
+def settings(request):    
+    checkIfCameraExists()
+    checkIfCameraViewExists()
+    checkIfStorageExists()
+    
     pageData = {
         'cameras': Camera.objects.all(),
         'views': CameraView.objects.all(),
