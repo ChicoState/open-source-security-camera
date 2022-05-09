@@ -1,0 +1,13 @@
+#nav-bar {
+    background-color: #334257;
+}
+
+.nav-link {
+    color: #EEEEEE;
+    font-size: 150%;
+}
+
+a, a:hover, a:focus, a:active {
+    text-decoration: none;
+    color: #FFFFFF;
+}
