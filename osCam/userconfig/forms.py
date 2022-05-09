@@ -1,4 +1,4 @@
-from .models import Camera, Storage, CameraView
+from .models import Camera, Storage, CameraView, CustomUser
 from django import forms
 from django.forms import ModelForm
 
@@ -22,14 +22,14 @@ class CameraEntryForm(ModelForm):
             'deviceName',
         )
 
-    # labels
+    # Labels
     def __init__(self, *args, **kwargs):
         super(CameraEntryForm, self).__init__(*args, **kwargs)
         self.fields['deviceName'].label = "Device Name"
 
 
 # Class for view settings
-# this affects how the 'feed' from the camera is 'viewed'
+# This affects how the 'feed' from the camera is 'viewed'
 class CameraViewForm(ModelForm):
     showMotionBoxes = forms.BooleanField(required=False)
     showText = forms.BooleanField(required=False)
@@ -65,7 +65,7 @@ class CameraViewForm(ModelForm):
             'scale',
         )
 
-    # labels
+    # Labels
     def __init__(self, *args, **kwargs):
         super(CameraViewForm, self).__init__(*args, **kwargs)
         self.fields['showMotionBoxes'].label = "Show Motion Boxes"
@@ -77,7 +77,7 @@ class CameraViewForm(ModelForm):
         self.fields['scale'].label = "scale"
 
 
-# class for Storage settings
+# Class for Storage settings
 class StorageForm(ModelForm):
     recordToDevice = forms.BooleanField(
         required=False,
@@ -111,7 +111,7 @@ class StorageForm(ModelForm):
             'lengthOfRecordings',
         )
 
-    # labels
+    # Labels
     def __init__(self, *args, **kwargs):
         super(StorageForm, self).__init__(*args, **kwargs)
         self.fields['recordToDevice'].label = "Record to Device"
@@ -119,3 +119,20 @@ class StorageForm(ModelForm):
         self.fields['maxSpace'].label = "Max Space"
         self.fields['timeToLive'].label = "Time to Live"
         self.fields['lengthOfRecordings'].label = "Length of Recordings"
+
+
+class EmailEntryForm(ModelForm):
+    email = forms.CharField(label='email address', required=False,
+        widget=forms.TextInput(attrs={'size': '80', 'class': "form-control"}))
+    emailKey = forms.CharField(label='email authentication key', required=False,
+        widget=forms.TextInput(attrs={'size': '80', 'class': "form-control"}))
+
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'emailKey',)
+
+    # Labels
+    def __init__(self, *args, **kwargs):
+        super(EmailEntryForm, self).__init__(*args, **kwargs)
+        self.fields['email'].label = "Email Address"
+        self.fields['emailKey'].label = "Email Authenticaion Key"

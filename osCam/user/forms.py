@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from userconfig.models import CustomUser
 
 
 class JoinForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class JoinForm(forms.ModelForm):
         attrs={'size': '30'}))
 
     class Meta():
-        model = User
+        model = CustomUser
         fields = (
             'first_name',
             'last_name',

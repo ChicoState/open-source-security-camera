@@ -1,10 +1,14 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
+
+class CustomUser(AbstractUser):
+    emailKey = models.CharField(max_length=16, blank=True)
 
 
 class Camera(models.Model):
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         null=True,
         blank=True
@@ -20,7 +24,7 @@ class Camera(models.Model):
 
 class CameraView(models.Model):
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         null=True,
         blank=True
