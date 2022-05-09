@@ -132,7 +132,8 @@ class MotionDetect():
                     camID = 1
                     # pass database info to subProcess
                     self.fileName += '.avi'
-                    if self.notify:
+                    # only send email if recording and notifications are turned on
+                    if self.notify and self.record:
                         os.system('python send_email.py {} {} {} {}'.format(
                             self.fileName,
                             self.filePath,
