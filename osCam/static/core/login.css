@@ -1,3 +1,29 @@
 .register-row {
     padding-top: 25px
 }
+
+.center {
+    margin: 0;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    -ms-transform: translateY(-25%) translateX(-50%);
+    transform: translateY(-20%) translateX(-50%);
+}
+
+h1, label, td {
+    color: #EEE
+}
+
+#login-title {
+    position: relative;
+    top: -25%;
+}
+
+#label-form {
+    font-size: 20px;
+}
+
+.jumbotron-div {
+    background-color: #334756
+}

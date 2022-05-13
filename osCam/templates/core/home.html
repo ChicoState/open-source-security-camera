@@ -5,8 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="text-center">
-    <h1>Hello, security camera dashboard under construction</h1>
+<div>
     {% if user.is_authenticated %}
         <h2>Welcome, {{ user.username }}!</h2>
     {% elif user.is_anonymous %}
@@ -15,63 +14,45 @@
         <h2>Welcome, stranger!</h2>
     {% endif %}
 </div>
-<hr />
+<div class="text-center">
+    <h1>Cameras</h1>
+</div>
+<hr/>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <!-- 1 of 3 col -->
-            <!-- user profile information -->
-            <h2>user profile info</h2>
-            {% if user.is_authenticated %}
-                {% include "user/profile.html" %}
-            {% else %}
-                <p>
-                    You are not logged in.
-                </p>
-            {% endif %}
-        </div>
-        <div class="col-6">
-            <div class="row justify-content-md-center">
-                <!-- 2 of three columns -->
-                <h2>cameras</h2>
-            </div>
-            <div class="row justify-content-md-left">
-                <div class="col-6">
-                    <!-- cameras -->
-                    {% if user.is_authenticated %}
-                        
-                    <div class="container-fluid">
-                        <img src="{% url 'feed' %}" class="vid-feed">
-                    </div>
-                    {% endif %}
+    <div class="div-feed">
+        <div class="row justify-content-md-left">
+            <div class="col-6">
+                <!-- cameras -->
+                {% if user.is_authenticated %}
+                    
+                <div class="container-fluid">
+                    <img src="{% url 'feed' %}" class="vid-feed">
                 </div>
-            </div>
-        </div>
-        <div class="col">
-            <!-- 3 of three columns -->
-            <!-- statistics based on activity -->
-            <h2>stats</h2>
-            statistics based on activity monitored by system
-            <br>
-            <br>
-            <hr>
-            <div class="container">
-                <p>Current Storage Location: <a href="#" class="btn btn-primary">{{ path }}</a></p>
-                {% if update_path_dialog %}
-                    <form id="path_dialog" method="post" action="{% url 'home' %}"> {% csrf_token %}
-                        <label for="path">Choose File Path:</label>
-                        {% for subPath in nextpaths %}
-                            <input type="submit" id="path" name="$PATH" value="{{ subPath }}">
-                        {% endfor %}
-                    </form>
                 {% endif %}
-        
             </div>
- 
         </div>
-           <!-- end of 3 of 3 col -->  
     </div>
-    <!-- end of row -->
+    <div class="div-info">
+        <!-- 3 of three columns -->
+        <!-- statistics based on activity -->
+        <h2>stats</h2>
+        statistics based on activity monitored by system
+        <br>
+        <br>
+        <hr>
+        <div class="container">
+            <p>Current Storage Location: <a href="#" class="btn btn-primary">{{ path }}</a></p>
+            {% if update_path_dialog %}
+                <form id="path_dialog" method="post" action="{% url 'home' %}"> {% csrf_token %}
+                    <label for="path">Choose File Path:</label>
+                    {% for subPath in nextpaths %}
+                        <input type="submit" id="path" name="$PATH" value="{{ subPath }}">
+                    {% endfor %}
+                </form>
+            {% endif %}
+    
+        </div>
+    </div>
 </div>
  <!-- end of container -->
 
