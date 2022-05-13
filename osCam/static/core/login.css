@@ -2,7 +2,7 @@
     padding-top: 25px
 }
 
-.login {
+.center {
     margin: 0;
     position: absolute;
     top: 40%;
@@ -12,7 +12,7 @@
 }
 
 h1, label, td {
-    color: #222
+    color: #EEE
 }
 
 #login-title {
@@ -22,4 +22,8 @@ h1, label, td {
 
 #label-form {
     font-size: 20px;
+}
+
+.jumbotron-div {
+    background-color: #334756
 }
