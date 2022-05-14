@@ -25,9 +25,3 @@ urlpatterns = [
     path('settings/', include('userconfig.urls'), name='settings'),
     path('stream/', include('streamin.urls'), name='stream'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# urlpatterns += urlpatterns('',
-#         url(r'^media/(?P<path>.*)$',
-#             'django.views.static.serve',
-#             {'document_root': settings.MEDIA_ROOT, }),
-#     )
