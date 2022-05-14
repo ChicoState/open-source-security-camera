@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from userconfig.models import CustomUser
 
 
 class PathBuilderHandler(models.Model):
@@ -32,7 +32,7 @@ class NextPath(models.Model):
 
 class Path(models.Model):
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         blank=True,
         null=True

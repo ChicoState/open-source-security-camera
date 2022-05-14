@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from userconfig.forms import CameraEntryForm, CameraViewForm, StorageForm
+from userconfig.forms import CameraEntryForm, CameraViewForm, StorageForm, EmailEntryForm
 
 
 def settings(request):
@@ -7,6 +7,7 @@ def settings(request):
     from userconfig.models import Camera
     from userconfig.models import CameraView
     from userconfig.models import Storage
+    from userconfig.models import CustomUser
     # if there are no cameras create a dummy camera
     if (Camera.objects.count() < 1):
         Camera.objects.create(
@@ -88,6 +89,19 @@ def settings(request):
                 thisStorageInstance.lengthOfRecordings = lengthOfRecordings
                 thisStorageInstance.save()
                 return redirect('/settings')
+
+        elif("add_email_config" in request.POST):
+            add_form = EmailEntryForm(request.POST)
+            if(add_form.is_valid()):
+                email = add_form.cleaned_data['email']
+                emailKey = add_form.cleaned_data['emailKey']
+
+                user_instance = CustomUser.objects.get(id=1)
+                user_instance.email = email
+                user_instance.emailKey = emailKey
+                user_instance.save()
+
+            return redirect('/settings/')
     elif(request.method == "GET"):
         Camera = Camera.objects.get(id=1)
         cameraFormData = CameraEntryForm(
@@ -122,9 +136,21 @@ def settings(request):
             }
         )
         Storage = storageFormData.save(commit=False)
+
+        User = CustomUser.objects.get(id=1)
+        email_form_data = EmailEntryForm(
+            instance=User,
+            initial={
+                'email': User.email,
+                'emailKey': User.emailKey,
+            }
+        )
+        User = email_form_data.save(commit=False)
+
         pageData = {
             "camera_form_data": cameraFormData,
             "view_form_data": viewForm,
             "storage_form_data": storageFormData,
+            "email_form_data": email_form_data,
         }
     return render(request, 'user/settings.html', pageData)

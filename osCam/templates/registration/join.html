@@ -4,9 +4,10 @@
 <title>Register Your OS Cam Account</title>
 {% endblock %}  
 {% block content %}
-<div class="container">
-  <div class = "jumbotron">
+<div class="container center">
+  <div class = "jumbotron jumbotron-div">
     <h1>Join</h1>
+    <hr class="my-4">
     <form method="POST">{% csrf_token %}
       <table> 
         {{ join_form.as_table }}
