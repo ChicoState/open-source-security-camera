@@ -1,33 +1,32 @@
 from django.test import TestCase
 from django import forms
 from userconfig.models import CustomUser, CameraView, Camera, Storage
-import userconfig.forms
-
+from userconfig.forms import CameraEntryForm, CameraViewForm, StorageForm
 
 class CameraFormTest(TestCase):
     def test_camera_entry_form_valid(self):
-      form = userconfig.forms.CameraEntryForm(data={
+      form = CameraEntryForm(data={
         'deviceName': 'Camera'
       })
 
       self.assertTrue(form.is_valid())
 
     def test_camera_entry_form_labels(self):
-      form = userconfig.forms.CameraEntryForm(data={
+      form = CameraEntryForm(data={
         'deviceName': 'Camera'
       })
 
       self.assertEqual(form.fields['deviceName'].label, 'Device Name')
 
     def test_camera_entry_form_initials(self):
-      form = userconfig.forms.CameraEntryForm(data={
+      form = CameraEntryForm(data={
         'deviceName': 'Camera'
       })
 
       self.assertEqual(form.fields['deviceName'].initial, None)
 
     def test_camera_view_form_valid(self):
-      form = userconfig.forms.CameraViewForm(data={
+      form = CameraViewForm(data={
           'showMotionBoxes': True,
           'showText': True,
           'text': 'Cam Name :: Date :: Time',
@@ -40,7 +39,7 @@ class CameraFormTest(TestCase):
       self.assertTrue(form.is_valid())
 
     def test_camera_view_form_labels(self):
-      form = userconfig.forms.CameraViewForm(data={
+      form = CameraViewForm(data={
         'showMotionBoxes': True,
         'showText': True,
         'text': 'Cam Name :: Date :: Time',
@@ -59,7 +58,7 @@ class CameraFormTest(TestCase):
       self.assertEqual(form.fields['scale'].label, 'Scale')
 
     def test_camera_view_form_labels(self):
-      form = userconfig.forms.CameraViewForm(data={
+      form = CameraViewForm(data={
         'showMotionBoxes': True,
         'showText': True,
         'text': 'Cam Name :: Date :: Time',
@@ -85,7 +84,6 @@ class smokeTest(TestCase):
         x = 69
         self.assertNotEqual(x, 420)
 
-
 class userTest(TestCase):
     def test_user(self):
         u = CustomUser.objects.create(
@@ -107,6 +105,13 @@ class userTest(TestCase):
           password='testpassword')
         self.assertNotEqual(u.username, 'KAJLHSF*(#UIONFN')
         self.assertNotEqual(u.password, 'KMFK(I*(*$(#KF')
+    
+    def test_user_4(self):
+        u = CustomUser.objects.create(
+          username='testuser',
+          password='testpassword')
+        self.assertEqual(u.username, 'testuser')
+        self.assertEqual(u.password, 'testpassword')
 
 
 class CameraTestCase(TestCase):
@@ -155,3 +160,79 @@ class StorageTestCase(TestCase):
         self.assertEqual(s.maxSpace, "1")
         self.assertEqual(s.timeToLive, "1")
         self.assertEqual(s.lengthOfRecordings, "1")
+
+class StorageFormTestCase(TestCase):
+    def test_storage_form_valid(self):
+        form = StorageForm(data={
+          'recordToDevice': 'True',
+          'filePath': 'test',
+          'maxSpace': '1',
+          'timeToLive': '1',
+          'lengthOfRecordings': '1',
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_storage_form_2_valid(self):
+        form = StorageForm(data={
+          'recordToDevice': 'False',
+          'filePath': 'test2',
+          'maxSpace': '100',
+          'timeToLive': '100',
+          'lengthOfRecordings': '100',
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_storage_form_3_valid(self):
+      form = StorageForm(data={
+        'recordToDevice': 'True',
+        'filePath': 'test3',
+        'maxSpace': '100',
+        'timeToLive': '100',
+        'lengthOfRecordings': '100',
+      })
+      self.assertEqual(form.is_valid(), True)
+
+    def test_storage_form_labels(self):
+      form = StorageForm(data={
+        'recordToDevice': 'True',
+        'filePath': 'test4',
+        'maxSpace': '100',
+        'timeToLive': '100',
+        'lengthOfRecordings': '100',
+      })
+      self.assertEqual(form.is_valid(), True)
+      self.assertEqual(form.fields['recordToDevice'].label, 'Record to Device')
+      self.assertEqual(form.fields['filePath'].label, "File Path")
+      self.assertEqual(form.fields['maxSpace'].label, "Max Space")
+      self.assertEqual(form.fields['timeToLive'].label, "Time to Live")
+      self.assertEqual(form.fields['lengthOfRecordings'].label, "Length of Recordings")
+    
+    def test_storage_form_initials_01(self):
+      form = StorageForm(data={
+        'recordToDevice': 'True',
+        'filePath': 'testLabel',
+        'maxSpace': '100',
+        'timeToLive': '100',
+        'lengthOfRecordings': '100',
+      })
+      self.assertEqual(form.is_valid(), True)
+      self.assertEqual(form.fields['recordToDevice'].initial, None)
+      self.assertEqual(form.fields['filePath'].initial, None)
+      self.assertEqual(form.fields['maxSpace'].initial, None)
+      self.assertEqual(form.fields['timeToLive'].initial, None)
+      self.assertEqual(form.fields['lengthOfRecordings'].initial, None)
+
+    def test_storage_form_initials_02(self):
+      form = StorageForm(data={
+        'recordToDevice': 'False',
+        'filePath': 'testLabel05',
+        'maxSpace': '10000',
+        'timeToLive': '10000',
+        'lengthOfRecordings': '10000',
+      })
+      self.assertEqual(form.is_valid(), True)
+      self.assertEqual(form.fields['recordToDevice'].initial, None)
+      self.assertEqual(form.fields['filePath'].initial, None)
+      self.assertEqual(form.fields['maxSpace'].initial, None)
+      self.assertEqual(form.fields['timeToLive'].initial, None)
+      self.assertEqual(form.fields['lengthOfRecordings'].initial, None)
