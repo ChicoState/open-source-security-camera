@@ -1,30 +1,29 @@
 from django.shortcuts import render, redirect
 from userconfig.forms import CameraEntryForm, CameraViewForm, StorageForm, EmailEntryForm
 
-
-def settings(request):
-    # this_user = User.objects.get(username=request.user.username)
+def checkIfCameraExists():
     from userconfig.models import Camera
-    from userconfig.models import CameraView
-    from userconfig.models import Storage
-    from userconfig.models import CustomUser
     # if there are no cameras create a dummy camera
     if (Camera.objects.count() < 1):
         Camera.objects.create(
             deviceName='rpi camera 01',
         )
-    # if there are no views create a dummy view
+
+def checkIfCameraViewExists():
+    from userconfig.models import CameraView
     if (CameraView.objects.count() < 1):
-        CameraView.objects.create(
-            showMotionBoxes='True',
-            showText='True',
-            text='Cam Name :: Date :: Time',
-            fps='30',
-            invert='False',
-            mirror='False',
-            scale='0.75'
-        )
-    # if there are no storages create a dummy storage
+            CameraView.objects.create(
+                showMotionBoxes='True',
+                showText='True',
+                text='Cam Name :: Date :: Time',
+                fps='30',
+                invert='False',
+                mirror='False',
+                scale='0.75'
+            )
+
+def checkIfStorageExists():
+    from userconfig.models import Storage
     if (Storage.objects.count() < 1):
         Storage.objects.create(
             recordToDevice='False',
@@ -33,6 +32,12 @@ def settings(request):
             timeToLive='60',
             lengthOfRecordings='10',
         )
+
+def settings(request):    
+    checkIfCameraExists()
+    checkIfCameraViewExists()
+    checkIfStorageExists()
+    
     pageData = {
         'cameras': Camera.objects.all(),
         'views': CameraView.objects.all(),
