@@ -1,6 +1,6 @@
 from django.test import TestCase
-from userconfig.models import User, CameraView, Camera, Storage
-
+from userconfig.models import CustomUser, CameraView, Camera, Storage
+from django.contrib.auth.models import User
 
 class smokeTest(TestCase):
     def test_smoke(self):
@@ -10,24 +10,23 @@ class smokeTest(TestCase):
         x = 69
         self.assertNotEqual(x, 420)
 
-
 class userTest(TestCase):
     def test_user(self):
-        u = User.objects.create(
+        u = CustomUser.objects.create(
           username='testuser',
           password='testpassword')
         self.assertEqual(u.username, 'testuser')
         self.assertEqual(u.password, 'testpassword')
 
     def test_user_2(self):
-        u = User.objects.create(
+        u = CustomUser.objects.create(
           username='KAJLHSF*(#UIONFN',
           password='KMFK(I*(*$(#KF')
         self.assertEqual(u.username, 'KAJLHSF*(#UIONFN')
         self.assertEqual(u.password, 'KMFK(I*(*$(#KF')
 
     def test_user_3(self):
-        u = User.objects.create(
+        u = CustomUser.objects.create(
           username='testuser',
           password='testpassword')
         self.assertNotEqual(u.username, 'KAJLHSF*(#UIONFN')
@@ -39,6 +38,10 @@ class CameraTestCase(TestCase):
         c = Camera.objects.create(
           deviceName="Camera 1",
         )
+        u = CustomUser.objects.create(
+          username='testuser',
+          password='testpassword')
+        c.user = u
         self.assertEqual(c.user.username, "testuser")
         self.assertEqual(c.user.password, "testpassword")
         self.assertEqual(c.deviceName, "Camera 1")
