@@ -1,196 +1,46 @@
-<html>
-    <head>
-        {% load static %}
-        {% include "core/bootstrap.html" %}
-        <!-- osCam/static/core/dash.css -->
-        <link rel="stylesheet" href="{% static '/core/dash.css' %}">
-    </head>
-
-    <body>
-        {% include "core/navigation.html" %}
-        <div class="text-center">
-            <h1>Hello, security camera dashboard under construction</h1>
-            {% if user.is_authenticated %}
-                <h2>Welcome, {{ user.username }}!</h2>
-            {% elif user.is_anonymous %}
-                <h2>Welcome, non-logged-in person!</h2>
-            {% else %}
-                <h2>Welcome, stranger!</h2>
-            {% endif %}
-        </div>
-        <hr />
-        <div class="container-fluid">
-            <div class="row">
-              <div class="col">
-                  <!-- 1 of 3 col -->
-                <!-- user profile information -->
-                <h2>user profile info</h2>
+<!--  -->
+{% extends 'core/base.html' %}
+    {% block content %}
+        <body>
+            <!-- {% include "core/navigation.html" %} -->
+            <div class="text-center">
+                <h1>Hello, security camera dashboard under construction</h1>
                 {% if user.is_authenticated %}
-                    {% include "user/profile.html" %}
+                    <h2>Welcome, {{ user.username }}!</h2>
+                {% elif user.is_anonymous %}
+                    <h2>Welcome, non-logged-in person!</h2>
                 {% else %}
-                    <p>
-                        You are not logged in.
-                    </p>
+                    <h2>Welcome, stranger!</h2>
                 {% endif %}
-              </div>
-
-              <div class="col-6">
-                <div class="row justify-content-md-center">
-                    <!-- 2 of three columns -->
-                    <h2>cameras</h2>
-                </div>
-                <div class="row justify-content-md-left">
-                    <div class="col-6">
-                        <!-- cameras -->
-                        {% if user.is_authenticated %}
-                          
-                        <div class="container-fluid">
-                        <img src="{% url 'feed' %}" class="vid-feed">
-                            <!-- <div class="container-fluid">
-                            <img src="{% url 'feed' %}"> -->
-                          
-                        {% endif %}
-
+            </div>
+            <hr />
+            <div class="container-fluid">
+                <div class="col">
+                    <div class="row justify-content-md-center">
+                        <!-- 2 of three columns -->
+                        <h2>cameras</h2>
                     </div>
-                    </div>
-                  </div>
-              </div>
-              <div class="col">
-                <!-- 3 of three columns -->
-                <!-- statistics based on activity -->
-             
+                    <div class="row justify-content-md-left">
+                        <div class="col-6">
+                            <!-- cameras -->
+                            {% if user.is_authenticated %}
+                            
+                            <div class="container-fluid">
+                            <img src="{% url 'feed' %}" class="vid-feed">
+                                <!-- <div class="container-fluid">
+                                <img src="{% url 'feed' %}"> -->
+                            
+                            {% endif %}
 
-                <h2>stats</h2>
-                statistics based on activity monitored by system
-                <br>
-                <br>
-                <hr>
-                <div class="container">
-                    <p>Current Upload Path: <a href="#" class="btn btn-primary">{{ path }}</a></p>
-                    {% if update_path_dialog %}
-                     <form id="path_dialog" method="post" action="{% url 'home' %}"> {% csrf_token %}
-                            <label for="path">[UPDATE] Choose File Path:</label>
-                            {% for subPath in nextpaths %}
-                                <!-- <a type="submit" name="path" value="{{ subPath }}">{{subPath}}</a> -->
-                                <input type="submit" id="path" name="$PATH" value="{{ subPath }}">
-                                <!-- <a href="" class="btn btn-primary">{{subPath}}</a> -->
-                            {% endfor %}
-                        </form>
-                    {% endif %}
-            
+                        </div>
+                        </div>
+                    </div>
                 </div>
-                  
-        
-            
-                </div>
-                  
-                </div>
-              </div> <!-- end of 3 of 3 col -->
+                
+                
             </div> <!-- end of row -->
-        <!-- {% include 'core/gridview.html' %} -->
-        <div class="container">
-            <div class="space">
-                <br><br><br>
-            </div>
-            <div class="row">
-                <h1 class="gridview-header">Recordings<hr></h1>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="video-card">
-                        <video width="300" height="300" controls>
-                            <source src="../../videos/istock-1016926172_preview.mp4" type="video/mp4">
-                            <!-- <source src="movie.ogg" type="video/ogg"> -->
-                            Video cannot be displayed. Your browser does not support the video tag.
-                          </video>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="video-card">
-                        <video width="300" height="300" controls>
-                            <source src="movie.mp4" type="video/mp4">
-                            <source src="movie.ogg" type="video/ogg">
-                            Video cannot be displayed. Your browser does not support the video tag.
-                          </video>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="video-card">
-                        <video width="300" height="300" 
-                        controls preload="auto">
-                            <source src="https://storage.googleapis.com/web-dev-assets/video-and-source-tags/chrome.webm" type="video/webm">
+        
+    <!-- end of container -->
+        </body>
 
-                            <source src="{% static 'core/media/mov/istock-1016926172_preview.mp4' %}" type="video/mp4">
-                            Video cannot be displayed. Your browser does not support the video tag.
-                          </video>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="video-card">
-
-                        <video width="300" height="300" controls preload="auto">
-                            <source src="movie.mp4" type="video/mp4">
-                            <source src="movie.ogg" type="video/ogg">
-                            Video cannot be displayed. Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="video-card">
-
-                        <video width="300" height="300" controls preload="auto" 
-                        poster="https://www.videvo.net/video/a-moonshiner-blows-homemade-alcohol-into-a-fire-causing-an-explosion-of-flames-1/631539/">
-                            <source src="https://www.videvo.net/video/a-moonshiner-blows-homemade-alcohol-into-a-fire-causing-an-explosion-of-flames-1/631539/" type="video/mov">
-                            Video cannot be displayed
-                    </video>
-                </div>
-                </div>
-                <div class="col">
-                    <div class="video-card">
-                        <video width="300" height="300" controls>
-                            <source src="movie.mp4" type="video/mp4">
-                            <source src="movie.ogg" type="video/ogg">
-                            Video cannot be displayed. Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="video-card">
-
-                        <video width="300" height="300" controls>
-                            <source src="movie.mp4" type="video/mp4">
-                            <source src="movie.ogg" type="video/ogg">
-                            Video cannot be displayed. Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="video-card">
-
-                        <video width="300" height="300" controls>
-                            <source src="movie.mp4" type="video/mp4">
-                            <source src="movie.ogg" type="video/ogg">
-                            Video cannot be displayed. Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="video-card">
-
-                        <video width="300" height="300" controls>
-                            <source src="movie.mp4" type="video/mp4">
-                            <source src="movie.ogg" type="video/ogg">
-                            Video cannot be displayed. Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        </div> <!-- end of container -->
-    </body>
-</html>
+    {% endblock %}

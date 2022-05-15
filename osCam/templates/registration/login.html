@@ -1,11 +1,6 @@
-<html>
-  <head>
-    {% include "../core/bootstrap.html" %}
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'core/login.css' %}">
-  </head>
-  <body>
-    {% include "core/navigation.html" %}
+
+  {% extends '../core/base.html' %}
+{% block content %}
     <div class="container">
       <div class = "jumbotron">
         <h1>Login</h1>
@@ -26,5 +21,4 @@
         </form>
       </div>
     </div>
-  </body>
-</html>
+    {% endblock %}

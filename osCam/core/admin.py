@@ -1,7 +1,6 @@
 import imp
 from django.contrib import admin
-from .models import StorageHandler
-from .models import NextPath, Path, Recording
+from .models import Recording
 
 
 # Register your models here.

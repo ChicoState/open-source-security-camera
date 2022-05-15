@@ -1,0 +1,114 @@
+{% extends '../core/base.html' %}
+{% load static %}
+{% block content %}
+
+ <div class="container">
+    <div class="space">
+        <br><br><br>
+    </div>
+    <div class="row">
+        <h1 class="gridview-header">Recordings<hr></h1>
+    </div>
+    {% for video in videos %}
+    <div class="row">
+        <div class="col-4">
+            <div class="card video-card">
+                osCam/media/uploads
+                <!-- osCam/media/uploads/video_storage/meher_spirit_animal.mp4 -->
+                <video 
+                width="350" height="370" 
+                controls preload="auto">
+                    <source src="osCam/media/uploads/video_storage/meher_spirit_animal.mp4"  type="video/mp4">
+                    
+                    Video cannot be displayed. Your browser does not support the video tag.
+                  </video>
+            </div>
+        </div>
+        {% endfor %}
+     
+        <!-- <div class="col">
+            <div class="video-card">
+                <video width="300" height="300" controls>
+                    <source src="movie.mp4" type="video/mp4">
+                    <source src="movie.ogg" type="video/ogg">
+                    Video cannot be displayed. Your browser does not support the video tag.
+                  </video>
+            </div>
+        </div>
+        <div class="col">
+            <div class="video-card">
+                <video width="300" height="300" 
+                controls preload="auto">
+                    <source src="https://storage.googleapis.com/web-dev-assets/video-and-source-tags/chrome.webm" type="video/webm">
+
+                    Video cannot be displayed. Your browser does not support the video tag.
+                  </video>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="video-card">
+
+                <video width="300" height="300" controls preload="auto">
+                    <source src="movie.mp4" type="video/mp4">
+                    <source src="movie.ogg" type="video/ogg">
+                    Video cannot be displayed. Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+        <div class="col">
+            <div class="video-card">
+
+                <video width="300" height="300" controls preload="auto" 
+                poster="https://www.videvo.net/video/a-moonshiner-blows-homemade-alcohol-into-a-fire-causing-an-explosion-of-flames-1/631539/">
+                    <source src="https://www.videvo.net/video/a-moonshiner-blows-homemade-alcohol-into-a-fire-causing-an-explosion-of-flames-1/631539/" type="video/mov">
+                    Video cannot be displayed
+            </video>
+        </div>
+        </div>
+        <div class="col">
+            <div class="video-card">
+                <video width="300" height="300" controls>
+                    <source src="movie.mp4" type="video/mp4">
+                    <source src="movie.ogg" type="video/ogg">
+                    Video cannot be displayed. Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="video-card">
+
+                <video width="300" height="300" controls>
+                    <source src="movie.mp4" type="video/mp4">
+                    <source src="movie.ogg" type="video/ogg">
+                    Video cannot be displayed. Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+        <div class="col">
+            <div class="video-card">
+
+                <video width="300" height="300" controls>
+                    <source src="movie.mp4" type="video/mp4">
+                    <source src="movie.ogg" type="video/ogg">
+                    Video cannot be displayed. Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+        <div class="col">
+            <div class="video-card">
+
+                <video width="300" height="300" controls>
+                    <source src="movie.mp4" type="video/mp4">
+                    <source src="movie.ogg" type="video/ogg">
+                    Video cannot be displayed. Your browser does not support the video tag.
+                </video>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+{% endblock %}

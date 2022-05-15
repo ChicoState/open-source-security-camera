@@ -18,6 +18,12 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# If we want to use remote storage:
+# def remote_storage_location(f):
+#     return os.path.join(BASE_DIR, f)
+# MEDIA_URL = 'http://127.0.0.1:8000/media/'
+# MEDIA_ROOT = remote_storage_location('media/')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -127,7 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-MEDIA_URL = '/'
+
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR]
@@ -135,6 +141,10 @@ STATICFILES_DIRS = [STATIC_DIR]
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
+# Generic Media Enpoints (Video, Thumbnails)
+MEDIA_URL = '/media/'
 
 # Automatic Primary Key field
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+
