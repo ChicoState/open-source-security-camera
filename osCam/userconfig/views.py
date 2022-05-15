@@ -96,6 +96,7 @@ def settings(request):
                 return redirect('/settings')
 
         elif("add_email_config" in request.POST):
+            from userconfig.models import CustomUser
             add_form = EmailEntryForm(request.POST)
             if(add_form.is_valid()):
                 email = add_form.cleaned_data['email']
