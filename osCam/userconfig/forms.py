@@ -74,7 +74,7 @@ class CameraViewForm(ModelForm):
         self.fields['fps'].label = "FPS"
         self.fields['invert'].label = "Invert Image"
         self.fields['mirror'].label = "Mirror Image"
-        self.fields['scale'].label = "scale"
+        self.fields['scale'].label = "Scale"
 
 
 # Class for Storage settings

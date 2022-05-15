@@ -1,6 +1,80 @@
 from django.test import TestCase
+from django import forms
 from userconfig.models import CustomUser, CameraView, Camera, Storage
 from userconfig.forms import CameraEntryForm, CameraViewForm, StorageForm
+
+class CameraFormTest(TestCase):
+    def test_camera_entry_form_valid(self):
+      form = CameraEntryForm(data={
+        'deviceName': 'Camera'
+      })
+
+      self.assertTrue(form.is_valid())
+
+    def test_camera_entry_form_labels(self):
+      form = CameraEntryForm(data={
+        'deviceName': 'Camera'
+      })
+
+      self.assertEqual(form.fields['deviceName'].label, 'Device Name')
+
+    def test_camera_entry_form_initials(self):
+      form = CameraEntryForm(data={
+        'deviceName': 'Camera'
+      })
+
+      self.assertEqual(form.fields['deviceName'].initial, None)
+
+    def test_camera_view_form_valid(self):
+      form = CameraViewForm(data={
+          'showMotionBoxes': True,
+          'showText': True,
+          'text': 'Cam Name :: Date :: Time',
+          'fps': 30,
+          'invert': False,
+          'mirror': False,
+          'scale': 0.75,
+      })
+
+      self.assertTrue(form.is_valid())
+
+    def test_camera_view_form_labels(self):
+      form = CameraViewForm(data={
+        'showMotionBoxes': True,
+        'showText': True,
+        'text': 'Cam Name :: Date :: Time',
+        'fps': 30,
+        'invert': False,
+        'mirror': False,
+        'scale': 0.75,
+    })
+
+      self.assertEqual(form.fields['showMotionBoxes'].label, 'Show Motion Boxes')
+      self.assertEqual(form.fields['showText'].label, 'Show Text')
+      self.assertEqual(form.fields['text'].label, 'Text')
+      self.assertEqual(form.fields['fps'].label, 'FPS')
+      self.assertEqual(form.fields['invert'].label, 'Invert Image')
+      self.assertEqual(form.fields['mirror'].label, 'Mirror Image')
+      self.assertEqual(form.fields['scale'].label, 'Scale')
+
+    def test_camera_view_form_labels(self):
+      form = CameraViewForm(data={
+        'showMotionBoxes': True,
+        'showText': True,
+        'text': 'Cam Name :: Date :: Time',
+        'fps': 30,
+        'invert': False,
+        'mirror': False,
+        'scale': 0.75,
+    })
+
+      self.assertEqual(form.fields['showMotionBoxes'].initial, None)
+      self.assertEqual(form.fields['showText'].initial, None)
+      self.assertEqual(form.fields['text'].initial, None)
+      self.assertEqual(form.fields['fps'].initial, None)
+      self.assertEqual(form.fields['invert'].initial, None)
+      self.assertEqual(form.fields['mirror'].initial, None)
+      self.assertEqual(form.fields['scale'].initial, None)
 
 class smokeTest(TestCase):
     def test_smoke(self):
@@ -162,4 +236,3 @@ class StorageFormTestCase(TestCase):
       self.assertEqual(form.fields['maxSpace'].initial, None)
       self.assertEqual(form.fields['timeToLive'].initial, None)
       self.assertEqual(form.fields['lengthOfRecordings'].initial, None)
-
