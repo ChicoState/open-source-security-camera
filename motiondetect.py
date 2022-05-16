@@ -35,8 +35,6 @@ class dataBase():
                 attributeList.append(attribute)
         # return list of attributes (user storage settings from DB
         return attributeList
-
-
 class MotionDetect():
     def __init__(self):
         self.capture = cv.VideoCapture(0)
@@ -264,7 +262,7 @@ class MotionDetect():
                             thickness
                         )
                         text = self.motionText[int(time.time()) % 4]
-            MotionDetect.setShowText(self, frame, text)
+            frame = MotionDetect.setShowText(self, frame, text)
             cv.imshow('Video', frame)
             MotionDetect.actions(self, frame)
         connection.close()
