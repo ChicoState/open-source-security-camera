@@ -1,5 +1,5 @@
 {% extends '../shared/base.html' %}
-
+{% load static %}
 {% block pageTitle %}
 <title>Home</title>
 {% endblock %}
@@ -42,5 +42,7 @@
     </div>
 </div>
  <!-- end of container -->
-
+ {% block javascriptblock %}
+    <script src="{% static 'core/home.js' %}"></script>
+ {% endblock %}
 {% endblock %}
