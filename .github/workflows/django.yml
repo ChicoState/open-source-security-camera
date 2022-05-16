@@ -27,4 +27,5 @@ jobs:
         pip install -r osCam/requirements.txt
     - name: Run Tests
       run: |
-         python osCam/manage.py test
+         cd osCam
+         python manage.py test
