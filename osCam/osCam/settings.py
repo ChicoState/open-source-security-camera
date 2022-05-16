@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'pathbuilder',
     'streamin',
     'crispy_forms',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

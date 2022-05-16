@@ -2,23 +2,35 @@
 <link rel="stylesheet" href="{% static 'core/nav.css' %}">
 
 <nav class="navbar navbar-expand-md" id="nav-bar">
-  <a class="nav-link" href="{% url 'home' %}">Home </a>
-  <ul class="navbar-nav">
-    {% if not user.is_authenticated %}
-      <li>
-        <a class="nav-link" href="{% url 'login' %}">Login</a>
-      </li>
-    {% endif %}
 
+
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img src="{% static "core/images/sheild-blk.gif" %}" width="30" height="30" class="d-inline-block align-top" alt="Organizer Image">
+        Open Source Security Camera
+    </a>
+    <ul class="navbar-nav">
+  {% if not user.is_authenticated %}
+    <li>
+      <a class="nav-link" href="{% url 'login' %}" target="_blank">Login</a>
+    </li>
+  {% endif %}
+
+  
     {% if user.is_authenticated %}
     <li>
       <a class="nav-link" href="{% url 'settings' %}">Settings</a>
     </li>
-    <li>
-      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'gallery-stream' %}">Gallery</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/admin" target="_blank">Admin</a>
     </li>
+    <li>
+      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+    </li>
     {% endif %}
+  </ul>
+
+  <!-- End Login/Logou t RHS -->
 </nav>

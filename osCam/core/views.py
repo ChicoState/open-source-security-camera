@@ -143,16 +143,14 @@ class MotionDetect():
         # return resize frame to particular dimension
         return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
 
+
 @login_required
 def home(request):
     pageTitle = home.__name__
-    showPathForm = True
-    fakeFullPath = '/usr/media/uploads/'
+    showPathForm = False
     pageData = {
         "pageTitle": pageTitle,
         "update_path_dialog": showPathForm,
-        "path": fakeFullPath,
-        "nextpaths": ['videos', 'thumbnails']
     }
     return render(request, 'core/home.html', pageData)
 

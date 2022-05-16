@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
-    emailKey = models.CharField(max_length=16, blank=True)
+    emailKey = models.CharField(max_length=16, blank=True, null=True)
 
 
 class Camera(models.Model):

@@ -4,8 +4,8 @@ from . import views
 TYPE = "stream"
 
 urlpatterns = [
-    path('', views.videoStreamGallery, name=f'gallery-{TYPE}'),
-    path('add/', views.addStream, name=f"add-{TYPE}"),
-    path('edit/<int:id>/', views.editStream, name=f"edit-{TYPE}"),
-    path('remove/<int:id>/', views.removeStream, name=f"remove-{TYPE}"),
-]
+    path('', views.view_gallery_stream, name=f'gallery-{TYPE}'),
+    path('add/', views.CreateVideo.as_view(), name=f"create-{TYPE}"),
+    path('edit/<int:pk>/', views.video_stream_edit, name=f"{TYPE}-update"),
+    path('remove/<int:pk>/', views.DeleteVideo.as_view(), name=f"{TYPE}-delete"),
+] 
