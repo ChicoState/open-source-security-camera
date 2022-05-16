@@ -1,0 +1,293 @@
+        @import url('https://fonts.googleapis.com/css?family=Merriweather:300,900|Six+Caps');
+         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap'); 
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            height: 100vh;
+            width: 99vw;
+        }
+        header {
+            width: 100%;
+            flex: 1;
+        }
+
+        /*  set the height of the main section to calc( 100vh - 70px). */
+        main {
+            height: calc(100vh - 70px);
+            display: flex;
+            background-color: #f9f9f9;
+            padding: 0px 10px;
+        }
+
+        /* Sidebar & */
+        .side-bar {
+            position: -webkit-sticky;
+            position: sticky;
+            -ms-overflow-style: none;
+            height: calc(100vh - 70px);
+            max-lines: 1;
+        }
+
+    
+        .left {
+            display: flex;
+            align-items: center;
+        }
+
+        .left #menu {
+            padding: 0 7px;
+            cursor: pointer;
+        }
+
+        input:focus {
+            outline: none;
+            border: 1px solid #ddd;
+        }
+
+        .material-icons {
+            color: rgb(100, 100, 100);
+            padding: 0 7px;
+            cursor: pointer;
+        }
+
+        .nav {
+            min-width: 180px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-top: 15px;
+            max-lines: 1;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.6em 1.2em;
+            max-lines: 1;
+        }
+
+        .nav-link span {
+            margin-left: 15px;
+            max-lines: 1;
+        }
+
+        .side-bar .nav-link:hover {
+            background: #e5e5e5;
+            cursor: pointer;
+        }
+
+        .side-bar .active {
+            background: #e5e5e5;
+        }
+
+        /* Video Gallery COntent */
+        .content {
+            background-color: #f9f9f9;
+            width: 100%;
+            height: 100%;
+            padding: 15px 15px;
+            border-top: 1px solid #ddd;
+            overflow-y: scroll;
+        }
+        
+        .videos {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 0 4px;
+            
+        }
+        .gallery__item {
+            margin-bottom: 0;
+        }
+        .video {
+            width: 428px;
+            margin-bottom: 30px;
+            height:240px;
+        }
+  
+        .video video {
+            width: 100%;
+            height:100%;
+            margin-bottom: 30px;
+        }
+
+        /* When more than 4-videos per row, then start new  */
+        .thumbnail {
+            width: 100%;
+            height: 100%;
+            margin: 1em 1em 1em 0 ;
+        }
+
+        .thumbnail img {
+            object-fit: cover;
+            height: 94%;
+            width: 100%;
+        }
+        
+        
+        .author img {
+            object-fit: cover;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            margin-right: 10px;
+        }
+        
+        /* Video Details */
+        .details {
+            margin-top: 0.3em;
+            display: flex;
+        }
+
+        .title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title h3 {
+            color: rgb(3, 3, 3);
+            line-height: 18px;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .title a, span {
+            text-decoration: none;
+            color: rgb(96, 96, 96);
+            font-size: 12px;
+        }
+        @media (max-width: 768px)  {
+            .side-bar {
+                display: none;
+            }
+            figure {
+                width: 100%;
+                height: 40vh;
+            }
+        }
+
+      
+        /* 
+        ==========================
+        View Port Optimization
+        ==========================
+     
+        /* Shorter Screens */
+        @media (max-height: 480px) {
+            figure { 
+              height: 40vh;
+            }
+    
+          }
+
+        /*  Smaller Screens / Protrait */
+        @media (max-aspect-ratio: 1/1) and (max-width: 480px) {
+            .wrapper {
+              flex-direction: row;
+            }
+            figure {
+              height: auto;
+              width: 100%;
+              height: 60vh;
+              width: 100%;
+              max-height: 75vh;
+              min-width: 0;
+            }
+        
+            img {
+              width: 100%;
+              max-height: 75vh;
+              min-width: 0;
+            }
+          }
+
+          
+          .wrapper {
+              display: flex;
+              flex-wrap: wrap; 
+              height: calc(100vh - 70px);
+              overflow-y: scroll;
+            }
+          
+            figure {
+                min-width: 30%;
+                height: fit-content;
+                width: 458px;
+                padding: 1em;
+                flex-grow: 1;
+                margin-bottom: 0;
+            }
+        
+            @media (min-width: 769px ) and (max-width: 1024px) {
+                .gallery__item {
+                    height: 40vh; 
+                }
+            }
+          @media (min-width: 1025px ) {
+            figure {
+                height: 40vh;
+                padding: 1em;
+              }
+             
+          }
+
+          figure:last-child {
+              margin: 0 auto;
+            flex-grow: 7;
+          }
+         
+          .gallery__item{
+            max-height: 40vh;
+        }
+        video {
+            /* override other styles to make responsive */
+            display: block;
+            width: 100%;
+            height: 100%;
+          }
+
+          .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;  /* Preferred icon size */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+          
+            /* Support for all WebKit browsers. */
+            -webkit-font-smoothing: antialiased;
+            /* Support for Safari and Chrome. */
+            text-rendering: optimizeLegibility;
+          
+            /* Support for Firefox. */
+            -moz-osx-font-smoothing: grayscale;
+          
+            /* Support for IE. */
+            font-feature-settings: 'liga';
+          }
+
+          /* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }

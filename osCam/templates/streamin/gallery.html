@@ -1,0 +1,68 @@
+{% extends '../shared/base.html' %}
+{% load static %}
+{% block stylecss %}
+<!-- CSS File -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'streamin/media.css' %}" />
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+{% endblock %}  
+<!-- Human Readable times -->
+{% load humanize %}
+<!-- Extends for changing page titles -->
+{% block pageTitle %}
+<title>Gallery</title>
+{% endblock %}  
+ {% block content %}
+
+    <body>
+            <header>
+                <div class="header">
+                </div>
+            </header>
+            <main>
+                <div class="side-bar">
+
+                    {% include 'streamin/gallery_sidebar.html' %}
+                </div>
+                <div class="wrapper">
+                    <!--  video starts -->
+                 {% for video in videos %}
+                    <figure class=”gallery__item gallery__item--1">
+                        <div class="video-shadow" >
+                            <video controls preload="none" poster="{{MEDIA_URL}}{{video.thumbnail}}" >
+                                <source src="{{MEDIA_URL}}{{video.video_file}}"  type="video/mp4">
+                                    This Video cannot be displayed. Your browser does not support the video tag.
+                            </video>
+                            <div class="details">
+                                <div class="author">
+                                    <img src="https://yt3.ggpht.com/bpzY-S4DYlbTeOpY5hIA7qz_hcbMkgvLAugtwKBGTTImNnWAGudX0y53bo_fJZ0auypxrWkUiw=s88-c-k-c0x00ffffff-no-rj"
+                                    alt="user photo." />
+                            </div>
+                            <div class="title">
+                                <h3>{{video.title}} </h3>
+                          
+                                <a href="">
+                                    
+                                    {% if request.user.is_authenticated %}
+                                        {{request.user.first_name}} {{request.user.last_name}}
+                                    {% else %}
+                                     Anynomous Sam
+                                    {% endif %} 
+                                </a>
+                                <span> {{video.data_created}} • {{video.data_created | naturaltime}} </span>
+                            </div>
+                        </div>
+                        </div>
+
+                    </figure>
+                    {% endfor %}
+                    <!-- a video Ends -->
+                </div>
+            </main>
+    
+    </body>
+
+    
+{% endblock %}
+
+
