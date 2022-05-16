@@ -40,7 +40,15 @@ jobs:
         radon cc send_email.py -a -na
         radon cc osCam/core/views.py -a -na
         radon cc osCam/userconfig/views.py -a -na
-#     - name: Check Complexity with Xenon
-#       run: |
-#         # check cyclomatic complexity of all files in path . (min is 'C')
-#         xenon -b C -m B -a B .
+        - name: Install Dependencies
+    - name: Setup Dependancies for Motion Detect unittest's
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r osCam/requirements.txt
+    - name: Run unittest's
+      run: |
+        python -m unittest motiondetect_database_test.py 
+    - name: Get Coverage
+      run: | 
+        coverage run motiondetect_database_test.py
+        coverage report  
