@@ -245,7 +245,9 @@ class MotionDetect():
             isTrue, frame = self.capture.read()
             frame = MotionDetect.flipFrame(self, frame)
             frame = MotionDetect.mirrorFrame(self, frame)
-            self.avg, cnts = MotionDetect.imgProcess(self, frame, self.avg)
+            if isTrue:
+                self.avg, cnts = MotionDetect.imgProcess(self, frame, self.avg)
+
             for c in cnts:
                 # if contours are less than desired area cont
                 if cv.contourArea(c) > 5000:
@@ -262,7 +264,7 @@ class MotionDetect():
                             thickness
                         )
                         text = self.motionText[int(time.time()) % 4]
-            frame = MotionDetect.setShowText(self, frame, text)
+            MotionDetect.setShowText(self, frame, text)
             cv.imshow('Video', frame)
             MotionDetect.actions(self, frame)
         connection.close()

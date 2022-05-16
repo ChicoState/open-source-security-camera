@@ -35,7 +35,7 @@ class DatabaseTest(unittest.TestCase):
             'timeToLive':60,
             'lengthOfRecordings': 10,
     }
-    test_video = '/home/kcdouglass/Desktop/SoftwareEngineering/open-source-security-camera/open-source-security-camera/osCam/media/uploads/video_storage/meher_spirit_animal.mp4'
+    test_video = '/home/kcdouglass/Desktop/SoftwareEngineering/open-source-security-camera/open-source-security-camera/osCam/videos/funny_monkeys.avi'
     def setUp(self) -> None:
         # For Database Class
         self.TEST_DB_FILE_NAME = r"osCam.test/db.sqlite3"
@@ -122,9 +122,24 @@ class DatabaseTest(unittest.TestCase):
                 count += 1
                 if count == 20:
                     break
+
+                # if CV2.waitKey(25) & 0xFF == ord('q'):
+                #     break
             else:
                 break
 
+
+    def test_detect_invalid(self):
+        self.motion_detect = MotionDetect()
+        self.motion_detect.capture = CV2.VideoCapture(self.test_video)
+        # self.motion_detect.capture = CV2.VideoCapture(0)
+        capture = self.motion_detect.capture
+        isDetect, frame = capture.read() 
+        self.handle_open_video(capture, frame, isDetect )
+        # detect = self.motion_detect.capture
+        self.assertEqual(isDetect,  True)
+
+        
     def test_rescale_frame(self):
         self.motion_detect = MotionDetect()
         self.motion_detect.capture = CV2.VideoCapture(self.test_video)
@@ -133,12 +148,24 @@ class DatabaseTest(unittest.TestCase):
         isReading, frame = capture.read()
         self.handle_open_video(capture,frame, isReading)  
         self.motion_detect.actions(self.motion_detect.rescaleFrame(frame))
-        self.assertTrue(isReading == True)
+        self.assertTrue(isReading != None)
+
+
+
+    def test_actions_invalid(self):
+        self.motion_detect = MotionDetect()
+        self.motion_detect.capture = CV2.VideoCapture(self.test_video)
+        self.motion_detect.Detect()
+        isReadn, frame = self.motion_detect.capture.read()
+        self.motion_detect.actions(frame)
+        self.assertEqual(self.motion_detect.out, None)
+
+
 
     def test_motiondetect_init_then_cleanup(self):
         self.motion_detect = MotionDetect()
 
-        test_video = '/home/kcdouglass/Desktop/SoftwareEngineering/open-source-security-camera/open-source-security-camera/osCam/media/uploads/video_storage/meher_spirit_animal.mp4'
+        test_video = '/home/kcdouglass/Desktop/SoftwareEngineering/open-source-security-camera/open-source-security-camera/osCam/videos/funny_monkeys.avi'
         captured_video = CV2.VideoCapture(test_video)
         isReading, frame = self.motion_detect.capture.read()
         self.motion_detect.cleanUp()
