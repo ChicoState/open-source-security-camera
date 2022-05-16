@@ -26,6 +26,7 @@ jobs:
         pip install flake8 pytest
         pip install radon
         pip install xenon
+        pip install opencv-contrib-python
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
@@ -34,15 +35,25 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Check Complexity with Radon
+#       run: |
+#         # check cyclomatic complexity of individual files
+#         radon cc motiondetect.py -a -na
+#         radon cc send_email.py -a -na
+#         radon cc osCam/core/views.py -a -na
+#         radon cc osCam/userconfig/views.py -a -na
+#         - name: Check Cyclomatic Complexity with Radon
       run: |
-        # check cyclomatic complexity of individual files
-        radon cc motiondetect.py -a -na
-        radon cc motiondetect_database_test.py -a -na
-        radon cc send_email.py -a -na
-        radon cc osCam/core/views.py -a -na
-        radon cc osCam/userconfig/views.py -a -na
-        radon cc osCam/streamin/views.py -a -na 
-    - name: Run unittest's
+        radon cc -s -o score .
+    - name: Check Maintanability with Radon
+      run: |
+        radon mi -s .
+    - name: Check Raw Metrics with Radon
+      run: |
+        radon raw -s .
+    - name: Check Halstead complexity measures with Radon
+      run: |
+        radon hal .
+    - name: Run unittests
       run: |
         python -m unittest motiondetect_database_test.py 
     - name: Get Coverage
