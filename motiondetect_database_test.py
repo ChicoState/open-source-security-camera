@@ -9,13 +9,6 @@ import unittest
 from motiondetect import dataBase, MotionDetect
 from datetime import datetime, timedelta
 
-sys.path.append(
-    os.path.join(os.path.dirname(__file__), 'osCam')
-)
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "osCam.settings")
-
-from django.conf import settings
-
 
 class DatabaseTest(unittest.TestCase):
     '''
