@@ -1,6 +1,7 @@
 /* background image from ../images/vault.jpg */
 body {
-  background-image: url("../images/vault.jpg");
+  /* background-image: url("../images/vault.jpg"); */
+  /* background-color: #fff; */
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
@@ -8,7 +9,7 @@ body {
 
 #cameraSettings {
   color: rgba(15, 34, 75, 0.644);
-  background: rgb(56, 115, 95); 
+  background: #334756;
   margin-left: 30%; margin-right: 30%
 }
 

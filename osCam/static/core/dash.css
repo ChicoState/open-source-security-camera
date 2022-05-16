@@ -1,6 +1,6 @@
 body {
-    background-color: rgb(0, 0, 0);
-    color: rgb(255, 255, 255);
+    background-color: #082032;
+    color: #EEEEEE;
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 12px;
     margin: 0px;
@@ -11,22 +11,4 @@ hr {
     height: 1px;
     background-color: #ccc;
     border: none;
-}
-
-
-/* For Video Container (Move to its own css file later) */
-
-.gridview-header {
-    /* justify-content: center;
-    align-content: center; */
-    justify-self: center;
-    align-self: center;
-    width: 100%;
-    margin: 0;
-    text-shadow: 2px 2px 6px #000;
-    text-align: center;
-}
-
-.vid-feed {
-    border: 1px solid #eee
 }

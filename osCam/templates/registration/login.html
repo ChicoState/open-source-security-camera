@@ -1,17 +1,22 @@
+{% extends '../shared/base.html' %}
 
-  {% extends '../core/base.html' %}
+{% block pageTitle %}
+  <title>Sign in to your Account</title>
+{% endblock %}
+
 {% block content %}
-    <div class="container">
-      <div class = "jumbotron">
-        <h1>Login</h1>
+    <div class="container center">
+      <div class="jumbotron jumbotron-div">
+        <h1 class="display-4">Login</h1>
+        <hr class="my-4">
         <form action="/login/" method="POST">{% csrf_token %}
           <div style="color: red">
           {{ form.non_field_errors }}
           </div>
           <table>
-            <label>{{ form.username.label_tag }}</label>
+            <label id="label-form">{{ form.username.label_tag }}</label>
             {{ form.username }} <br>
-            <label>{{ form.password.label_tag }}</label>
+            <label id="label-form">{{ form.password.label_tag }}</label>
             {{ form.password }} <br>
             <tr><td>
               <input type="submit" class="btn btn-primary" value = "Login"/>
@@ -21,4 +26,4 @@
         </form>
       </div>
     </div>
-    {% endblock %}
+{% endblock %}

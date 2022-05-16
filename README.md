@@ -68,17 +68,41 @@ remove *a single* docker image <br>
 remove *all* containers and images <br>
 `docker system prune -a` <br>
 
-### Sending Emails <br>
-Create the file ".env" in the same directory as "send_email.py" and format <br>
-the file as following: <br>
+### Running the Application <br>
+
+To begin, OpenCV will need to be installed on the Raspberry Pi to make use of the motion detection feature. Run the following commands to enable and run this. *Note: This process will take around 2 hours to complete.*
+
 ```
-EMAIL_HOST=smtp.gmail.com
-EMAIL_HOST_USER=your_email_address@gmail.com
-EMAIL_HOST_PASSWORD=secret_key
-RECIPIENT_ADDRESS=your_email_address@gmail.com
+chmod +x OpenCV-4-5-5.sh
+./OpenCV-4-5-5.sh
 ```
 
-To generate the secret key follow these steps:
+Once OpenCV is installed, run the following commands to enable access to the startup script and run it.
+
+```
+chmod +x run.sh
+./run.sh
+```
+
+The ```./run.sh``` will be used to start the application every time.
+
+### Stopping the Application <br>
+
+Hold Ctrl-C to stop the dashboard. Next type the following command to list the current running processes:
+
+```
+ps
+```
+
+From here type the following command followed by the process listed as "Python3". This will stop the motion detection script from running.
+
+```
+kill <PID Number>
+```
+
+### Sending Emails <br>
+
+To enable this feature go to the settings page of the application. It will ask for a email authentication key. This is required to give the app access to send emails to and from the email provided. To generate the authentication key follow these steps:
 
 1. [Enable Less Secure Apps with your gmail account](https://myaccount.google.com/lesssecureapps)
 2. Make sure two-factor authentication is enabled.

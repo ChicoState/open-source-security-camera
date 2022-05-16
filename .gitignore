@@ -11,14 +11,17 @@ db.sqlite3
 media
 osCam/core/migrations/**
 osCam/userconfig/migrations/**
+osCam/pathbuilder/migrations/**
+osCam/user/migrations/**
+/migrations/**
 
 # MacOS #
 .DS_Store
 .AppleDouble
 .LSOverride
 
-# Backup files # 
-*.bak 
+# Backup files #
+*.bak
 
 
 # If you are using PyCharm #
