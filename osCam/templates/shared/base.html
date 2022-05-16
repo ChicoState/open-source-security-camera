@@ -3,12 +3,17 @@
         {% load static %}
         
         {% include "shared/bootstrap.html" %}
- 
+        
         <!-- osCam/static/core/dash.css -->
+        
         <link rel="stylesheet" href="{% static '/core/dash.css' %}">
         <link rel="stylesheet" href="{% static 'core/login.css' %}">
         <link rel="stylesheet" href="{% static 'userconfig/settings.css' %}">
         <link rel="stylesheet" href="{% static 'core/home.css' %}">
+        
+        {% block stylecss %}
+        {% endblock %}
+        
     </head>
     <body>
         <!-- Your file should use this block if you want to change page title -->

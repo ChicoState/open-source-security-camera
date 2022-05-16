@@ -16,6 +16,14 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# If we want to use remote storage:
+# def remote_storage_location(f):
+#     return os.path.join(BASE_DIR, f)
+# MEDIA_URL = 'http://127.0.0.1:8000/media/'
+# MEDIA_ROOT = remote_storage_location('media/')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -44,7 +52,9 @@ INSTALLED_APPS = [
     'pathbuilder',
     'streamin',
     'crispy_forms',
+    'django.contrib.humanize',
 ]
+    # 'django.contrib.sites',
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,7 +67,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'osCam.urls'
-
+SITE_ID = 1
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

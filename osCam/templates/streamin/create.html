@@ -1,0 +1,26 @@
+{% extends '../core/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<!-- HTML page to Create a Video -->
+<title>Django - Video File Upload</title>
+<body>
+	<div class="container mb-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6 col-sm 12 col-xs-12">
+				<form method="POST" enctype="multipart/form-data">{% csrf_token %}
+		
+					<label>Browse and select a video file</label>
+					<legend class="border-bottom mb-4">Upload Video</legend>
+					{{ form | crispy }}
+							<!-- <input type="file" name="file" autocomplete="off" required> -->
+						<button class="btn btn-outline-info btn-block mt-3" type="submit">Submit</button>
+						<!-- <input type="submit" value="Upload and Display"> -->
+			
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+{% endblock %}

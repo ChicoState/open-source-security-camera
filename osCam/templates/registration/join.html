@@ -2,14 +2,14 @@
 {% extends '../shared/base.html' %}
 {% block pageTitle %}
 <title>Register Your OS Cam Account</title>
-{% endblock %}
+{% endblock %}  
 {% block content %}
 <div class="container center">
   <div class = "jumbotron jumbotron-div">
     <h1>Join</h1>
     <hr class="my-4">
     <form method="POST">{% csrf_token %}
-      <table>
+      <table> 
         {{ join_form.as_table }}
         <tr><td>
           <input type="submit" class="btn btn-primary" value = "Join"/>

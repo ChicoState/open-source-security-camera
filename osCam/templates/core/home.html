@@ -1,5 +1,5 @@
 {% extends '../shared/base.html' %}
-
+{% load static %}
 {% block pageTitle %}
 <title>Home</title>
 {% endblock %}
@@ -37,23 +37,12 @@
         <!-- statistics based on activity -->
         <h2>stats</h2>
         statistics based on activity monitored by system
-        <br>
-        <br>
         <hr>
-        <div class="container">
-            <p>Current Storage Location: <a href="#" class="btn btn-primary">{{ path }}</a></p>
-            {% if update_path_dialog %}
-                <form id="path_dialog" method="post" action="{% url 'home' %}"> {% csrf_token %}
-                    <label for="path">Choose File Path:</label>
-                    {% for subPath in nextpaths %}
-                        <input type="submit" id="path" name="$PATH" value="{{ subPath }}">
-                    {% endfor %}
-                </form>
-            {% endif %}
-    
-        </div>
+ 
     </div>
 </div>
  <!-- end of container -->
-
+ {% block javascriptblock %}
+    <script src="{% static 'core/home.js' %}"></script>
+ {% endblock %}
 {% endblock %}

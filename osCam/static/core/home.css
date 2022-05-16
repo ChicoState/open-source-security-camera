@@ -1,4 +1,6 @@
-.div-info {
+
+.div-info 
+{
     float: right;
 }
 
@@ -6,3 +8,9 @@
     margin: auto;
     width: 50%;
 }
+
+  @media (max-height: 480px) {
+    .div-info {
+        display: none;
+      }
+   }

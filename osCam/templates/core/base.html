@@ -1,0 +1,26 @@
+<html>
+    <head>
+        {% load static %}
+        {% include "core/bootstrap.html" %}
+        <link href="https://unpkg.com/@videojs/themes@1/dist/sea/index.css" rel="stylesheet">
+        <link href="https://vjs.zencdn.net/7.8.3/video-js.css" rel="stylesheet" />
+        <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+        <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+
+        <!-- osCam/static/core/dash.css -->
+        <link rel="stylesheet" href="{% static '/core/dash.css' %}">
+        <link rel="stylesheet" href="{% static 'core/login.css' %}">
+    </head>
+
+    <body>
+        {% include "core/navigation.html" %}
+
+        {% block content %}
+
+        {% endblock %}
+        
+        {% block javascriptblock %}
+        {% endblock %}
+        </div> <!-- end of container -->
+    </body>
+</html>
