@@ -1,3 +1,4 @@
+
 # django imports
 from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
@@ -57,41 +58,6 @@ class MotionDetect():
             return cv.flip(frame, 1)
         else:
             return frame
-
-    def setSettings(self):
-        obj = CameraView.objects.get(id=1)
-        self.showBoxes = obj.showMotionBoxes
-        self.scale = obj.scale
-        self.mirror = obj.mirror
-        self.flip = obj.invert
-        self.showText = obj.showText
-
-    def setShowText(self, frame, text):
-        if self.showText:
-            status_color = MotionDetect.setStatusColor(self)
-            fontsize = .5
-            cv.putText(
-                frame,
-                "Status: {}".format(text),
-                (15, 15),
-                cv.FONT_HERSHEY_SIMPLEX,
-                fontsize, status_color,
-                1
-            )
-            # current date/time
-            date_time = datetime.now()
-            cv.putText(
-                frame,
-                "Date/Time: {}".format(date_time.strftime(
-                    "%Y/%m/%d, %H:%M:%S"
-                    )
-                ),
-                (200, 15),
-                cv.FONT_HERSHEY_SIMPLEX,
-                fontsize, status_color,
-                1
-            )
-        return frame
 
     def get_frame(self):
         success, frame = self.video.read()
@@ -177,7 +143,6 @@ class MotionDetect():
         # return resize frame to particular dimension
         return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
 
-
 @login_required
 def home(request):
     pageTitle = home.__name__
@@ -191,8 +156,11 @@ def home(request):
     }
     return render(request, 'core/home.html', pageData)
 
-
 def gen(camera):
+    '''
+        generates a frame from Camera:MotionDetect that builds up the Video stream.
+        if MotionDetect's current frame is 0-bytes then we stop. Otherwise a user with no camera capability gets stuck with page hanging
+    '''
     while True:
         frame = camera.get_frame()
         yield (
@@ -201,7 +169,6 @@ def gen(camera):
             frame +
             b'\r\n\r\n'
         )
-
 
 def feed(request):
     return StreamingHttpResponse(
