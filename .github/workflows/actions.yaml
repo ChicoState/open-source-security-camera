@@ -53,3 +53,10 @@ jobs:
     - name: Check Halstead complexity measures with Radon
       run: |
         radon hal .
+    - name: Run unittests
+      run: |
+        python -m unittest motiondetect_database_test.py 
+    - name: Get Coverage
+      run: | 
+        coverage run motiondetect_database_test.py
+        coverage report  
