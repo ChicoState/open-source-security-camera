@@ -1,9 +1,12 @@
-
-from ast import Return
 import os
 import sys
 import cv2 as CV2
-
+import sqlite3
+from sqlite3 import Connection, Cursor
+from sys import stdout
+import unittest
+from motiondetect import dataBase, MotionDetect
+from datetime import datetime, timedelta
 
 sys.path.append(
     os.path.join(os.path.dirname(__file__), 'osCam')
@@ -12,15 +15,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "osCam.settings")
 
 from django.conf import settings
 
-# import os
-import sqlite3
-from sqlite3 import Connection, Cursor
-from sys import stdout
-import unittest
-from motiondetect import dataBase, MotionDetect
-from datetime import datetime, timedelta
-
-
 
 class DatabaseTest(unittest.TestCase):
     '''
@@ -28,6 +22,7 @@ class DatabaseTest(unittest.TestCase):
         tests/motiondetect_database_test.py
         > python -m unittest tests/motiondetect_database_test.py
     '''
+    test_video = '/home/kcdouglass/Desktop/SoftwareEngineering/open-source-security-camera/open-source-security-camera/osCam/videos/funny_monkeys.avi'
     USER_CONFIG_SETTING = {
         'recordToDevice':0,
             'filePath':'/home/pi/open-source-security-camera/osCam/videos/',
@@ -35,7 +30,7 @@ class DatabaseTest(unittest.TestCase):
             'timeToLive':60,
             'lengthOfRecordings': 10,
     }
-    test_video = '/home/kcdouglass/Desktop/SoftwareEngineering/open-source-security-camera/open-source-security-camera/osCam/videos/funny_monkeys.avi'
+    
     def setUp(self) -> None:
         # For Database Class
         self.TEST_DB_FILE_NAME = r"osCam.test/db.sqlite3"
@@ -44,10 +39,8 @@ class DatabaseTest(unittest.TestCase):
         self._db = dataBase
         self.connection = dataBase.create_connection(self.db_file_name)
         self.cursor = self.connection.cursor()
-        # For motion Detect Class
         self.motion_detect = MotionDetect()
 
-        
     def tearDown(self) -> None:
         """
             Delete any Test database/ Entries on Treadown
@@ -72,7 +65,6 @@ class DatabaseTest(unittest.TestCase):
         self.db_file_name = r"osCam/db.sqlite3"
         _connection = self._db.create_connection(self.db_file_name)
         selected_items = self._db.GetSettingsFromDB(_connection)
-        
         self.assertIsNotNone((selected_items))
       
     def test_has_valid_db_entry(self):
@@ -92,9 +84,8 @@ class DatabaseTest(unittest.TestCase):
         # ENSURE SAMENESS
         self.assertListEqual(
                 original_items,
-                _storage
+                _storage,
             )
-      
 
     def test_create_connection(self):
         '''Sqlit3 returns instance-of *Connection* on successfull connection'''
@@ -116,62 +107,37 @@ class DatabaseTest(unittest.TestCase):
 
     def handle_open_video(self, capture, frame, isReading):
         count = 0
-        while(capture.isOpened()):
+        while(capture.isOpened() and count < 20):
             if isReading:
                 CV2.imshow('FRAME', frame)
                 count += 1
-                if count == 20:
-                    break
-
-                # if CV2.waitKey(25) & 0xFF == ord('q'):
-                #     break
             else:
                 break
-
 
     def test_detect_invalid(self):
         self.motion_detect = MotionDetect()
         self.motion_detect.capture = CV2.VideoCapture(self.test_video)
-        # self.motion_detect.capture = CV2.VideoCapture(0)
         capture = self.motion_detect.capture
         isDetect, frame = capture.read() 
         self.handle_open_video(capture, frame, isDetect )
-        # detect = self.motion_detect.capture
         self.assertEqual(isDetect,  True)
 
-        
     def test_rescale_frame(self):
         self.motion_detect = MotionDetect()
         self.motion_detect.capture = CV2.VideoCapture(self.test_video)
-        
         capture = self.motion_detect.capture
         isReading, frame = capture.read()
         self.handle_open_video(capture,frame, isReading)  
         self.motion_detect.actions(self.motion_detect.rescaleFrame(frame))
         self.assertTrue(isReading != None)
 
-
-
-    def test_actions_invalid(self):
-        self.motion_detect = MotionDetect()
-        self.motion_detect.capture = CV2.VideoCapture(self.test_video)
-        self.motion_detect.Detect()
-        isReadn, frame = self.motion_detect.capture.read()
-        self.motion_detect.actions(frame)
-        self.assertEqual(self.motion_detect.out, None)
-
-
-
     def test_motiondetect_init_then_cleanup(self):
         self.motion_detect = MotionDetect()
-
-        test_video = '/home/kcdouglass/Desktop/SoftwareEngineering/open-source-security-camera/open-source-security-camera/osCam/videos/funny_monkeys.avi'
-        captured_video = CV2.VideoCapture(test_video)
+        captured_video = CV2.VideoCapture(self.test_video)
         isReading, frame = self.motion_detect.capture.read()
         self.motion_detect.cleanUp()
         self.assertEqual(isReading, False)
 
-    
 
 if __name__ == '__main__':
     unittest.main()
