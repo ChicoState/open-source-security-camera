@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 
 
 
+
 # Create your tests here.
 class smokeTest(TestCase):
     def test_smoke(self):
@@ -39,12 +40,6 @@ class SetupMotionDetectCamera(TestCase):
     @property
     def urlNameAlias(self) -> str:
         return self.objects.get("URL_NAMEALIAS")
-    @property
-    def bytes(self) -> bytes:
-        return self.objects.get("BYTES")
-
-    def setupVideo(self):
-        self.feed = Cv2.VideoCapture(self.portNum)
 
     def setupUser(self):
         self.user = User.objects.create(
@@ -68,7 +63,6 @@ class VideoCapture(SetupMotionDetectCamera):
     def testAddVideoHomePage(self):
         print(f"\n\nCur URL: {self.getUrl(HttpRequest)}")
         _response = self.client.get(self.getUrl(HttpRequest)) #, "Video Test Data Stream"
-        # get('/customers/details/', {'name': 'fred', 'age': 7})
         self.assertEqual(_response.status_code, 200)
         self.assertTemplateUsed(response=_response, template_name="core/home.html")
     def invalidVideoDataView(self):

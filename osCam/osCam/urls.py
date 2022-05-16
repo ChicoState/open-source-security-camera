@@ -24,4 +24,4 @@ urlpatterns = [
     path('', include('user.urls'), name='user'),
     path('settings/', include('userconfig.urls'), name='settings'),
     path('stream/', include('streamin.urls'), name='stream'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
