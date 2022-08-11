@@ -11,7 +11,7 @@ click-repl==0.2.0
 coverage==6.3.3
 pytest-cov==3.0.0
 Deprecated==1.2.13
-Django==4.0.4
+Django==4.0.7
 django-crispy-forms==1.14.0
 django-environ==0.8.1
 kombu==5.2.4
